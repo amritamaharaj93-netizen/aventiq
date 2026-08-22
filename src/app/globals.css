@@ -1,26 +1,126 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Light mode tokens */
+  --background: #FFFFFF;
+  --foreground: #102A43; /* Primary Text */
+  
+  --card: #FFFFFF;
+  --card-foreground: #102A43;
+
+  --popover: #FFFFFF;
+  --popover-foreground: #102A43;
+
+  --primary: #0067D9; /* Primary Blue */
+  --primary-foreground: #FFFFFF;
+
+  --secondary: #062B63; /* Primary Navy */
+  --secondary-foreground: #FFFFFF;
+
+  --muted: #F8FAFC; /* Off White */
+  --muted-foreground: #64748B; /* Muted Text */
+
+  --accent: #FF8A00; /* Primary Orange */
+  --accent-foreground: #FFFFFF;
+
+  --destructive: #ff4d4f;
+  --destructive-foreground: #FFFFFF;
+
+  --border: #DCE8F5;
+  --input: #DCE8F5;
+  --ring: #0067D9;
+
+  --radius: 0.5rem;
+}
+
+.dark {
+  /* Dark mode tokens */
+  --background: #020B1C; /* Dark Background */
+  --foreground: #FFFFFF;
+  
+  --card: #031A3D; /* Dark Navy */
+  --card-foreground: #FFFFFF;
+
+  --popover: #031A3D;
+  --popover-foreground: #FFFFFF;
+
+  --primary: #00C6F7; /* Cyan */
+  --primary-foreground: #020B1C;
+
+  --secondary: #062B63; /* Primary Navy */
+  --secondary-foreground: #FFFFFF;
+
+  --muted: #041A3B; /* Deep Navy */
+  --muted-foreground: #CBD5E1; /* Secondary Text (Dark) */
+
+  --accent: #FF8A00; /* Primary Orange */
+  --accent-foreground: #FFFFFF;
+
+  --destructive: #7f1d1d;
+  --destructive-foreground: #FFFFFF;
+
+  --border: #062B63;
+  --input: #041A3B;
+  --ring: #00C6F7;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-aventiq-navy-primary: #062B63;
+  --color-aventiq-navy-dark: #031A3D;
+  --color-aventiq-navy-deep: #041A3B;
+  --color-aventiq-blue-primary: #0067D9;
+  --color-aventiq-blue-royal: #0759C8;
+  --color-aventiq-blue-bright: #1687F5;
+  --color-aventiq-cyan-primary: #00C6F7;
+  --color-aventiq-cyan-electric: #05D5F5;
+  --color-aventiq-orange-primary: #FF8A00;
+  --color-aventiq-orange-bright: #FF9700;
+  --color-aventiq-orange-golden: #FFB52E;
+
+  --color-aventiq-bg-light: #F3F8FF;
+  --color-aventiq-bg-soft: #E8F3FF;
+  --color-aventiq-bg-dark: #020B1C;
+
+  --color-aventiq-text-primary: #102A43;
+  --color-aventiq-text-secondary: #475569;
+
+  /* Custom Gradients defined */
+  --background-image-gradient-tech: linear-gradient(135deg, #062B63, #0067D9, #00C6F7);
+  --background-image-gradient-blue: linear-gradient(135deg, #0759C8, #1687F5, #00C6F7);
+  --background-image-gradient-growth: linear-gradient(135deg, #FF8A00, #FFB52E);
+  --background-image-gradient-hero: linear-gradient(135deg, #020B1C, #062B63);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
   }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  body {
+    @apply bg-background text-foreground;
+  }
 }

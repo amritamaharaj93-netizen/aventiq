@@ -1,0 +1,152 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// User / Admin model
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String?
+  role      String   @default("ADMIN")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  description String   @db.Text
+  results     String?  @db.Text
+  category    String
+  featured    Boolean  @default(false)
+  content     String?  @db.Text
+  clientUrl   String?
+  technologies Technology[]
+  images      ProjectImage[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model ProjectImage {
+  id        String   @id @default(cuid())
+  url       String
+  alt       String?
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+model Technology {
+  id        String   @id @default(cuid())
+  name      String
+  icon      String?
+  category  String   // e.g. Frontend, Backend, Database
+  projects  Project[]
+}
+
+model Service {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  description String   @db.Text
+  icon        String?
+  content     String?  @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model BlogCategory {
+  id    String @id @default(cuid())
+  name  String @unique
+  slug  String @unique
+  posts BlogPost[]
+}
+
+model BlogPost {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  excerpt     String   @db.Text
+  content     String   @db.Text
+  featuredImage String?
+  published   Boolean  @default(false)
+  author      String
+  readTime    Int?     // minutes
+  categoryId  String
+  category    BlogCategory @relation(fields: [categoryId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Testimonial {
+  id        String   @id @default(cuid())
+  name      String
+  jobTitle  String
+  company   String
+  content   String   @db.Text
+  rating    Int      @default(5)
+  photoUrl  String?
+  createdAt DateTime @default(now())
+}
+
+model ContactLead {
+  id          String   @id @default(cuid())
+  name        String
+  email       String
+  company     String?
+  phone       String?
+  projectType String
+  budget      String?
+  timeline    String?
+  description String   @db.Text
+  attachment  String?
+  status      String   @default("New") // New, Contacted, In Progress, Qualified, Converted, Closed
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Job {
+  id          String   @id @default(cuid())
+  title       String
+  department  String
+  location    String
+  type        String   // Full-time, Part-time, Contract
+  description String   @db.Text
+  isActive    Boolean  @default(true)
+  applications JobApplication[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model JobApplication {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  resumeUrl String
+  coverLetter String?  @db.Text
+  jobId     String
+  job       Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
+
+model NewsletterSubscriber {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
+model FAQ {
+  id        String   @id @default(cuid())
+  question  String   @db.Text
+  answer    String   @db.Text
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+}
