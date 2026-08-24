@@ -11,6 +11,7 @@ const PROJECTS = [
     desc: "A comprehensive multi-tenant resource planning platform built for modern enterprise workforces. Designed to handle over 1M+ daily active users with sub-100ms query times.",
     results: "Reduced operational costs by 40% and improved onboarding speed by 3x.",
     tech: ["Next.js", "Node.js", "PostgreSQL", "AWS"],
+    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop",
     imageColor: "from-[#062B63] to-[#0067D9]",
     slug: "nexgen-enterprise"
   },
@@ -20,6 +21,7 @@ const PROJECTS = [
     desc: "A highly secure, cross-platform mobile banking application featuring real-time transaction processing, biometric authentication, and AI-driven spending insights.",
     results: "Achieved 4.9/5 App Store rating with 500k+ downloads in year one.",
     tech: ["React Native", "TypeScript", "NestJS", "Stripe"],
+    image: "https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=800&auto=format&fit=crop",
     imageColor: "from-[#0067D9] to-[#00C6F7]",
     slug: "fintech-mobile"
   },
@@ -29,6 +31,7 @@ const PROJECTS = [
     desc: "An advanced predictive analytics engine that leverages machine learning to forecast market trends and automate inventory management for large retailers.",
     results: "Improved forecast accuracy by 28% and saved $2.4M in overstock.",
     tech: ["Python", "PyTorch", "React", "Docker"],
+    image: "https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?q=80&w=800&auto=format&fit=crop",
     imageColor: "from-[#020B1C] to-[#062B63]",
     slug: "aura-ai"
   },
@@ -38,102 +41,95 @@ const PROJECTS = [
     desc: "A headless e-commerce storefront for a luxury fashion brand, featuring 3D product configurators, global localized checkout, and ultra-fast page loads.",
     results: "Increased conversion rate by 65% and decreased bounce rate by 40%.",
     tech: ["Next.js", "Shopify Plus", "Tailwind CSS", "Vercel"],
+    image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=800&auto=format&fit=crop",
     imageColor: "from-[#102A43] to-[#FF8A00]",
     slug: "luxe-ecommerce"
   }
 ]
 
+import { PageHeader } from "@/components/layout/PageHeader"
+
 export default function ProjectsPage() {
   return (
-    <div className="min-h-screen bg-[#F8FAFC] pt-32 pb-24">
-      {/* Header Section */}
-      <div className="container mx-auto px-4 md:px-8 mb-20">
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="max-w-3xl"
-        >
-          <h1 className="text-4xl md:text-6xl font-bold text-[#102A43] mb-6">
-            Featured Work
-          </h1>
-          <p className="text-xl text-[#475569] leading-relaxed">
-            Explore some of the digital products and technology solutions we've built for ambitious businesses.
+    <div className="min-h-screen bg-white pb-24">
+      <PageHeader 
+        title="Featured Work" 
+        breadcrumbs={[{ label: "Projects" }]} 
+        bgImage="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2000&auto=format&fit=crop"
+      />
+
+      {/* Intro */}
+      <div className="container mx-auto px-4 md:px-8 mt-24 mb-24 relative">
+        <div className="max-w-3xl text-center mx-auto">
+          <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-slate-100 border border-slate-200 text-sm font-bold text-slate-700 mb-6 tracking-wide uppercase shadow-sm">
+            Our Portfolio
+          </div>
+          <h2 className="text-4xl md:text-5xl font-extrabold text-slate-900 mb-6 tracking-tight">
+            Proof of <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#0067D9] to-[#00C6F7]">Performance</span>
+          </h2>
+          <p className="text-xl text-slate-500 leading-relaxed font-light">
+            Explore some of the digital products and technology solutions we've engineered for ambitious businesses worldwide.
           </p>
-        </motion.div>
+        </div>
       </div>
 
       {/* Projects List */}
-      <div className="container mx-auto px-4 md:px-8 space-y-24">
+      <div className="container mx-auto px-4 md:px-8 space-y-32">
         {PROJECTS.map((project, index) => (
           <motion.div 
             key={project.title}
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.6 }}
-            className={`flex flex-col ${index % 2 === 1 ? 'lg:flex-row-reverse' : 'lg:flex-row'} gap-10 items-center`}
+            transition={{ duration: 0.7, ease: "easeOut" }}
+            className={`flex flex-col ${index % 2 === 1 ? 'lg:flex-row-reverse' : 'lg:flex-row'} gap-12 lg:gap-20 items-center`}
           >
             {/* Project Image/Visual */}
-            <div className="w-full lg:w-3/5">
-              <div className="relative aspect-[16/10] rounded-2xl overflow-hidden group shadow-lg">
-                {/* Simulated Image Background */}
-                <div className={`absolute inset-0 bg-gradient-to-br ${project.imageColor} opacity-90 transition-transform duration-700 group-hover:scale-105`}></div>
+            <div className="w-full lg:w-3/5 group">
+              <div className="relative aspect-[16/10] rounded-[2rem] overflow-hidden shadow-2xl shadow-slate-200/50 border border-slate-100 transition-all duration-700 group-hover:shadow-3xl">
                 
-                {/* Decorative UI elements mimicking an app interface inside the image */}
-                <div className="absolute inset-x-8 bottom-0 h-4/5 bg-white/10 backdrop-blur-md rounded-t-xl border-t border-x border-white/20 p-6 flex flex-col gap-4 transform transition-transform duration-500 group-hover:translate-y-2">
-                   <div className="w-32 h-4 bg-white/20 rounded-full"></div>
-                   <div className="w-full h-24 bg-white/10 rounded-lg"></div>
-                   <div className="flex gap-4">
-                     <div className="w-1/2 h-32 bg-white/10 rounded-lg"></div>
-                     <div className="w-1/2 h-32 bg-white/10 rounded-lg"></div>
-                   </div>
-                </div>
+                {/* Real Image */}
+                <img 
+                  src={project.image} 
+                  alt={project.title} 
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  loading="lazy"
+                />
 
-                {/* Hover Overlay */}
-                <div className="absolute inset-0 bg-[#062B63]/60 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                  <Link href={`/projects/${project.slug}`} className="bg-white text-[#062B63] px-6 py-3 rounded-full font-bold flex items-center hover:bg-[#00C6F7] hover:text-[#020B1C] transition-colors">
-                    View Full Case Study <ExternalLink size={18} className="ml-2" />
-                  </Link>
-                </div>
+                {/* Subtle Gradient Overlay for premium feel */}
+                <div className={`absolute inset-0 bg-gradient-to-br ${project.imageColor} opacity-20 mix-blend-multiply transition-opacity duration-700 group-hover:opacity-10`}></div>
+                
               </div>
             </div>
 
             {/* Project Details */}
             <div className="w-full lg:w-2/5 flex flex-col justify-center">
-              <div className="text-sm font-bold tracking-wider text-[#0067D9] uppercase mb-4 flex items-center">
-                <span className="w-8 h-[2px] bg-[#0067D9] mr-3 inline-block"></span>
+              <div className="text-sm font-bold tracking-widest text-[#0067D9] uppercase mb-5 flex items-center">
+                <span className="w-10 h-[2px] bg-gradient-to-r from-[#0067D9] to-transparent mr-4 inline-block"></span>
                 {project.category}
               </div>
               
-              <h2 className="text-3xl md:text-4xl font-bold text-[#102A43] mb-6">
+              <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 mb-6 tracking-tight">
                 {project.title}
               </h2>
               
-              <p className="text-lg text-[#475569] mb-8 leading-relaxed">
+              <p className="text-lg md:text-xl text-slate-500 mb-8 leading-relaxed font-light">
                 {project.desc}
               </p>
 
-              <div className="bg-white p-6 rounded-xl border border-border shadow-sm mb-8 relative overflow-hidden">
-                <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#FF8A00]"></div>
-                <h4 className="font-semibold text-[#102A43] mb-2">The Result</h4>
-                <p className="text-[#475569] italic">"{project.results}"</p>
+              <div className="bg-slate-50 p-6 md:p-8 rounded-[1.5rem] border border-slate-100 shadow-sm mb-10 relative overflow-hidden transition-all duration-300 hover:shadow-md hover:bg-white">
+                <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-gradient-to-b from-[#0067D9] to-[#00C6F7]"></div>
+                <h4 className="font-extrabold text-slate-900 mb-3 text-lg">The Result</h4>
+                <p className="text-slate-600 leading-relaxed font-medium">"{project.results}"</p>
               </div>
 
-              <div className="flex flex-wrap gap-2 mb-10">
+              <div className="flex flex-wrap gap-2">
                 {project.tech.map(t => (
-                  <span key={t} className="text-sm px-3 py-1 bg-[#E8F3FF] text-[#062B63] rounded-md font-medium">
+                  <span key={t} className="text-xs md:text-sm px-4 py-2 bg-white border border-slate-200 text-slate-600 rounded-lg font-semibold shadow-sm">
                     {t}
                   </span>
                 ))}
               </div>
-
-              <Link 
-                href={`/projects/${project.slug}`} 
-                className="inline-flex items-center text-lg font-semibold text-[#0067D9] hover:text-[#FF8A00] transition-colors group w-max"
-              >
-                Read Case Study 
-                <ArrowRight size={20} className="ml-2 group-hover:translate-x-2 transition-transform" />
-              </Link>
             </div>
           </motion.div>
         ))}

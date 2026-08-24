@@ -67,14 +67,14 @@ export default function ServiceDetail() {
   return (
     <div className="min-h-screen bg-white font-sans">
       {/* PREMIUM HERO */}
-      <section className="relative pt-32 pb-24 lg:pt-40 lg:pb-32 overflow-hidden bg-[#020B1C]">
+      <section className="relative pt-20 pb-12 lg:pt-28 lg:pb-16 overflow-hidden bg-[#020B1C]">
         <div className="absolute inset-0 z-0">
           <div className={`absolute top-1/4 left-1/4 w-[500px] h-[500px] ${data.glow} rounded-full mix-blend-screen filter blur-[150px] opacity-20 animate-pulse`}></div>
           <div className="absolute bottom-0 right-0 w-full h-1/2 bg-gradient-to-t from-[#020B1C] to-transparent"></div>
         </div>
 
         <div className="container relative z-10 mx-auto px-4 md:px-8">
-          <Link href="/services" className="inline-flex items-center text-[#94A3B8] hover:text-white transition-colors mb-12 group font-medium tracking-wide text-sm">
+          <Link href="/services" className="inline-flex items-center text-[#94A3B8] hover:text-white transition-colors mb-4 group font-medium tracking-wide text-sm">
             <ArrowLeft size={16} className="mr-2 group-hover:-translate-x-1 transition-transform" /> Back to Services
           </Link>
 
@@ -109,47 +109,47 @@ export default function ServiceDetail() {
       </section>
 
       {/* CONTENT & DETAILS */}
-      <section className="py-24 bg-[#F8FAFC]">
-        <div className="container mx-auto px-4 md:px-8 grid lg:grid-cols-12 gap-16">
+      <section className="py-24 bg-white relative">
+        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] opacity-30 pointer-events-none"></div>
+        <div className="container mx-auto px-4 md:px-8 grid lg:grid-cols-12 gap-16 relative z-10">
           
           <div className="lg:col-span-8">
-            <h2 className="text-3xl md:text-4xl font-bold text-[#020B1C] mb-8 tracking-tight">Overview</h2>
-            <p className="text-xl text-[#475569] leading-relaxed mb-16 font-light">
+            <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-6 tracking-tight">Overview</h2>
+            <p className="text-xl md:text-2xl text-slate-600 leading-relaxed mb-20 font-medium">
               {data.description}
             </p>
 
-            <h2 className="text-3xl md:text-4xl font-bold text-[#020B1C] mb-8 tracking-tight">What We Deliver</h2>
-            <div className="grid sm:grid-cols-2 gap-8">
+            <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-10 tracking-tight">What We Deliver</h2>
+            <div className="grid sm:grid-cols-2 gap-6">
               {data.features.map((feature: any, i: number) => (
-                <div key={i} className="bg-white p-8 rounded-3xl border border-[#DCE8F5] shadow-xl shadow-[#062B63]/5">
-                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${data.color} opacity-10 mb-6 flex items-center justify-center`}></div>
-                  <div className="absolute w-12 h-12 -mt-18 flex items-center justify-center text-[#020B1C]">
+                <div key={i} className="group bg-slate-50 p-8 rounded-3xl border border-slate-100 hover:bg-white hover:shadow-2xl hover:shadow-slate-200/50 transition-all duration-500">
+                  <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${data.color} flex items-center justify-center mb-6 shadow-md text-white group-hover:scale-110 transition-transform duration-500`}>
                     <CheckCircle2 size={24} />
                   </div>
-                  <h3 className="text-xl font-bold text-[#020B1C] mb-3">{feature.title}</h3>
-                  <p className="text-[#475569] leading-relaxed font-light">{feature.desc}</p>
+                  <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-slate-900 group-hover:to-slate-600 transition-colors">{feature.title}</h3>
+                  <p className="text-slate-600 leading-relaxed">{feature.desc}</p>
                 </div>
               ))}
             </div>
           </div>
 
           <div className="lg:col-span-4">
-            <div className="bg-white p-10 rounded-[2.5rem] border border-[#DCE8F5] shadow-2xl shadow-[#062B63]/5 sticky top-32">
-              <h3 className="text-2xl font-bold text-[#020B1C] mb-6 tracking-tight">Technologies</h3>
-              <div className="flex flex-wrap gap-3 mb-10">
+            <div className="bg-white p-8 md:p-10 rounded-[2rem] border border-slate-200 shadow-xl shadow-slate-200/50">
+              <h3 className="text-xl font-extrabold text-slate-900 mb-6 uppercase tracking-wider text-sm">Technologies Used</h3>
+              <div className="flex flex-wrap gap-2.5 mb-10">
                 {data.tech.map((tech: string) => (
-                  <span key={tech} className="px-4 py-2 bg-[#F1F5F9] text-[#102A43] font-medium rounded-lg text-sm border border-[#E2E8F0]">
+                  <span key={tech} className="px-4 py-2 bg-slate-50 text-slate-700 font-semibold rounded-xl text-sm border border-slate-200 hover:border-slate-300 transition-colors cursor-default">
                     {tech}
                   </span>
                 ))}
               </div>
 
-              <div className="w-full h-px bg-[#E2E8F0] mb-10"></div>
+              <div className="w-full h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent mb-10"></div>
 
-              <h3 className="text-2xl font-bold text-[#020B1C] mb-4 tracking-tight">Start this project</h3>
-              <p className="text-[#475569] font-light mb-8">Ready to bring this vision to life? Let our elite engineering team handle it.</p>
+              <h3 className="text-2xl font-bold text-slate-900 mb-4 tracking-tight">Ready to build?</h3>
+              <p className="text-slate-500 mb-8 leading-relaxed">Partner with our elite engineering team to bring this vision to life.</p>
               
-              <Button asChild className={`w-full h-14 text-lg font-semibold rounded-2xl bg-gradient-to-r ${data.color} text-white shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all`}>
+              <Button asChild className={`w-full h-14 text-lg font-bold rounded-2xl bg-gradient-to-r ${data.color} text-white shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/40 hover:-translate-y-1 transition-all duration-300`}>
                 <Link href="/contact">Consult with Us</Link>
               </Button>
             </div>

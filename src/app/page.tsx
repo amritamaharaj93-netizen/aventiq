@@ -5,7 +5,7 @@ import { useState, useEffect } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { ArrowRight, Code2, Smartphone, Cloud, Cpu, Database, Blocks, LayoutTemplate, ShieldCheck, Zap } from "lucide-react"
+import { ArrowRight, Code2, Smartphone, Cloud, Cpu, Database, Blocks, LayoutTemplate, ShieldCheck, Zap, Palette, Server, Megaphone, Search, Target, MousePointerClick, Hexagon, Triangle, Box, Command, Layers, User, Mail, Phone, MapPin, Send, Briefcase, Users, Award, Calendar } from "lucide-react"
 
 // Using server component for the page, and we'll extract smaller animated client components if needed,
 // but since we want Framer Motion we might just make this a client component, or better:
@@ -14,12 +14,15 @@ import { ArrowRight, Code2, Smartphone, Cloud, Cpu, Database, Blocks, LayoutTemp
 import { motion, AnimatePresence } from "framer-motion"
 
 const SERVICES = [
-  { icon: LayoutTemplate, title: "Web Development", desc: "High-performance, accessible, and modern web applications built for scale." },
-  { icon: Cloud, title: "SaaS Development", desc: "End-to-end multi-tenant software as a service platform engineering." },
-  { icon: Smartphone, title: "Mobile App Development", desc: "Native-feeling iOS and Android applications with single codebases." },
-  { icon: Cpu, title: "AI Development", desc: "Intelligent automation and integrations powered by modern machine learning." },
-  { icon: Database, title: "API & Backend", desc: "Secure, fast, and scalable architectures designed for complex data flows." },
-  { icon: Blocks, title: "Custom Software", desc: "Tailored software solutions to solve your specific business challenges." },
+  { icon: LayoutTemplate, title: "Web Development", desc: "High-performance, accessible, and modern web applications built for scale.", slug: "web-development" },
+  { icon: Cloud, title: "SaaS Development", desc: "End-to-end multi-tenant software as a service platform engineering.", slug: "saas-development" },
+  { icon: Palette, title: "UI/UX Design", desc: "Beautiful, intuitive interfaces and user experiences that delight and convert.", slug: "ui-ux-design" },
+  { icon: Cpu, title: "AI Development", desc: "Intelligent automation and integrations powered by modern machine learning.", slug: "ai-development" },
+  { icon: Server, title: "Cloud & DevOps", desc: "Scalable cloud infrastructure, CI/CD pipelines, and reliable deployment workflows.", slug: "cloud-devops" },
+  { icon: Megaphone, title: "Digital Marketing", desc: "Data-driven marketing strategies that amplify your brand and drive growth.", slug: "digital-marketing" },
+  { icon: Search, title: "SEO", desc: "Search engine optimization that boosts visibility and organic traffic.", slug: "seo" },
+  { icon: Target, title: "Meta Ads", desc: "High-ROI Facebook and Instagram ad campaigns that reach your target audience.", slug: "meta-ads" },
+  { icon: MousePointerClick, title: "Google Ads", desc: "Strategic Google Ads management to maximize conversions and minimize ad spend.", slug: "google-ads" },
 ]
 
 export default function Home() {
@@ -32,15 +35,7 @@ export default function Home() {
       cta: "Start a Project",
       accent: "#0067D9",
       accentEnd: "#00C6F7",
-      cardLabel: "SaaS Dashboard",
-      cardTitle: "Enterprise Analytics Platform",
-      cardSubtitle: "Real-time insights for modern businesses",
-      metrics: [
-        { label: "Revenue", value: "$188K", change: "+24%" },
-        { label: "Users", value: "12.4K", change: "+18%" },
-        { label: "Uptime", value: "99.9%", change: "" },
-      ],
-      chartData: [40, 60, 100, 80, 50, 70, 90, 60, 80],
+      image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=1200",
     },
     {
       badge: "Mobile Excellence",
@@ -50,15 +45,7 @@ export default function Home() {
       cta: "Build Your App",
       accent: "#10B981",
       accentEnd: "#34D399",
-      cardLabel: "Mobile App",
-      cardTitle: "HealthTrack Pro",
-      cardSubtitle: "AI-powered fitness & wellness platform",
-      metrics: [
-        { label: "Downloads", value: "340K", change: "+42%" },
-        { label: "Rating", value: "4.8★", change: "" },
-        { label: "DAU", value: "89K", change: "+31%" },
-      ],
-      chartData: [30, 50, 45, 70, 85, 60, 95, 80, 100],
+      image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&q=80&w=1200",
     },
     {
       badge: "E-Commerce Solutions",
@@ -68,15 +55,7 @@ export default function Home() {
       cta: "Launch Your Store",
       accent: "#8B5CF6",
       accentEnd: "#A78BFA",
-      cardLabel: "E-Commerce",
-      cardTitle: "LuxeCart Platform",
-      cardSubtitle: "Next-gen shopping experience",
-      metrics: [
-        { label: "Orders", value: "8.2K", change: "+56%" },
-        { label: "GMV", value: "$2.4M", change: "+38%" },
-        { label: "Conv.", value: "4.7%", change: "+12%" },
-      ],
-      chartData: [60, 45, 80, 55, 90, 70, 85, 95, 75],
+      image: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&q=80&w=1200",
     },
     {
       badge: "AI-Powered Automation",
@@ -86,47 +65,40 @@ export default function Home() {
       cta: "Explore AI Solutions",
       accent: "#F59E0B",
       accentEnd: "#FBBF24",
-      cardLabel: "AI Platform",
-      cardTitle: "NeuralOps Suite",
-      cardSubtitle: "Intelligent workflow automation",
-      metrics: [
-        { label: "Tasks", value: "45K", change: "+67%" },
-        { label: "Accuracy", value: "97.3%", change: "+5%" },
-        { label: "Saved", value: "1.2K hrs", change: "" },
-      ],
-      chartData: [20, 40, 35, 65, 50, 80, 70, 90, 100],
+      image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=1200",
     },
   ]
 
   const [activeSlide, setActiveSlide] = useState(0)
   const [direction, setDirection] = useState(1)
+  const [openFaq, setOpenFaq] = useState<number | null>(0)
   const testimonials = [
     {
-      name: "Sarah Chen",
-      role: "CTO, NexGen Solutions",
-      quote: "Aventiq transformed our legacy system into a modern SaaS platform. Their team delivered ahead of schedule with exceptional code quality. The architecture handles 10x our original traffic. Our experience throughout the engagement was incredible. We were guided whenever we had queries and the engineering staff is highly professional.",
+      name: "Rahul Desai",
+      role: "CTO, TechVanguard India",
+      quote: "Aventiq transformed our legacy system into a modern SaaS platform. Their team delivered ahead of schedule with exceptional code quality. The architecture handles 10x our original traffic across India. Our experience throughout the engagement was incredible. We were guided whenever we had queries and the engineering staff is highly professional.",
       rating: 5,
     },
     {
-      name: "Michael Roberts",
-      role: "Founder, CloudSync",
-      quote: "Working with Aventiq felt like having an in-house engineering team. Their deep understanding of cloud architecture and DevOps practices helped us reduce infrastructure costs by 40%. Highly recommend them to anyone needing serious backend scaling.",
+      name: "Vikram Mehta",
+      role: "Founder, CloudSync Networks",
+      quote: "Working with Aventiq felt like having an in-house engineering team in Bengaluru. Their deep understanding of cloud architecture and DevOps practices helped us reduce infrastructure costs by 40%. Highly recommend them to anyone needing serious backend scaling for the Indian market.",
       rating: 5,
     },
     {
       name: "Priya Sharma",
-      role: "VP of Product, DataFlow",
-      quote: "The mobile application Aventiq built for us has a 4.8-star rating on both app stores. Their attention to UX details and smooth animations set our product apart from every competitor. An absolute joy to collaborate with from start to finish.",
+      role: "VP of Product, DataFlow Systems",
+      quote: "The mobile application Aventiq built for us has a 4.8-star rating and helped us seamlessly expand into Tier 2 and Tier 3 cities. Their attention to UX details and smooth animations set our product apart from every competitor. An absolute joy to collaborate with from start to finish.",
       rating: 5,
     },
     {
-      name: "David Park",
+      name: "Anjali Kapoor",
       role: "Director of Engineering, FinTech Corp",
-      quote: "They didn't just write code; they partnered with us to fundamentally improve our product strategy. The best technical partners we've ever hired. The migration was completely seamless without any downtime.",
+      quote: "They didn't just write code; they partnered with us to fundamentally improve our product strategy for the UPI ecosystem. The best technical partners we've ever hired in India. The migration was completely seamless without any downtime.",
       rating: 5,
     },
   ]
-  const [activeTestimonial, setActiveTestimonial] = useState(0)
+
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -213,62 +185,21 @@ export default function Home() {
                     </div>
                   </div>
 
-                  {/* Right Side: Visual Card */}
-                  <div className="hidden lg:block relative">
-                    <div
-                      className="rounded-[2rem] overflow-hidden border border-white/[0.06] p-8 shadow-2xl relative"
-                      style={{ background: `linear-gradient(145deg, #111827, #0C1222 60%, ${HERO_SLIDES[activeSlide].accent}08)` }}
-                    >
-                      {/* Window Top Bar */}
-                      <div className="flex items-center justify-between mb-8">
-                        <div className="flex items-center gap-3">
-                          <div className="flex gap-1.5">
-                            <div className="w-3 h-3 rounded-full bg-white/10"></div>
-                            <div className="w-3 h-3 rounded-full bg-white/10"></div>
-                            <div className="w-3 h-3 rounded-full bg-white/10"></div>
-                          </div>
-                          <div className="px-3 py-1 rounded-lg bg-white/5 text-[11px] text-white/50 font-medium">{HERO_SLIDES[activeSlide].cardLabel}</div>
-                        </div>
-                        <div className="px-3 py-1 rounded-full text-[11px] font-semibold" style={{ backgroundColor: `${HERO_SLIDES[activeSlide].accent}20`, color: HERO_SLIDES[activeSlide].accent }}>
-                          Live
-                        </div>
-                      </div>
-
-                      {/* Card Title */}
-                      <h3 className="text-2xl font-bold text-white mb-1">{HERO_SLIDES[activeSlide].cardTitle}</h3>
-                      <p className="text-sm text-slate-400 mb-8">{HERO_SLIDES[activeSlide].cardSubtitle}</p>
-
-                      {/* Metrics */}
-                      <div className="grid grid-cols-3 gap-4 mb-8">
-                        {HERO_SLIDES[activeSlide].metrics.map((m, mi) => (
-                          <div key={mi} className="bg-white/[0.04] rounded-xl p-4 border border-white/[0.06]">
-                            <div className="text-[11px] text-slate-500 font-medium mb-2">{m.label}</div>
-                            <div className="text-xl font-bold text-white">{m.value}</div>
-                            {m.change && <div className="text-xs font-semibold mt-1" style={{ color: HERO_SLIDES[activeSlide].accent }}>{m.change}</div>}
-                          </div>
-                        ))}
-                      </div>
-
-                      {/* Bar Chart */}
-                      <div className="bg-white/[0.03] rounded-xl p-5 border border-white/[0.06]">
-                        <div className="flex items-center justify-between mb-4">
-                          <span className="text-xs font-medium text-slate-400">Performance</span>
-                          <span className="text-xs font-medium" style={{ color: HERO_SLIDES[activeSlide].accent }}>Last 9 months</span>
-                        </div>
-                        <div className="flex items-end justify-between h-28 gap-2">
-                          {HERO_SLIDES[activeSlide].chartData.map((h, ci) => (
-                            <motion.div
-                              key={`${activeSlide}-${ci}`}
-                              initial={{ height: 0 }}
-                              animate={{ height: `${h}%` }}
-                              transition={{ duration: 0.6, delay: ci * 0.05, ease: [0.22, 1, 0.36, 1] }}
-                              className="w-full rounded-md"
-                              style={{
-                                backgroundColor: ci === HERO_SLIDES[activeSlide].chartData.indexOf(Math.max(...HERO_SLIDES[activeSlide].chartData)) ? HERO_SLIDES[activeSlide].accent : `${HERO_SLIDES[activeSlide].accent}30`,
-                              }}
-                            ></motion.div>
-                          ))}
-                        </div>
+                  {/* Right Side: Content Image */}
+                  <div className="block relative mt-4 lg:mt-0">
+                    <div className="relative">
+                      {/* Glow behind image */}
+                      <div className="absolute -inset-4 rounded-[2.5rem] blur-2xl opacity-30" style={{ backgroundColor: HERO_SLIDES[activeSlide].accent }}></div>
+                      
+                      <div className="relative rounded-[2rem] overflow-hidden border border-white/[0.1] shadow-2xl">
+                        <img 
+                          src={HERO_SLIDES[activeSlide].image} 
+                          alt={HERO_SLIDES[activeSlide].headline}
+                          draggable={false}
+                          className="w-full h-[280px] md:h-[400px] lg:h-[480px] object-cover select-none cursor-pointer"
+                        />
+                        {/* Subtle gradient overlay at bottom */}
+                        <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-gradient-to-t from-[#030712]/60 to-transparent"></div>
                       </div>
                     </div>
                   </div>
@@ -297,43 +228,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* TRUSTED CLIENTS */}
-      <section className="py-[40px] bg-white border-b border-border">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-sm uppercase tracking-wider font-semibold text-[#64748B] mb-12">Trusted by Businesses Building What's Next</h2>
-          
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-y-12">
-            {['Acme Corp', 'GlobalTech', 'Innovate', 'NexGen', 'FutureSoft'].map((client, i) => (
-              <motion.div 
-                key={i} 
-                whileHover={{ y: -5 }}
-                className="flex flex-col items-center text-center px-4 relative group cursor-default"
-              >
-                {/* Circular element mirroring the features UI */}
-                <div className="w-20 h-20 rounded-full border-4 border-[#00C6F7]/20 p-1 mb-4 flex items-center justify-center bg-transparent group-hover:border-[#00C6F7]/50 transition-colors duration-300">
-                  <div className="w-full h-full rounded-full bg-gradient-to-br from-[#0067D9] to-[#020B1C] flex items-center justify-center text-white shadow-md text-2xl font-bold font-mono">
-                    {client.charAt(0)}
-                  </div>
-                </div>
-                
-                <div className="text-lg font-bold font-mono text-[#102A43] group-hover:text-[#0067D9] transition-colors duration-300">
-                  {client}
-                </div>
-
-                {/* Short Vertical Divider mirroring the features UI */}
-                {i !== 4 && (
-                  <div className="absolute right-0 top-[25%] bottom-[15%] w-px bg-slate-200 hidden md:block"></div>
-                )}
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* SERVICES */}
       <section className="py-[80px] relative bg-[#F0F7FF] overflow-hidden">
-        {/* Premium Geometric Texture Layer */}
-        <div className="absolute inset-0 opacity-[0.4]" style={{ backgroundImage: 'radial-gradient(#94A3B8 1px, transparent 1px)', backgroundSize: '32px 32px' }}></div>
         
         {/* Atmospheric Glow Orbs */}
         <div className="absolute top-[-20%] right-[-10%] w-[600px] h-[600px] bg-blue-200/40 rounded-full blur-[120px] pointer-events-none"></div>
@@ -341,11 +237,15 @@ export default function Home() {
         
         <div className="container mx-auto px-4 md:px-8 relative z-10">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="text-3xl md:text-5xl font-bold text-[#102A43] mb-6 relative inline-block">
+            <div className="inline-flex items-center gap-3 mb-4">
+              <div className="w-8 h-[2px] bg-[#0067D9]"></div>
+              <span className="text-[#102A43] font-bold text-sm tracking-[0.15em] uppercase">Our Services</span>
+              <div className="w-8 h-[2px] bg-[#0067D9]"></div>
+            </div>
+            <h2 className="text-4xl md:text-5xl font-extrabold text-[#102A43] tracking-tight mb-6">
               What We Build
-              <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-12 h-1 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full"></div>
             </h2>
-            <p className="text-lg text-[#475569] mt-8">
+            <p className="text-lg text-[#475569]">
               From strategy to deployment, Aventiq delivers technology solutions designed to solve real business problems and create long-term value.
             </p>
           </div>
@@ -387,21 +287,14 @@ export default function Home() {
                   {/* Subtle Horizontal Divider */}
                   <div className="w-full h-px bg-slate-100 mb-6"></div>
                   
-                  {/* Bottom Action Bar (Explore & Get Quote) */}
-                  <div className="w-full flex items-center justify-between mt-auto">
+                  {/* Bottom Action Bar */}
+                  <div className="w-full flex items-center justify-center mt-auto">
                     <Link 
-                      href="/services" 
+                      href={`/services/${service.slug}`} 
                       className="flex items-center text-sm font-bold group/link"
                       style={{ color: theme.main }}
                     >
                       Explore <ArrowRight size={16} className="ml-1 group-hover/link:translate-x-1 transition-transform" />
-                    </Link>
-                    <Link 
-                      href="/contact" 
-                      className="px-5 py-2.5 rounded-xl text-sm font-bold transition-opacity hover:opacity-80"
-                      style={{ backgroundColor: theme.light, color: theme.main }}
-                    >
-                      Get Quote
                     </Link>
                   </div>
                 </motion.div>
@@ -412,127 +305,225 @@ export default function Home() {
       </section>
 
       {/* WHY CHOOSE AVENTIQ */}
-      <section className="py-[40px] bg-[#031A3D] text-white">
-        <div className="container mx-auto px-4 md:px-8 grid lg:grid-cols-2 gap-16 items-center">
-          <div>
-            <h2 className="text-3xl md:text-5xl font-bold mb-6">Why Aventiq?</h2>
-            <p className="text-[#CBD5E1] text-lg mb-8">
-              We combine modern engineering, thoughtful design, and business understanding to build technology that creates measurable impact.
-            </p>
-            <ul className="space-y-4 mb-10">
-              {['Experienced Developers', 'Modern Technology Stack', 'Scalable Architecture', 'Transparent Communication'].map((item, i) => (
-                <li key={i} className="flex items-center text-lg">
-                  <ShieldCheck className="text-[#00C6F7] mr-3" size={24} />
-                  {item}
-                </li>
-              ))}
-            </ul>
-            <Button asChild variant="accent" size="lg" className="rounded-full">
-              <Link href="/about">Discover Our Approach</Link>
-            </Button>
-          </div>
-          
-          <div className="grid grid-cols-2 gap-6">
-            <div className="bg-[#041A3B] p-8 rounded-2xl border border-white/5 text-center">
-              <div className="text-4xl md:text-5xl font-bold text-[#00C6F7] mb-2">50+</div>
-              <div className="text-[#CBD5E1]">Projects Delivered</div>
+      <section className="py-[80px] bg-[#031A3D] text-white">
+        <div className="container mx-auto px-4 md:px-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Card 1 */}
+            <div className="bg-[#0f1115] p-8 rounded-[1.5rem] border border-white/5 flex flex-col items-center text-center shadow-2xl">
+              <div className="w-[4.5rem] h-[4.5rem] rounded-[1.25rem] bg-white/5 border border-white/10 flex items-center justify-center mb-6">
+                <Briefcase className="text-[#00C6F7] w-8 h-8" strokeWidth={1.5} />
+              </div>
+              <div className="text-[2.75rem] font-extrabold text-white mb-5 tracking-tight leading-none">
+                50<span className="text-[#00C6F7]">+</span>
+              </div>
+              <div className="w-10 h-1 bg-[#00C6F7] rounded-full mb-6"></div>
+              <div className="text-[#94A3B8] text-[11px] font-bold tracking-[0.2em] uppercase">
+                Projects Delivered
+              </div>
             </div>
-            <div className="bg-[#041A3B] p-8 rounded-2xl border border-white/5 text-center translate-y-8">
-              <div className="text-4xl md:text-5xl font-bold text-[#00C6F7] mb-2">30+</div>
-              <div className="text-[#CBD5E1]">Happy Clients</div>
+
+            {/* Card 2 */}
+            <div className="bg-[#0f1115] p-8 rounded-[1.5rem] border border-white/5 flex flex-col items-center text-center shadow-2xl">
+              <div className="w-[4.5rem] h-[4.5rem] rounded-[1.25rem] bg-white/5 border border-white/10 flex items-center justify-center mb-6">
+                <Users className="text-[#FF8A00] w-8 h-8" strokeWidth={1.5} />
+              </div>
+              <div className="text-[2.75rem] font-extrabold text-white mb-5 tracking-tight leading-none">
+                30<span className="text-[#FF8A00]">+</span>
+              </div>
+              <div className="w-10 h-1 bg-[#FF8A00] rounded-full mb-6"></div>
+              <div className="text-[#94A3B8] text-[11px] font-bold tracking-[0.2em] uppercase">
+                Happy Clients
+              </div>
             </div>
-            <div className="bg-[#041A3B] p-8 rounded-2xl border border-white/5 text-center">
-              <div className="text-4xl md:text-5xl font-bold text-[#FF8A00] mb-2">10+</div>
-              <div className="text-[#CBD5E1]">Technologies</div>
+
+            {/* Card 3 */}
+            <div className="bg-[#0f1115] p-8 rounded-[1.5rem] border border-white/5 flex flex-col items-center text-center shadow-2xl">
+              <div className="w-[4.5rem] h-[4.5rem] rounded-[1.25rem] bg-white/5 border border-white/10 flex items-center justify-center mb-6">
+                <Layers className="text-[#00C6F7] w-8 h-8" strokeWidth={1.5} />
+              </div>
+              <div className="text-[2.75rem] font-extrabold text-white mb-5 tracking-tight leading-none">
+                10<span className="text-[#00C6F7]">+</span>
+              </div>
+              <div className="w-10 h-1 bg-[#00C6F7] rounded-full mb-6"></div>
+              <div className="text-[#94A3B8] text-[11px] font-bold tracking-[0.2em] uppercase">
+                Technologies
+              </div>
             </div>
-            <div className="bg-[#041A3B] p-8 rounded-2xl border border-white/5 text-center translate-y-8">
-              <div className="text-4xl md:text-5xl font-bold text-[#FF8A00] mb-2">5+</div>
-              <div className="text-[#CBD5E1]">Years Experience</div>
+
+            {/* Card 4 */}
+            <div className="bg-[#0f1115] p-8 rounded-[1.5rem] border border-white/5 flex flex-col items-center text-center shadow-2xl">
+              <div className="w-[4.5rem] h-[4.5rem] rounded-[1.25rem] bg-white/5 border border-white/10 flex items-center justify-center mb-6">
+                <Calendar className="text-[#FF8A00] w-8 h-8" strokeWidth={1.5} />
+              </div>
+              <div className="text-[2.75rem] font-extrabold text-white mb-5 tracking-tight leading-none">
+                5<span className="text-[#FF8A00]">+</span>
+              </div>
+              <div className="w-10 h-1 bg-[#FF8A00] rounded-full mb-6"></div>
+              <div className="text-[#94A3B8] text-[11px] font-bold tracking-[0.2em] uppercase">
+                Years Experience
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* TESTIMONIALS (List UI based on image) */}
-      <section className="py-[40px] bg-[#F4F8FA] border-y border-slate-100">
+      {/* TESTIMONIALS */}
+      <section className="py-[80px] bg-[#F8FAFC] border-y border-slate-100 overflow-hidden">
         <div className="container mx-auto px-4 md:px-8">
           
-          <div className="mb-16 max-w-3xl">
-             <h2 className="text-4xl md:text-5xl font-light text-[#00428A] tracking-tight mb-4">
-                Real Stories of <span className="font-semibold text-[#102A43]">Growth & Success</span>
+          <div className="mb-16 text-center">
+             <div className="inline-flex items-center gap-3 mb-4">
+               <div className="w-8 h-[2px] bg-[#FFB800]"></div>
+               <span className="text-[#102A43] font-bold text-sm tracking-[0.15em] uppercase">Client Reviews</span>
+               <div className="w-8 h-[2px] bg-[#FFB800]"></div>
+             </div>
+             <h2 className="text-4xl md:text-5xl font-extrabold text-[#102A43] tracking-tight">
+                Real Stories of Growth & Success
              </h2>
-             <p className="text-lg text-slate-600 font-medium">
-                Read true experiences shared by our clients, detailing their journeys to scale supported by our engineering teams.
-             </p>
           </div>
 
-          <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-start">
-             
-             {/* Left side: Active Testimonial Card */}
-             <div className="flex-1 w-full relative bg-white rounded-3xl p-10 md:p-14 shadow-[0_8px_30px_rgba(0,0,0,0.04)] overflow-hidden">
-                {/* Faint large quote mark */}
-                <div className="absolute top-10 right-10 text-[180px] font-bold text-slate-50 leading-none select-none pointer-events-none">
-                  &rdquo;
-                </div>
-                
-                <div className="relative z-10">
-                   <div className="text-sm font-bold tracking-widest text-[#D97706] uppercase mb-8">
-                      Verified Client Partner
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8 gap-y-12">
+             {testimonials.map((testimonial, idx) => (
+                <div 
+                  key={idx} 
+                  className="relative bg-white rounded-3xl p-8 shadow-[0_10px_40px_rgba(0,0,0,0.06)] flex flex-col h-full mt-4 lg:mt-6"
+                >
+                   {/* Overlapping Quote Icon */}
+                   <div className="absolute -top-5 -left-4 w-12 h-12 bg-[#FFB800] rounded-full flex items-center justify-center shadow-md">
+                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="text-[#102A43]">
+                       <path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z" />
+                       <path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z" />
+                     </svg>
                    </div>
-                   
-                   <AnimatePresence mode="wait">
-                     <motion.div
-                       key={activeTestimonial}
-                       initial={{ opacity: 0, y: 10 }}
-                       animate={{ opacity: 1, y: 0 }}
-                       exit={{ opacity: 0, y: -10 }}
-                       transition={{ duration: 0.3 }}
-                     >
-                       <p className="text-[22px] md:text-2xl text-[#334155] leading-[1.7] font-light italic">
-                         {testimonials[activeTestimonial].quote}
-                       </p>
-                     </motion.div>
-                   </AnimatePresence>
+
+                   {/* Stars */}
+                   <div className="flex gap-1 mb-5">
+                     {[...Array(5)].map((_, i) => (
+                       <svg key={i} className="w-4 h-4 text-[#FFB800] fill-current" viewBox="0 0 24 24">
+                         <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                       </svg>
+                     ))}
+                   </div>
+
+                   {/* Quote */}
+                   <div className="flex-1">
+                     <p className="text-slate-500 italic text-[14.5px] leading-relaxed">
+                        "{testimonial.quote}"
+                     </p>
+                   </div>
+
+                   {/* User Info */}
+                   <div className="flex items-center gap-4 mt-8">
+                      <div className="w-11 h-11 rounded-full bg-[#102A43] flex items-center justify-center text-white font-bold text-sm shrink-0">
+                         {testimonial.name.charAt(0)}
+                      </div>
+                      <div className="flex flex-col">
+                         <span className="text-[#102A43] font-bold text-[14px]">
+                            {testimonial.name}
+                         </span>
+                         <span className="text-slate-400 text-[12px]">
+                            {testimonial.role}
+                         </span>
+                      </div>
+                   </div>
                 </div>
-             </div>
+             ))}
+          </div>
 
-             {/* Right side: List of Clients */}
-             <div className="w-full lg:w-[450px] flex flex-col gap-3">
-                {testimonials.map((testimonial, idx) => {
-                   const isActive = idx === activeTestimonial
-                   
-                   return (
-                     <button
-                       key={idx}
-                       onClick={() => setActiveTestimonial(idx)}
-                       className={`w-full text-left px-6 py-5 rounded-2xl transition-all duration-300 border-2 flex items-center justify-between ${
-                         isActive 
-                           ? "bg-white border-teal-200 shadow-sm" 
-                           : "bg-white/50 border-transparent hover:bg-white hover:border-slate-100"
-                       }`}
-                     >
-                       <div>
-                         <div className={`font-bold text-[17px] mb-1 ${isActive ? 'text-[#102A43]' : 'text-[#334155]'}`}>
-                           {testimonial.name}
-                         </div>
-                         <div className="text-sm text-slate-400 font-medium">
-                           {testimonial.role}
-                         </div>
-                       </div>
-                       
-                       {isActive && (
-                         <motion.div 
-                           layoutId="activeIndicator"
-                           className="w-2.5 h-2.5 rounded-full bg-teal-400"
-                         />
-                       )}
-                     </button>
-                   )
-                })}
-             </div>
+        </div>
+      </section>
 
+      {/* TRUSTED PARTNERS */}
+      <section className="relative overflow-hidden bg-[#0A1E3D]">
+        <style dangerouslySetInnerHTML={{__html: `
+          @keyframes scroll-left {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+          }
+          @keyframes scroll-right {
+            0% { transform: translateX(-50%); }
+            100% { transform: translateX(0); }
+          }
+          .marquee-left {
+            animation: scroll-left 35s linear infinite;
+            display: flex;
+            width: max-content;
+          }
+          .marquee-right {
+            animation: scroll-right 35s linear infinite;
+            display: flex;
+            width: max-content;
+          }
+          .marquee-left:hover, .marquee-right:hover {
+            animation-play-state: paused;
+          }
+        `}} />
+
+        {/* Subtle background texture */}
+        <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(circle, #fff 1px, transparent 1px)', backgroundSize: '24px 24px' }}></div>
+        
+        {/* Glow orbs */}
+        <div className="absolute top-0 left-[20%] w-[400px] h-[200px] bg-[#0067D9]/10 rounded-full blur-[100px] pointer-events-none"></div>
+        <div className="absolute bottom-0 right-[20%] w-[400px] h-[200px] bg-[#00C6F7]/8 rounded-full blur-[100px] pointer-events-none"></div>
+
+        {/* Top gradient line */}
+        <div className="h-px bg-gradient-to-r from-transparent via-[#0067D9]/50 to-transparent"></div>
+
+        <div className="py-14 md:py-20 relative z-10">
+          {/* Section Header */}
+          <div className="container mx-auto px-4 md:px-8 text-center mb-14">
+            <div className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full bg-white/[0.04] border border-white/[0.08] mb-6">
+              <div className="w-1.5 h-1.5 rounded-full bg-[#00C6F7] animate-pulse"></div>
+              <span className="text-[12px] font-bold text-[#00C6F7] tracking-[0.2em] uppercase">Our Trusted Partners</span>
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight">
+              Companies We've Built <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#0067D9] to-[#00C6F7]">& Delivered For</span>
+            </h2>
+          </div>
+
+          {/* Row 1 — scrolls left */}
+          <div className="w-full overflow-hidden mb-5">
+            <div className="marquee-left items-center">
+              {[...Array(4)].map((_, i) => (
+                <div key={i} className="flex items-center shrink-0">
+                  {['TechVanguard India', 'CloudSync Networks', 'DataFlow Systems', 'FinTech Corp', 'NexGen Solutions', 'Innovate Labs'].map((company, j) => (
+                    <div
+                      key={j}
+                      className="shrink-0 mx-3 px-10 py-5 rounded-2xl bg-gradient-to-br from-white/[0.07] to-white/[0.02] border border-white/[0.12] backdrop-blur-md shadow-[inset_0_1px_1px_rgba(255,255,255,0.06),0_4px_20px_rgba(0,0,0,0.2)] hover:from-white/[0.12] hover:to-white/[0.05] hover:border-[#00C6F7]/40 hover:shadow-[inset_0_1px_1px_rgba(255,255,255,0.1),0_4px_30px_rgba(0,198,247,0.1)] transition-all duration-500 group cursor-default"
+                    >
+                      <span className="font-semibold text-[15px] text-white/80 tracking-[0.04em] whitespace-nowrap group-hover:text-white transition-colors duration-500">
+                        {company}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Row 2 — scrolls right */}
+          <div className="w-full overflow-hidden">
+            <div className="marquee-right items-center">
+              {[...Array(4)].map((_, i) => (
+                <div key={i} className="flex items-center shrink-0">
+                  {['Acme Corp', 'GlobalTech', 'FutureSoft', 'RapidScale AI', 'MetaEdge', 'Zenith Digital', 'Prism Analytics'].map((company, j) => (
+                    <div
+                      key={j}
+                      className="shrink-0 mx-3 px-10 py-5 rounded-2xl bg-gradient-to-br from-white/[0.07] to-white/[0.02] border border-white/[0.12] backdrop-blur-md shadow-[inset_0_1px_1px_rgba(255,255,255,0.06),0_4px_20px_rgba(0,0,0,0.2)] hover:from-white/[0.12] hover:to-white/[0.05] hover:border-[#00C6F7]/40 hover:shadow-[inset_0_1px_1px_rgba(255,255,255,0.1),0_4px_30px_rgba(0,198,247,0.1)] transition-all duration-500 group cursor-default"
+                    >
+                      <span className="font-semibold text-[15px] text-white/80 tracking-[0.04em] whitespace-nowrap group-hover:text-white transition-colors duration-500">
+                        {company}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
+
+        {/* Bottom gradient line */}
+        <div className="h-px bg-gradient-to-r from-transparent via-[#00C6F7]/50 to-transparent"></div>
       </section>
 
       {/* BLOG / INSIGHTS */}
@@ -540,7 +531,7 @@ export default function Home() {
         {/* Background Image with Overlay */}
         <div className="absolute inset-0 z-0 bg-[#F4F8FA]">
           <div 
-            className="absolute inset-0 opacity-[0.25]" 
+            className="absolute inset-0 opacity-20"
             style={{
               backgroundImage: 'url("https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=2000")',
               backgroundSize: 'cover',
@@ -647,78 +638,357 @@ export default function Home() {
         </div>
       </section>
 
-      {/* FAQ (Clean Light Minimalist Theme) */}
-      <section className="py-[40px] bg-white relative">
-        <div className="container mx-auto px-4 md:px-8 max-w-3xl">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-5xl font-extrabold text-[#102A43] tracking-tight mb-4">
-              Frequently Asked Questions
+      {/* TECHNOLOGIES */}
+      <section className="py-[100px] bg-[#0A1E3D] relative overflow-hidden">
+        {/* Glows */}
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#00C6F7]/5 rounded-full blur-[100px] pointer-events-none"></div>
+        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[#0067D9]/10 rounded-full blur-[100px] pointer-events-none"></div>
+        
+        <div className="container mx-auto px-4 md:px-8 relative z-10">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <div className="inline-flex items-center gap-3 mb-4">
+              <div className="w-8 h-[2px] bg-[#00C6F7]"></div>
+              <span className="text-[#00C6F7] font-bold text-sm tracking-[0.15em] uppercase">Tech Stack</span>
+              <div className="w-8 h-[2px] bg-[#00C6F7]"></div>
+            </div>
+            <h2 className="text-4xl md:text-5xl font-extrabold text-white tracking-tight mb-6">
+              Technologies We Use
             </h2>
-            <p className="text-lg text-slate-500 font-medium">
-              Find answers to common questions about our services, process, and technical capabilities.
-            </p>
           </div>
 
-          <div className="space-y-0">
+          <div className="flex flex-wrap justify-center gap-6 md:gap-10">
             {[
               {
-                q: "What technologies does Aventiq use?",
-                a: "We work with modern frameworks like Next.js, React, React Native, Node.js, Python, and cloud platforms including AWS, Google Cloud, and Azure. We always choose the best tool for your specific project needs.",
+                name: "React",
+                category: "Frontend",
+                color: "#61DAFB",
+                svg: (
+                  <svg viewBox="-11.5 -10.2 23 20.4" fill="none" stroke="currentColor" strokeWidth="1.2" className="w-14 h-14">
+                    <ellipse rx="11" ry="4.2"/>
+                    <ellipse rx="11" ry="4.2" transform="rotate(60)"/>
+                    <ellipse rx="11" ry="4.2" transform="rotate(120)"/>
+                    <circle r="2" fill="currentColor" stroke="none"/>
+                  </svg>
+                )
               },
               {
-                q: "How long does a typical project take?",
-                a: "Project timelines vary based on scope. A typical MVP takes 6-10 weeks, while a full enterprise platform may take 3-6 months. We provide detailed timelines during the discovery phase.",
+                name: "Next.js",
+                category: "Frontend",
+                color: "#FFFFFF",
+                svg: (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-14 h-14">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M8 8v8l8-8v8"/>
+                  </svg>
+                )
               },
               {
-                q: "Do you offer ongoing support after launch?",
-                a: "Absolutely. We provide maintenance packages that include bug fixes, performance monitoring, security updates, and feature enhancements to keep your product running smoothly.",
+                name: "PHP",
+                category: "Backend",
+                color: "#777BB4",
+                svg: (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-14 h-14">
+                    <ellipse cx="12" cy="12" rx="10" ry="6"/>
+                    <text x="12" y="16" fontSize="10" fontWeight="bold" textAnchor="middle" fill="currentColor" stroke="none">PHP</text>
+                  </svg>
+                )
               },
               {
-                q: "What is your development process like?",
-                a: "We follow an agile methodology with 2-week sprints, regular demos, and continuous deployment. You'll have full visibility into progress through shared project boards and weekly status updates.",
+                name: "WordPress",
+                category: "CMS",
+                color: "#21759B",
+                svg: (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-14 h-14">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M6 10l3 8.5L12 12l3 6.5L18 10" strokeLinejoin="round"/>
+                  </svg>
+                )
               },
               {
-                q: "Can you work with our existing team?",
-                a: "Yes. We offer team augmentation services where our engineers embed with your existing team, following your workflows, coding standards, and communication tools.",
+                name: "Android",
+                category: "Mobile",
+                color: "#3DDC84",
+                svg: (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-14 h-14">
+                    <path d="M5 14v-4a7 7 0 0 1 14 0v4M8 8v-2M16 8v-2"/>
+                    <rect x="5" y="14" width="14" height="4" rx="1"/>
+                  </svg>
+                )
               },
-            ].map((faq, i) => (
-              <details
-                key={i}
-                className="group border-b border-slate-200 [&_summary::-webkit-details-marker]:hidden"
-              >
-                <summary className="flex items-center justify-between cursor-pointer py-6 text-[#102A43] font-bold text-lg md:text-xl list-none transition-colors hover:text-[#0067D9]">
-                  <span className="pr-8">{faq.q}</span>
-                  <span className="relative flex-shrink-0 w-5 h-5 ml-4 flex items-center justify-center">
-                    {/* Vertical line (disappears when open) */}
-                    <span className="absolute inset-0 w-[2px] h-full bg-[#102A43] mx-auto rounded-full transition-transform duration-300 group-open:rotate-90 group-open:opacity-0 group-hover:bg-[#0067D9]"></span>
-                    {/* Horizontal line (turns blue when open) */}
-                    <span className="absolute inset-0 h-[2px] w-full bg-[#102A43] my-auto rounded-full transition-colors duration-300 group-open:bg-[#0067D9] group-hover:bg-[#0067D9]"></span>
-                  </span>
-                </summary>
-                <div className="pb-8 text-slate-600 leading-relaxed text-[17px]">
-                  {faq.a}
+              {
+                name: "AWS",
+                category: "Cloud",
+                color: "#FF9900",
+                svg: (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-14 h-14">
+                    <path d="M4 15s4 4 10 2c-3 1-7-1-10-2z" fill="currentColor" stroke="none"/>
+                    <path d="M14 12c-1.5 2-4.5 3-7 1.5 1-1 3.5-2.5 7-1.5z" fill="currentColor" stroke="none"/>
+                    <path d="M19 15l-2 1m2-1l-1-2" strokeWidth="2"/>
+                    <text x="12" y="11" fontSize="8" fontWeight="bold" textAnchor="middle" fill="currentColor" stroke="none">AWS</text>
+                  </svg>
+                )
+              },
+              {
+                name: "Vercel",
+                category: "Hosting",
+                color: "#FFFFFF",
+                svg: (
+                  <svg viewBox="0 0 24 24" fill="currentColor" className="w-14 h-14">
+                    <path d="M12 4L22 20H2L12 4Z"/>
+                  </svg>
+                )
+              }
+            ].map((tech, i) => (
+              <div key={i} className="flex flex-col items-center group">
+                <div 
+                  className="w-[110px] h-[110px] rounded-3xl bg-white/[0.04] border border-white/[0.08] backdrop-blur-md shadow-[inset_0_1px_1px_rgba(255,255,255,0.06),0_4px_20px_rgba(0,0,0,0.2)] flex items-center justify-center mb-5 group-hover:-translate-y-2 group-hover:bg-white/[0.08] transition-all duration-500"
+                  style={{ '--hover-border-color': tech.color } as React.CSSProperties}
+                  onMouseEnter={(e) => (e.currentTarget.style.borderColor = tech.color)}
+                  onMouseLeave={(e) => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)')}
+                >
+                  <div style={{ color: tech.color }} className="transition-transform duration-500 group-hover:scale-110">
+                    {tech.svg}
+                  </div>
                 </div>
-              </details>
+                <h3 className="font-bold text-white text-[16px] mb-1 transition-colors duration-300" style={{ '--hover-text-color': tech.color } as React.CSSProperties} onMouseEnter={(e) => (e.currentTarget.style.color = tech.color)} onMouseLeave={(e) => (e.currentTarget.style.color = '#FFFFFF')}>{tech.name}</h3>
+                <span className="text-white/40 font-bold text-[10px] tracking-[0.1em] uppercase">{tech.category}</span>
+              </div>
             ))}
           </div>
         </div>
       </section>
-      <section className="py-[40px] bg-[#020B1C] relative overflow-hidden">
-        <div className="absolute inset-0 z-0">
-           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[var(--background-image-gradient-tech)] rounded-full mix-blend-screen filter blur-[150px] opacity-20"></div>
+
+      {/* FAQ */}
+      <section className="py-[100px] bg-[#F4F8FA] relative overflow-hidden">
+        <div className="container mx-auto px-4 md:px-8 max-w-5xl">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-3 mb-4">
+              <div className="w-8 h-[2px] bg-[#FFB800]"></div>
+              <span className="text-[#102A43] font-bold text-sm tracking-[0.15em] uppercase">FAQ</span>
+              <div className="w-8 h-[2px] bg-[#FFB800]"></div>
+            </div>
+            <h2 className="text-4xl md:text-5xl font-extrabold text-[#102A43] tracking-tight mb-6">
+              Frequently Asked Questions
+            </h2>
+            <p className="text-lg text-slate-500">
+              Got questions? We've got answers. If you don't see your question here, feel free to reach out to our team.
+            </p>
+          </div>
+
+          <div className="space-y-6">
+            {[
+              {
+                q: "What is your typical project timeline?",
+                a: "Project timelines vary depending on scope and complexity. A simple MVP might take 4-8 weeks, while enterprise SaaS platforms typically take 3-6 months. We work iteratively, providing deliverables every sprint."
+              },
+              {
+                q: "Do you provide post-launch support and maintenance?",
+                a: "Yes, we offer comprehensive post-launch support, maintenance, and SLA-backed retainers to ensure your software remains secure, performant, and up-to-date with the latest technologies."
+              },
+              {
+                q: "What is your pricing model?",
+                a: "We offer flexible pricing models including fixed-price for well-defined scopes and time-and-materials for agile projects with evolving requirements. We're transparent about costs and provide detailed estimates."
+              },
+              {
+                q: "Will I own the intellectual property (IP)?",
+                a: "Absolutely. Once the project is fully paid for, you receive complete ownership of all source code, designs, and intellectual property."
+              },
+              {
+                q: "How do you ensure the quality of your code?",
+                a: "We employ rigorous code reviews, automated testing (unit, integration, and E2E), CI/CD pipelines, and adhere to strict coding standards to deliver robust, bug-free applications."
+              }
+            ].map((faq, i) => (
+              <div 
+                key={i} 
+                className={`bg-white rounded-[1.5rem] border ${openFaq === i ? 'border-[#0067D9] shadow-lg shadow-blue-900/5' : 'border-slate-200 shadow-sm'} overflow-hidden transition-all duration-300`}
+              >
+                <button 
+                  onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                  className="w-full px-8 py-7 flex items-center justify-between text-left focus:outline-none"
+                >
+                  <span className={`font-bold text-xl pr-4 leading-tight ${openFaq === i ? 'text-[#0067D9]' : 'text-[#102A43]'}`}>
+                    {faq.q}
+                  </span>
+                  <div className={`w-12 h-12 rounded-full flex items-center justify-center shrink-0 transition-colors duration-300 ${openFaq === i ? 'bg-[#0067D9] text-white' : 'bg-[#F0F7FF] text-[#0067D9]'}`}>
+                    <svg className={`w-5 h-5 transition-transform duration-300 ${openFaq === i ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </div>
+                </button>
+                <AnimatePresence>
+                  {openFaq === i && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      className="overflow-hidden"
+                    >
+                      <div className="px-8 pb-8 pt-4 text-slate-500 text-lg leading-relaxed border-t border-slate-100">
+                        {faq.a}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            ))}
+          </div>
         </div>
-        <div className="container relative z-10 mx-auto px-4 text-center max-w-4xl">
-          <h2 className="text-4xl md:text-6xl font-bold text-white mb-6">Have an Idea? Let's Build It.</h2>
-          <p className="text-xl text-[#CBD5E1] mb-10">
-            Tell Aventiq what you're building. We'll help turn your idea into a scalable digital product.
-          </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <Button asChild size="lg" className="rounded-full px-8 h-14 text-lg">
-              <Link href="/contact">Start a Project</Link>
-            </Button>
-            <Button asChild variant="outline" size="lg" className="rounded-full px-8 h-14 text-lg border-[#00C6F7] text-[#00C6F7] hover:bg-[#00C6F7]/10">
-              <Link href="/contact">Talk to Aventiq</Link>
-            </Button>
+      </section>
+
+      {/* CONTACT US */}
+      <section className="py-[100px] bg-white relative overflow-hidden">
+        {/* Subtle decorative background elements */}
+        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-gradient-to-bl from-slate-50 to-transparent rounded-full pointer-events-none -translate-y-1/2 translate-x-1/3"></div>
+        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-to-tr from-blue-50/50 to-transparent rounded-full pointer-events-none translate-y-1/3 -translate-x-1/3"></div>
+        
+        <div className="container mx-auto px-4 md:px-8 relative z-10 max-w-7xl">
+          <div className="flex flex-col lg:flex-row gap-16 lg:gap-24 items-center">
+            
+            {/* Left Content */}
+            <div className="flex-1 w-full">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100/80 text-sm font-bold text-slate-600 mb-5 tracking-widest uppercase">
+                Contact Us
+              </div>
+              <h2 className="text-3xl md:text-4xl font-light text-[#102A43] tracking-tight mb-4 leading-snug">
+                Let's build something <br/>
+                <span className="font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#0067D9] to-[#00C6F7]">extraordinary together.</span>
+              </h2>
+              <p className="text-base text-slate-500 mb-8 max-w-md leading-relaxed">
+                Whether you have a fully formed project or just an idea on a napkin, our team is ready to bring your vision to life.
+              </p>
+              
+              <div className="space-y-5">
+                <div className="flex items-center gap-5 group">
+                  <div className="w-12 h-12 rounded-xl bg-[#F0F7FF] flex items-center justify-center text-[#0067D9] group-hover:bg-[#0067D9] group-hover:text-white transition-colors duration-300 shadow-sm shrink-0">
+                    <Mail className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h4 className="text-base font-bold text-[#102A43] mb-0.5">Email Us</h4>
+                    <a href="mailto:hello@aventiq.com" className="text-sm text-[#0067D9] font-medium hover:underline">hello@aventiq.com</a>
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-5 group">
+                  <div className="w-12 h-12 rounded-xl bg-[#F0F7FF] flex items-center justify-center text-[#0067D9] group-hover:bg-[#0067D9] group-hover:text-white transition-colors duration-300 shadow-sm shrink-0">
+                    <Phone className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h4 className="text-base font-bold text-[#102A43] mb-0.5">Call Us</h4>
+                    <a href="tel:+918239988743" className="text-sm text-[#0067D9] font-medium hover:underline">8239988743</a>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-5 group">
+                  <div className="w-12 h-12 rounded-xl bg-[#F0F7FF] flex items-center justify-center text-[#0067D9] group-hover:bg-[#0067D9] group-hover:text-white transition-colors duration-300 shadow-sm shrink-0">
+                    <MapPin className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h4 className="text-base font-bold text-[#102A43] mb-0.5">Visit Us</h4>
+                    <span className="text-sm text-slate-600 font-medium">Kokar Ranchi</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Form Card */}
+            <div className="flex-1 w-full max-w-xl">
+              <div className="bg-white rounded-[40px] shadow-[0_20px_60px_rgb(0,0,0,0.06)] border border-slate-100 p-8 md:p-12 relative overflow-hidden">
+                {/* Form decorative accent */}
+                <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-blue-100 to-transparent opacity-50 pointer-events-none"></div>
+                
+                <h3 className="text-2xl font-bold text-[#102A43] mb-8 relative z-10">Send a Message</h3>
+                
+                <form className="space-y-6 relative z-10" onSubmit={(e) => e.preventDefault()}>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <label className="text-sm font-semibold text-slate-600 ml-1">First Name</label>
+                      <input 
+                        type="text" 
+                        placeholder="John" 
+                        className="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#0067D9]/20 focus:border-[#0067D9] transition-all placeholder:text-slate-400"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-semibold text-slate-600 ml-1">Last Name</label>
+                      <input 
+                        type="text" 
+                        placeholder="Doe" 
+                        className="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#0067D9]/20 focus:border-[#0067D9] transition-all placeholder:text-slate-400"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <label className="text-sm font-semibold text-slate-600 ml-1">Email Address</label>
+                    <input 
+                      type="email" 
+                      placeholder="john@company.com" 
+                      className="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#0067D9]/20 focus:border-[#0067D9] transition-all placeholder:text-slate-400"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-semibold text-slate-600 ml-1">Message</label>
+                    <textarea 
+                      placeholder="Tell us about your project..." 
+                      rows={4}
+                      className="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#0067D9]/20 focus:border-[#0067D9] transition-all placeholder:text-slate-400 resize-none"
+                    ></textarea>
+                  </div>
+                  
+                  <button className="w-full py-4 rounded-2xl bg-[#102A43] hover:bg-[#0067D9] text-white font-bold text-lg transition-colors flex items-center justify-center gap-2 group shadow-lg shadow-blue-900/20 mt-2">
+                    Send Message
+                    <Send className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  </button>
+                </form>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+      {/* FINAL CTA (Light BG + Dark Glassmorphism) */}
+      <section className="py-[40px] relative overflow-hidden bg-gradient-to-br from-[#EEF5FB] via-[#E0EFFA] to-[#D4E8F8]">
+        {/* Soft Decorative Orbs */}
+        <div className="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] bg-blue-300/30 blur-[120px] rounded-full pointer-events-none animate-pulse" style={{ animationDuration: '8s' }}></div>
+        <div className="absolute bottom-[-15%] right-[-10%] w-[500px] h-[500px] bg-cyan-200/30 blur-[120px] rounded-full pointer-events-none animate-pulse" style={{ animationDuration: '6s' }}></div>
+        <div className="absolute top-[30%] right-[20%] w-[300px] h-[300px] bg-violet-200/20 blur-[100px] rounded-full pointer-events-none animate-pulse" style={{ animationDuration: '10s' }}></div>
+
+        <div className="container relative z-10 mx-auto px-4 text-center max-w-6xl">
+          {/* Wide Dark Glassmorphism Card with 200px border-radius */}
+          <div className="relative group">
+            {/* Outer glow ring */}
+            <div className="absolute -inset-[1px] bg-gradient-to-r from-[#0067D9]/40 via-[#00C6F7]/40 to-[#8B5CF6]/40 blur-sm opacity-60 group-hover:opacity-100 transition-opacity duration-700" style={{ borderRadius: '200px' }}></div>
+            
+            <div className="relative bg-[#0A1A35]/85 backdrop-blur-2xl border border-white/10 p-14 md:p-20 overflow-hidden shadow-[0_30px_80px_rgba(0,0,0,0.15)]" style={{ borderRadius: '200px' }}>
+              {/* Inner shimmer */}
+              <div className="absolute inset-0 bg-gradient-to-b from-white/[0.06] to-transparent pointer-events-none" style={{ borderRadius: '200px' }}></div>
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[50%] h-[1px] bg-gradient-to-r from-transparent via-[#00C6F7]/30 to-transparent"></div>
+
+              <div className="relative z-10">
+                <div className="inline-flex items-center gap-2.5 px-6 py-2.5 rounded-full bg-white/[0.08] border border-white/[0.12] text-sm font-bold text-[#00C6F7] mb-8 uppercase tracking-[0.2em] backdrop-blur-md">
+                  <span className="w-2 h-2 rounded-full bg-[#00C6F7] animate-pulse"></span>
+                  Let's Collaborate
+                </div>
+                <h2 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-white mb-6 tracking-tight leading-[1.1]">
+                  Have an Idea?{' '}
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00C6F7] via-[#0067D9] to-[#8B5CF6]">
+                    Let's Build It.
+                  </span>
+                </h2>
+                <p className="text-base md:text-xl text-slate-300/80 mb-12 max-w-2xl mx-auto font-medium leading-relaxed">
+                  Tell Aventiq what you're building. We'll help turn your vision into a scalable digital product.
+                </p>
+                <div className="flex flex-col sm:flex-row justify-center gap-5">
+                  <Button asChild size="lg" className="rounded-full px-10 h-14 text-lg font-bold bg-gradient-to-r from-[#0067D9] to-[#00C6F7] hover:from-[#0052ad] hover:to-[#00b0dc] text-white shadow-[0_0_40px_rgba(0,103,217,0.35)] hover:shadow-[0_0_60px_rgba(0,198,247,0.4)] transition-all duration-300 hover:-translate-y-1 border-0">
+                    <Link href="/contact">Start a Project</Link>
+                  </Button>
+                  <Button asChild variant="outline" size="lg" className="rounded-full px-10 h-14 text-lg font-bold border-white/15 text-white hover:bg-white/10 bg-white/[0.05] backdrop-blur-md transition-all duration-300 hover:-translate-y-1">
+                    <Link href="/contact">Talk to Aventiq</Link>
+                  </Button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>

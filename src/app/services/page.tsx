@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { motion } from "framer-motion"
-import { ArrowRight, LayoutTemplate, Cloud, Smartphone, Palette, Cpu, Database, Server, Blocks, ShoppingCart, Wrench } from "lucide-react"
+import { ArrowRight, LayoutTemplate, Cloud, Smartphone, Palette, Cpu, Database, Server, Blocks, ShoppingCart, Wrench, Megaphone, Search, Target, MousePointerClick } from "lucide-react"
 
 const ALL_SERVICES = [
   { 
@@ -20,13 +20,6 @@ const ALL_SERVICES = [
     slug: "saas-development"
   },
   { 
-    icon: Smartphone, 
-    title: "Mobile App Development", 
-    desc: "Native-feeling iOS and Android applications with single codebases. Deliver seamless mobile experiences with fast performance and offline capabilities.",
-    tags: ["React Native", "Swift", "Kotlin", "Firebase"],
-    slug: "mobile-development"
-  },
-  { 
     icon: Palette, 
     title: "UI/UX Design", 
     desc: "User-centric interface design and intuitive experiences. We transform complex workflows into clean, accessible, and beautiful interfaces.",
@@ -41,40 +34,40 @@ const ALL_SERVICES = [
     slug: "ai-development"
   },
   { 
-    icon: Database, 
-    title: "API & Backend", 
-    desc: "Secure, fast, and scalable architectures designed for complex data flows. We engineer robust APIs that power enterprise-grade applications.",
-    tags: ["GraphQL", "REST", "NestJS", "Prisma"],
-    slug: "api-backend"
-  },
-  { 
     icon: Server, 
     title: "Cloud & DevOps", 
     desc: "Automated deployments, continuous integration, and cloud infrastructure management for highly available software systems.",
     tags: ["Docker", "Kubernetes", "CI/CD", "Terraform"],
     slug: "cloud-devops"
   },
-  { 
-    icon: Blocks, 
-    title: "Custom Software", 
-    desc: "Tailored software solutions designed from the ground up to solve your specific operational challenges and business requirements.",
-    tags: ["Architecture", "Enterprise", "Legacy Migration"],
-    slug: "custom-software"
+  {
+    icon: Megaphone,
+    title: "Digital Marketing",
+    desc: "Comprehensive marketing strategies that increase brand awareness, drive traffic, and convert visitors into loyal customers across multiple channels.",
+    tags: ["Strategy", "Content", "Analytics", "Growth"],
+    slug: "digital-marketing"
   },
-  { 
-    icon: ShoppingCart, 
-    title: "E-commerce Development", 
-    desc: "Scalable online storefronts with customized checkouts, inventory management, and fast, secure payment processing integrations.",
-    tags: ["Shopify", "Next.js Commerce", "Medusa", "Stripe"],
-    slug: "ecommerce"
+  {
+    icon: Search,
+    title: "SEO",
+    desc: "Data-driven Search Engine Optimization to boost your organic visibility, rank higher on Google, and drive sustainable high-quality traffic.",
+    tags: ["On-Page", "Off-Page", "Technical SEO", "Audits"],
+    slug: "seo"
   },
-  { 
-    icon: Wrench, 
-    title: "Maintenance & Support", 
-    desc: "Ongoing code optimization, security patching, and technical support to ensure your digital products remain fast, secure, and reliable.",
-    tags: ["Monitoring", "SLA", "Updates", "Security audits"],
-    slug: "maintenance"
+  {
+    icon: Target,
+    title: "Meta Ads",
+    desc: "Highly targeted Facebook and Instagram advertising campaigns designed to maximize ROI, generate leads, and scale your brand reach.",
+    tags: ["Facebook", "Instagram", "Retargeting", "ROAS"],
+    slug: "meta-ads"
   },
+  {
+    icon: MousePointerClick,
+    title: "Google Ads",
+    desc: "Intent-driven search and display advertising. We optimize your ad spend to capture high-intent users actively looking for your solutions.",
+    tags: ["Search Ads", "Display", "PPC", "Conversion"],
+    slug: "google-ads"
+  }
 ]
 
 const containerVariants = {
@@ -90,30 +83,32 @@ const itemVariants = {
   show: { opacity: 1, y: 0, transition: { duration: 0.5 } }
 }
 
+import { PageHeader } from "@/components/layout/PageHeader"
+
 export default function ServicesPage() {
   return (
-    <div className="min-h-screen bg-[#F8FAFC] pt-32 pb-24">
-      {/* Header Section */}
-      <div className="container mx-auto px-4 md:px-8 mb-20 text-center max-w-4xl">
-        <motion.h1 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-4xl md:text-6xl font-bold text-[#102A43] mb-6"
-        >
-          What We Build
-        </motion.h1>
-        <motion.p 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="text-lg md:text-xl text-[#475569] leading-relaxed"
-        >
-          From strategy to deployment, Aventiq delivers technology solutions designed to solve real business problems and create long-term value.
-        </motion.p>
+    <div className="min-h-screen bg-[#F8FAFC] pb-24">
+      <PageHeader 
+        title="What We Build" 
+        breadcrumbs={[{ label: "Services" }]} 
+        bgImage="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2000&auto=format&fit=crop"
+      />
+
+      {/* Intro Text */}
+      <div className="container mx-auto px-4 md:px-8 mt-24 mb-16 text-center max-w-4xl relative">
+        <div className="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-slate-50 border border-slate-200 text-sm font-bold text-[#0067D9] mb-8 tracking-widest uppercase shadow-sm">
+          Our Expertise
+        </div>
+        <h2 className="text-4xl md:text-5xl font-extrabold text-slate-900 mb-6 tracking-tight">
+          Engineered for <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#0067D9] to-[#00C6F7]">Excellence</span>
+        </h2>
+        <p className="text-lg md:text-xl text-slate-600 leading-relaxed font-medium">
+          From robust enterprise software to highly engaging mobile experiences, we build technology solutions that drive measurable business results. Explore our core disciplines below.
+        </p>
       </div>
 
       {/* Services Grid */}
-      <div className="container mx-auto px-4 md:px-8">
+      <div className="container mx-auto px-4 md:px-8 relative z-10 pb-24">
         <motion.div 
           variants={containerVariants}
           initial="hidden"
@@ -124,39 +119,49 @@ export default function ServicesPage() {
             <motion.div 
               key={service.title} 
               variants={itemVariants}
-              whileHover={{ y: -5 }}
-              className="group relative bg-white rounded-2xl p-8 border border-border shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden"
+              whileHover={{ y: -8 }}
+              className="group relative bg-white rounded-3xl border border-slate-200 shadow-[0_4px_20px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgb(0,103,217,0.1)] transition-all duration-500 overflow-hidden"
             >
-              {/* Cyan Hover Glow (Subtle Top Border) */}
-              <div className="absolute top-0 left-0 w-full h-1 bg-transparent group-hover:bg-[#00C6F7] transition-colors duration-300"></div>
+              {/* Premium Gradient Hover Effect (Behind the content) */}
+              <div className="absolute inset-0 bg-gradient-to-br from-[#00C6F7]/5 via-transparent to-[#0067D9]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"></div>
               
-              {/* Icon Container */}
-              <div className="w-14 h-14 rounded-xl bg-[#F3F8FF] flex items-center justify-center text-[#0067D9] mb-6 group-hover:bg-[#062B63] group-hover:text-white transition-colors duration-300 relative">
-                 <service.icon size={28} />
-                 {/* Small Orange Accent Dot */}
-                 <div className="absolute -top-1 -right-1 w-3 h-3 bg-[#FF8A00] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              </div>
+              <Link href={`/services/${service.slug}`} className="relative z-10 block p-8 md:p-10 h-full flex flex-col">
+                
+                {/* Icon Container matching image colors exactly */}
+                <div className="w-16 h-16 rounded-2xl bg-[#F3F8FF] flex items-center justify-center text-[#0067D9] mb-8 group-hover:scale-110 group-hover:bg-white group-hover:shadow-[0_0_25px_rgba(0,198,247,0.25)] transition-all duration-500 relative">
+                   <service.icon size={28} strokeWidth={2} />
+                   <div className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-[#FF8A00] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 shadow-sm border-2 border-white"></div>
+                </div>
 
-              {/* Content */}
-              <h3 className="text-2xl font-bold text-[#102A43] mb-4 group-hover:text-[#0067D9] transition-colors">{service.title}</h3>
-              <p className="text-[#475569] mb-8 line-clamp-3 leading-relaxed">
-                {service.desc}
-              </p>
+                {/* Content */}
+                <h3 className="text-2xl font-bold text-slate-900 mb-4 tracking-tight group-hover:text-[#0067D9] transition-colors duration-300">
+                  {service.title}
+                </h3>
+                <p className="text-slate-600 mb-8 leading-relaxed font-medium flex-grow text-[17px]">
+                  {service.desc}
+                </p>
 
-              {/* Tech Tags */}
-              <div className="flex flex-wrap gap-2 mb-8">
-                {service.tags.map(tag => (
-                  <span key={tag} className="text-xs font-semibold px-2.5 py-1 rounded-full bg-[#E8F3FF] text-[#0067D9] border border-[#DCE8F5]">
-                    {tag}
+                {/* Tech Tags */}
+                <div className="flex flex-wrap gap-2 mb-12">
+                  {service.tags.map(tag => (
+                    <span 
+                      key={tag} 
+                      className="text-xs font-semibold px-3 py-1.5 rounded-full border border-slate-200 bg-slate-50 text-slate-600 group-hover:border-[#00C6F7]/30 transition-colors"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+
+                {/* Link Arrow */}
+                <div className="flex items-center font-bold mt-auto group/link text-[#0067D9]">
+                  <span className="relative overflow-hidden">
+                    <span className="inline-block transition-transform duration-300 group-hover/link:-translate-y-full">View Details</span>
+                    <span className="absolute top-0 left-0 inline-block transition-transform duration-300 translate-y-full group-hover/link:translate-y-0 text-[#00C6F7]">View Details</span>
                   </span>
-                ))}
-              </div>
-
-              {/* Link Arrow */}
-              <div className="absolute bottom-8 left-8 right-8 flex items-center text-[#0067D9] font-semibold mt-auto group/link">
-                View Service 
-                <ArrowRight size={18} className="ml-2 group-hover:translate-x-2 transition-transform duration-300" />
-              </div>
+                  <ArrowRight size={18} className="ml-2 group-hover:translate-x-2 transition-transform duration-300" />
+                </div>
+              </Link>
             </motion.div>
           ))}
         </motion.div>

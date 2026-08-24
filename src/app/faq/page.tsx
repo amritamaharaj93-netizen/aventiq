@@ -88,31 +88,24 @@ function AccordionItem({ q, a, isOpen, onClick }: { q: string, a: string, isOpen
   )
 }
 
+import { PageHeader } from "@/components/layout/PageHeader"
+
 export default function FAQPage() {
   const [openIndex, setOpenIndex] = useState<string | null>("0-0") // Open the first one by default
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] font-sans">
-      {/* PREMIUM HERO */}
-      <section className="relative pt-32 pb-24 lg:pt-40 lg:pb-32 overflow-hidden bg-[#020B1C]">
-        {/* Background Glows */}
-        <div className="absolute inset-0 z-0">
-          <div className="absolute top-0 right-1/4 w-[600px] h-[600px] bg-[#00C6F7] rounded-full mix-blend-screen filter blur-[150px] opacity-20"></div>
-          <div className="absolute bottom-[-10%] left-[-5%] w-[500px] h-[500px] bg-[#0067D9] rounded-full mix-blend-screen filter blur-[150px] opacity-20"></div>
-        </div>
+    <div className="min-h-screen bg-[#F8FAFC] font-sans pb-24">
+      <PageHeader 
+        title="Frequently Asked Questions" 
+        breadcrumbs={[{ label: "FAQ" }]} 
+        bgImage="https://images.unsplash.com/photo-1516321497487-e288fb19713f?q=80&w=2000&auto=format&fit=crop"
+      />
 
-        <div className="container relative z-10 mx-auto px-4 md:px-8 text-center max-w-4xl">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-[#0067D9] to-[#00C6F7] mb-8 shadow-2xl shadow-[#00C6F7]/20">
-            <MessageCircleQuestion size={32} className="text-white" />
-          </div>
-          <h1 className="text-5xl md:text-7xl font-bold text-white tracking-tighter mb-8 leading-[1.05]">
-            Frequently Asked <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00C6F7] to-[#0067D9]">Questions</span>
-          </h1>
-          <p className="text-xl md:text-2xl text-[#94A3B8] font-light leading-relaxed">
-            Everything you need to know about partnering with Aventiq, our engineering processes, and how we deliver premium software.
-          </p>
-        </div>
-      </section>
+      <div className="container relative z-10 mx-auto px-4 md:px-8 text-center max-w-4xl mt-24 mb-16">
+        <p className="text-xl md:text-2xl text-[#475569] font-light leading-relaxed">
+          Everything you need to know about partnering with Aventiq, our engineering processes, and how we deliver premium software.
+        </p>
+      </div>
 
       {/* FAQ ACCORDION SECTION */}
       <section className="py-24">
