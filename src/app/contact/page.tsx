@@ -34,7 +34,7 @@ export default function ContactPage() {
         breadcrumbs={[{ label: "Contact Us" }]} 
         bgImage="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2000&auto=format&fit=crop"
       />
-      <div className="container mx-auto px-4 max-w-7xl mt-24 mb-24">
+      <div className="container mx-auto px-4 max-w-7xl mt-12 mb-24">
         <div className="grid lg:grid-cols-2 gap-16 lg:gap-24">
           
           {/* Left Column: Contact Info */}

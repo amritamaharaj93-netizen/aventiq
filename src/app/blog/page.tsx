@@ -76,7 +76,7 @@ export default function BlogPage() {
         breadcrumbs={[{ label: "Blog" }]} 
         bgImage="https://images.unsplash.com/photo-1499750310107-5fef28a66643?q=80&w=2000&auto=format&fit=crop"
       />
-      <div className="container mx-auto px-4 md:px-8 max-w-6xl mt-24 mb-24">
+      <div className="container mx-auto px-4 md:px-8 max-w-6xl mt-12 mb-24">
         <div className="text-center mb-20">
           <div className="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-slate-50 border border-slate-200 text-sm font-bold text-[#0067D9] mb-8 tracking-widest uppercase shadow-sm">
             Engineering Blog

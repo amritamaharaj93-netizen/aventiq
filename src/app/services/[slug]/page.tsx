@@ -27,15 +27,15 @@ const SERVICE_DETAILS: Record<string, any> = {
   "web-development": {
     title: "Web Development",
     subtitle: "High-performance web applications built for enterprise scale.",
-    description: "We engineer lightning-fast, highly secure web applications using modern JavaScript frameworks. Our architectures are designed to handle immense traffic while delivering a flawless, app-like experience in the browser.",
+    description: "We engineer lightning-fast, highly secure web applications using modern JavaScript frameworks. Our architectures are designed to handle immense traffic while delivering a flawless, app-like experience in the browser.\n\nAt Aventiq, we understand that your digital presence is the core of your business. That's why we focus on building robust, scalable solutions tailored to your unique requirements. From complex enterprise SaaS platforms to high-conversion headless e-commerce sites, our full-stack engineering team ensures every product we build is optimized for peak performance, robust security, and exceptional user engagement. We leverage the latest cloud technologies and agile methodologies to bring your vision to life.",
     icon: LayoutTemplate,
-    color: "from-[#0067D9] to-[#00C6F7]",
+    color: "from-[#062B63] to-[#0067D9]",
     glow: "bg-[#00C6F7]",
     features: [
-      { title: "Frontend Engineering", desc: "Building highly interactive, accessible, and fast user interfaces using React and Next.js." },
-      { title: "Performance Optimization", desc: "Optimizing Core Web Vitals, implementing advanced caching, and Edge delivery." },
-      { title: "Progressive Web Apps", desc: "Creating installable web applications with offline capabilities and push notifications." },
-      { title: "Technical SEO", desc: "Server-side rendering and structured data implementation to ensure maximum search engine visibility." }
+      { title: "Custom Web Applications", desc: "Tailor-made web solutions designed from the ground up to meet your specific business requirements with seamless user experiences." },
+      { title: "E-Commerce Platforms", desc: "Scalable, secure, and conversion-optimized online stores built with the latest headless commerce technologies." },
+      { title: "Enterprise SaaS Development", desc: "Robust multi-tenant architectures, complex data management, and secure APIs for software-as-a-service products." },
+      { title: "CMS & Content Platforms", desc: "Dynamic, easy-to-manage content systems powered by headless CMS architecture like Sanity or WordPress." }
     ],
     tech: ["Next.js", "React", "TypeScript", "Tailwind CSS", "Framer Motion"],
   }
@@ -115,7 +115,7 @@ export default function ServiceDetail() {
           
           <div className="lg:col-span-8">
             <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-6 tracking-tight">Overview</h2>
-            <p className="text-xl md:text-2xl text-slate-600 leading-relaxed mb-20 font-medium">
+            <p className="text-lg md:text-xl text-slate-600 leading-relaxed mb-20 font-medium whitespace-pre-line">
               {data.description}
             </p>
 
@@ -134,7 +134,7 @@ export default function ServiceDetail() {
           </div>
 
           <div className="lg:col-span-4">
-            <div className="bg-white p-8 md:p-10 rounded-[2rem] border border-slate-200 shadow-xl shadow-slate-200/50">
+            <div className="bg-white p-8 md:p-10 rounded-[2rem] border border-slate-200 shadow-xl shadow-slate-200/50 sticky top-28">
               <h3 className="text-xl font-extrabold text-slate-900 mb-6 uppercase tracking-wider text-sm">Technologies Used</h3>
               <div className="flex flex-wrap gap-2.5 mb-10">
                 {data.tech.map((tech: string) => (
@@ -146,12 +146,23 @@ export default function ServiceDetail() {
 
               <div className="w-full h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent mb-10"></div>
 
-              <h3 className="text-2xl font-bold text-slate-900 mb-4 tracking-tight">Ready to build?</h3>
-              <p className="text-slate-500 mb-8 leading-relaxed">Partner with our elite engineering team to bring this vision to life.</p>
+              <h3 className="text-2xl font-bold text-slate-900 mb-2 tracking-tight">Request a Quote</h3>
+              <p className="text-slate-500 mb-6 text-sm">Tell us about your {data.title.toLowerCase()} needs and we'll get back to you within 24 hours.</p>
               
-              <Button asChild className={`w-full h-14 text-lg font-bold rounded-2xl bg-gradient-to-r ${data.color} text-white shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/40 hover:-translate-y-1 transition-all duration-300`}>
-                <Link href="/contact">Consult with Us</Link>
-              </Button>
+              <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+                <div>
+                  <input type="text" placeholder="Your Name" className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-sm" />
+                </div>
+                <div>
+                  <input type="email" placeholder="Email Address" className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-sm" />
+                </div>
+                <div>
+                  <textarea placeholder="Project Details" rows={4} className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-sm resize-none"></textarea>
+                </div>
+                <button type="submit" className={`w-full h-12 mt-2 text-base font-bold rounded-xl bg-gradient-to-r ${data.color} text-white shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300`}>
+                  Submit Request
+                </button>
+              </form>
             </div>
           </div>
 

@@ -95,7 +95,7 @@ export default function ServicesPage() {
       />
 
       {/* Intro Text */}
-      <div className="container mx-auto px-4 md:px-8 mt-24 mb-16 text-center max-w-4xl relative">
+      <div className="container mx-auto px-4 md:px-8 mt-12 mb-16 text-center max-w-4xl relative">
         <div className="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-slate-50 border border-slate-200 text-sm font-bold text-[#0067D9] mb-8 tracking-widest uppercase shadow-sm">
           Our Expertise
         </div>

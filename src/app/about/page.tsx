@@ -24,7 +24,7 @@ export default function AboutPage() {
       />
       
       {/* Intro */}
-      <div className="container mx-auto px-4 md:px-8 mt-24 mb-24 relative">
+      <div className="container mx-auto px-4 md:px-8 mt-12 mb-24 relative">
         <div className="max-w-4xl text-center mx-auto">
           <div className="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-slate-50 border border-slate-200 text-sm font-bold text-[#0067D9] mb-8 tracking-widest uppercase shadow-sm">
             Who We Are
@@ -38,29 +38,57 @@ export default function AboutPage() {
         </div>
       </div>
 
-      {/* Mission & Vision (Premium Dark Section) */}
-      <div className="relative py-32 bg-[#020B1C] overflow-hidden my-24 rounded-[3rem] mx-4 md:mx-8 shadow-2xl">
-        <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-[#00C6F7] rounded-full mix-blend-screen filter blur-[120px] opacity-20"></div>
-        <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-[#0067D9] rounded-full mix-blend-screen filter blur-[120px] opacity-20"></div>
-        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay pointer-events-none"></div>
+      {/* Mission & Vision (Elegant Classic Section) */}
+      <div className="container mx-auto px-4 md:px-8 mb-32 relative">
+        <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
+          
+          {/* Mission Card */}
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }} 
+            whileInView={{ opacity: 1, y: 0 }} 
+            viewport={{ once: true }}
+            className="group relative bg-white rounded-[2.5rem] p-10 md:p-14 border border-slate-200 shadow-2xl shadow-slate-200/50 overflow-hidden"
+          >
+            {/* Elegant background accent */}
+            <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-blue-50 to-transparent rounded-full -translate-y-1/2 translate-x-1/3 group-hover:scale-110 transition-transform duration-700 pointer-events-none"></div>
+            
+            <div className="relative z-10">
+              <div className="w-16 h-16 rounded-2xl bg-blue-50 text-[#0067D9] flex items-center justify-center mb-8 border border-blue-100 group-hover:bg-[#0067D9] group-hover:text-white transition-colors duration-500 shadow-sm">
+                <Target strokeWidth={1.5} size={32} />
+              </div>
+              
+              <h3 className="text-3xl font-extrabold text-slate-900 mb-6 tracking-tight">Our Mission</h3>
+              
+              <p className="text-xl md:text-2xl text-slate-600 leading-relaxed font-light">
+                To empower ambitious businesses by engineering <span className="font-semibold text-slate-900">intelligent, scalable technology solutions</span> that solve complex problems and drive sustainable growth.
+              </p>
+            </div>
+          </motion.div>
 
-        <div className="container mx-auto px-4 md:px-8 grid md:grid-cols-2 gap-16 relative z-10">
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-bold text-[#00C6F7] mb-6 tracking-widest uppercase">
-              Our Mission
+          {/* Vision Card */}
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }} 
+            whileInView={{ opacity: 1, y: 0 }} 
+            viewport={{ once: true }} 
+            transition={{ delay: 0.1 }}
+            className="group relative bg-[#020B1C] rounded-[2.5rem] p-10 md:p-14 border border-[#1A2642] shadow-2xl overflow-hidden"
+          >
+            {/* Elegant background accent */}
+            <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-[#0067D9]/10 to-transparent rounded-full -translate-y-1/2 translate-x-1/3 group-hover:scale-110 transition-transform duration-700 pointer-events-none"></div>
+            
+            <div className="relative z-10">
+              <div className="w-16 h-16 rounded-2xl bg-[#0A1835] text-[#00C6F7] flex items-center justify-center mb-8 border border-[#1A2642] group-hover:bg-[#00C6F7] group-hover:text-[#020B1C] transition-colors duration-500 shadow-sm">
+                <Eye strokeWidth={1.5} size={32} />
+              </div>
+              
+              <h3 className="text-3xl font-extrabold text-white mb-6 tracking-tight">Our Vision</h3>
+              
+              <p className="text-xl md:text-2xl text-slate-300 leading-relaxed font-light">
+                To be the <span className="font-semibold text-white">trusted global technology partner</span> for visionary companies, setting the standard for software engineering excellence and digital innovation.
+              </p>
             </div>
-            <p className="text-3xl md:text-4xl font-extrabold text-white leading-tight tracking-tight">
-              To help businesses use technology to solve meaningful problems and create <span className="text-[#00C6F7]">sustainable growth</span>.
-            </p>
           </motion.div>
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }}>
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-bold text-[#FF8A00] mb-6 tracking-widest uppercase">
-              Our Vision
-            </div>
-            <p className="text-3xl md:text-4xl font-extrabold text-white leading-tight tracking-tight">
-              To become a trusted technology partner for visionary companies building the <span className="text-[#FF8A00]">future across the globe</span>.
-            </p>
-          </motion.div>
+
         </div>
       </div>
 

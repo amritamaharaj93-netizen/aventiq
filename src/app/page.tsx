@@ -639,7 +639,7 @@ export default function Home() {
       </section>
 
       {/* TECHNOLOGIES */}
-      <section className="py-[100px] bg-[#0A1E3D] relative overflow-hidden">
+      <section className="py-[100px] bg-gradient-to-b from-[#020C1B] to-[#0A1E3D] relative overflow-hidden">
         {/* Glows */}
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#00C6F7]/5 rounded-full blur-[100px] pointer-events-none"></div>
         <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[#0067D9]/10 rounded-full blur-[100px] pointer-events-none"></div>
@@ -725,6 +725,16 @@ export default function Home() {
                     <path d="M14 12c-1.5 2-4.5 3-7 1.5 1-1 3.5-2.5 7-1.5z" fill="currentColor" stroke="none"/>
                     <path d="M19 15l-2 1m2-1l-1-2" strokeWidth="2"/>
                     <text x="12" y="11" fontSize="8" fontWeight="bold" textAnchor="middle" fill="currentColor" stroke="none">AWS</text>
+                  </svg>
+                )
+              },
+              {
+                name: "GitHub",
+                category: "Version Control",
+                color: "#FFFFFF",
+                svg: (
+                  <svg viewBox="0 0 24 24" fill="currentColor" className="w-14 h-14">
+                    <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.161 22 16.418 22 12c0-5.523-4.477-10-10-10z"/>
                   </svg>
                 )
               },
@@ -955,14 +965,14 @@ export default function Home() {
         <div className="absolute top-[30%] right-[20%] w-[300px] h-[300px] bg-violet-200/20 blur-[100px] rounded-full pointer-events-none animate-pulse" style={{ animationDuration: '10s' }}></div>
 
         <div className="container relative z-10 mx-auto px-4 text-center max-w-6xl">
-          {/* Wide Dark Glassmorphism Card with 200px border-radius */}
+          {/* Wide Dark Glassmorphism Card with responsive border-radius */}
           <div className="relative group">
             {/* Outer glow ring */}
-            <div className="absolute -inset-[1px] bg-gradient-to-r from-[#0067D9]/40 via-[#00C6F7]/40 to-[#8B5CF6]/40 blur-sm opacity-60 group-hover:opacity-100 transition-opacity duration-700" style={{ borderRadius: '200px' }}></div>
+            <div className="absolute -inset-[1px] bg-gradient-to-r from-[#0067D9]/40 via-[#00C6F7]/40 to-[#8B5CF6]/40 blur-sm opacity-60 group-hover:opacity-100 transition-opacity duration-700 rounded-[3rem] md:rounded-[200px]"></div>
             
-            <div className="relative bg-[#0A1A35]/85 backdrop-blur-2xl border border-white/10 p-14 md:p-20 overflow-hidden shadow-[0_30px_80px_rgba(0,0,0,0.15)]" style={{ borderRadius: '200px' }}>
+            <div className="relative bg-[#0A1A35]/85 backdrop-blur-2xl border border-white/10 p-10 md:p-20 overflow-hidden shadow-[0_30px_80px_rgba(0,0,0,0.15)] rounded-[3rem] md:rounded-[200px]">
               {/* Inner shimmer */}
-              <div className="absolute inset-0 bg-gradient-to-b from-white/[0.06] to-transparent pointer-events-none" style={{ borderRadius: '200px' }}></div>
+              <div className="absolute inset-0 bg-gradient-to-b from-white/[0.06] to-transparent pointer-events-none rounded-[3rem] md:rounded-[200px]"></div>
               <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[50%] h-[1px] bg-gradient-to-r from-transparent via-[#00C6F7]/30 to-transparent"></div>
 
               <div className="relative z-10">

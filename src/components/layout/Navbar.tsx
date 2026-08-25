@@ -14,7 +14,6 @@ const NAV_LINKS = [
   { name: "Services", href: "/services" },
   { name: "Projects", href: "/projects" },
   { name: "About", href: "/about" },
-  { name: "Technologies", href: "/technologies" },
   { name: "Blog", href: "/blog" },
   { name: "Contact", href: "/contact" },
 ]
@@ -72,7 +71,7 @@ export function Navbar() {
                   <Link
                     href={link.href}
                     className={cn(
-                      "text-sm font-medium transition-colors hover:text-[#0067D9]",
+                      "text-base font-semibold transition-colors hover:text-[#0067D9]",
                       isActive ? "text-[#0067D9] font-bold" : "text-[#475569]"
                     )}
                   >

@@ -59,7 +59,7 @@ export default function ProjectsPage() {
       />
 
       {/* Intro */}
-      <div className="container mx-auto px-4 md:px-8 mt-24 mb-24 relative">
+      <div className="container mx-auto px-4 md:px-8 mt-12 mb-24 relative">
         <div className="max-w-3xl text-center mx-auto">
           <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-slate-100 border border-slate-200 text-sm font-bold text-slate-700 mb-6 tracking-wide uppercase shadow-sm">
             Our Portfolio

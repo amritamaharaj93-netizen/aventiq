@@ -29,7 +29,7 @@ export function PageHeader({
 
       {/* Content */}
       <div className="relative z-10 container mx-auto px-4 text-center text-white animate-in fade-in slide-in-from-bottom-8 duration-700">
-        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 tracking-tight">{title}</h1>
+        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-3 tracking-tight">{title}</h1>
         
         {/* Breadcrumbs */}
         <div className="flex items-center justify-center gap-2 text-sm md:text-base font-medium">
