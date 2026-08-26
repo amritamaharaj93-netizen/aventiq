@@ -32,14 +32,17 @@ export default function AboutPage() {
           <h2 className="text-4xl md:text-5xl font-extrabold text-slate-900 mb-8 tracking-tight">
             Building software that <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#0067D9] to-[#00C6F7]">actually works</span>
           </h2>
-          <p className="text-xl md:text-2xl text-slate-600 leading-relaxed font-medium">
+          <p className="text-xl md:text-2xl text-slate-600 leading-relaxed font-medium mb-6">
             Aventiq is a premier software development agency focused on helping ambitious businesses turn ideas into reliable, scalable, and impactful digital products.
+          </p>
+          <p className="text-lg md:text-xl text-slate-500 leading-relaxed">
+            With a passion for engineering excellence, we bring together top-tier talent and innovative design thinking. Whether you're a disruptive startup or an established enterprise, we build strategic partnerships to deliver real business value through clean code, transparent communication, and forward-thinking architecture.
           </p>
         </div>
       </div>
 
       {/* Mission & Vision (Elegant Classic Section) */}
-      <div className="container mx-auto px-4 md:px-8 mb-32 relative">
+      <div className="container mx-auto px-4 md:px-8 mb-0 relative">
         <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
           
           {/* Mission Card */}
@@ -93,8 +96,8 @@ export default function AboutPage() {
       </div>
 
       {/* Values */}
-      <div className="container mx-auto px-4 md:px-8 py-24 pb-32">
-        <div className="text-center max-w-3xl mx-auto mb-20">
+      <div className="container mx-auto px-4 md:px-8 mt-4 pt-0 pb-24">
+        <div className="text-center max-w-3xl mx-auto mb-12">
           <h2 className="text-4xl md:text-5xl font-extrabold text-slate-900 mb-6 tracking-tight">Our Core Values</h2>
           <p className="text-xl text-slate-600 font-medium">
             The principles that guide our engineering process and how we interact with our clients.

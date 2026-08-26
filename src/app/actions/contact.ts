@@ -1,8 +1,7 @@
 "use server"
 
 import { z } from "zod"
-// In a real scenario, you'd import Prisma Client here and save it to the DB
-// import prisma from "@/lib/prisma"
+import nodemailer from "nodemailer"
 
 const contactSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -30,11 +29,37 @@ export async function submitContactForm(prevState: any, formData: FormData) {
 
     const validatedData = contactSchema.parse(data)
 
-    // Simulate DB operation
-    // await prisma.contactLead.create({ data: validatedData })
-    
-    // Simulate artificial delay
-    await new Promise((resolve) => setTimeout(resolve, 1500))
+    // Setup nodemailer transporter using provided Gmail credentials
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: "aventiq34@gmail.com",
+        pass: "pzfs pmex nyuo foou",
+      },
+    })
+
+    // Construct the email content
+    const mailOptions = {
+      from: "aventiq34@gmail.com", // Send from the authenticated account
+      to: "aventiq34@gmail.com",   // Receive on the same account (as requested)
+      replyTo: validatedData.email,
+      subject: `New Project Inquiry from ${validatedData.name} - ${validatedData.projectType}`,
+      html: `
+        <h2>New Contact Form Submission</h2>
+        <p><strong>Name:</strong> ${validatedData.name}</p>
+        <p><strong>Email:</strong> ${validatedData.email}</p>
+        ${validatedData.phone ? `<p><strong>Phone:</strong> ${validatedData.phone}</p>` : ''}
+        ${validatedData.company ? `<p><strong>Company:</strong> ${validatedData.company}</p>` : ''}
+        <p><strong>Project Type:</strong> ${validatedData.projectType}</p>
+        ${validatedData.budget ? `<p><strong>Budget:</strong> ${validatedData.budget}</p>` : ''}
+        ${validatedData.timeline ? `<p><strong>Timeline:</strong> ${validatedData.timeline}</p>` : ''}
+        <h3>Message/Project Description:</h3>
+        <p>${validatedData.description.replace(/\n/g, "<br>")}</p>
+      `,
+    }
+
+    // Send the email
+    await transporter.sendMail(mailOptions)
 
     return {
       success: true,
@@ -47,9 +72,11 @@ export async function submitContactForm(prevState: any, formData: FormData) {
         errors: error.flatten().fieldErrors,
       }
     }
+    console.error("Email sending failed:", error)
     return {
       success: false,
-      message: "An unexpected error occurred. Please try again later.",
+      message: "Failed to send the email. Please verify the SMTP credentials or try again later.",
     }
   }
 }
+

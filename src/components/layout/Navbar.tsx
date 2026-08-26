@@ -39,22 +39,24 @@ export function Navbar() {
   return (
     <header
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-white",
-        isScrolled ? "shadow-md border-b border-border/40" : "border-b border-transparent"
+        "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
+        isScrolled ? "shadow-md border-b border-border/40 bg-white" : "border-b border-transparent bg-transparent"
       )}
     >
       <div className="container mx-auto px-4 md:px-8 h-20 flex items-center">
         {/* Left: Logo */}
         <div className="flex-1 flex items-center">
           <Link href="/" className="flex items-center gap-2 relative z-50">
-            {/* Fallback to text if logo image is missing, but assume user uploads logo */}
             <div className="relative flex items-center">
                <Image 
-                  src="/img/aventiq-logo.jpeg" 
+                  src="/img/logo_transparent.png" 
                   alt="Aventiq Logo" 
                   width={240} 
                   height={80} 
-                  className="h-14 md:h-20 w-auto object-contain mix-blend-multiply brightness-[1.1] contrast-[1.1]"
+                  className={cn(
+                    "h-14 md:h-20 w-auto object-contain transition-all duration-300",
+                    !isScrolled ? "drop-shadow-[0_0_15px_rgba(255,255,255,0.7)] drop-shadow-[0_0_5px_rgba(255,255,255,0.9)]" : "drop-shadow-none"
+                  )}
                   priority
                />
             </div>
@@ -71,8 +73,10 @@ export function Navbar() {
                   <Link
                     href={link.href}
                     className={cn(
-                      "text-base font-semibold transition-colors hover:text-[#0067D9]",
-                      isActive ? "text-[#0067D9] font-bold" : "text-[#475569]"
+                      "text-base font-semibold transition-colors",
+                      isActive 
+                        ? (!isScrolled ? "text-white" : "text-[#0067D9]")
+                        : (!isScrolled ? "text-white/80 hover:text-white" : "text-[#475569] hover:text-[#0067D9]")
                     )}
                   >
                     {link.name}
@@ -93,7 +97,10 @@ export function Navbar() {
 
         {/* Mobile Toggle */}
         <button
-          className="md:hidden relative z-50 p-2 text-[#020B1C]"
+          className={cn(
+            "md:hidden relative z-50 p-2", 
+            !isScrolled && !isMobileMenuOpen ? "text-white" : "text-[#020B1C]"
+          )}
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         >
           {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}

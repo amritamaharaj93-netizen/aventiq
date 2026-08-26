@@ -1,6 +1,8 @@
 "use client"
 
 import { useParams } from "next/navigation"
+import { useState } from "react"
+import { submitContactForm } from "@/app/actions/contact"
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { ArrowLeft, CheckCircle2, MonitorSmartphone, PenTool, Sparkles, LayoutTemplate, Palette, Zap } from "lucide-react"
@@ -63,6 +65,39 @@ export default function ServiceDetail() {
   }
 
   const Icon = data.icon
+
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [formSuccess, setFormSuccess] = useState(false)
+  const [formError, setFormError] = useState("")
+
+  const handleQuoteSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setFormError("");
+    setFormSuccess(false);
+    
+    const formData = new FormData(e.currentTarget);
+    const title = data.title; // we'll capture this from the data object below
+    formData.set("projectType", `${title} Quote Request`);
+    formData.set("company", "");
+    formData.set("phone", "");
+    formData.set("budget", "");
+    formData.set("timeline", "");
+
+    try {
+      const res = await submitContactForm(null, formData);
+      if (res.success) {
+        setFormSuccess(true);
+        e.currentTarget.reset();
+      } else {
+        const firstError = res.errors ? (Object.values(res.errors as Record<string, string[]>)[0])?.[0] : null;
+        setFormError(firstError as string || res.message || "Please fill in all required fields correctly.");
+      }
+    } catch(err) {
+      setFormError("Failed to send message. Please try again later.");
+    }
+    setIsSubmitting(false);
+  }
 
   return (
     <div className="min-h-screen bg-white font-sans">
@@ -149,19 +184,44 @@ export default function ServiceDetail() {
               <h3 className="text-2xl font-bold text-slate-900 mb-2 tracking-tight">Request a Quote</h3>
               <p className="text-slate-500 mb-6 text-sm">Tell us about your {data.title.toLowerCase()} needs and we'll get back to you within 24 hours.</p>
               
-              <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
-                <div>
-                  <input type="text" placeholder="Your Name" className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-sm" />
-                </div>
-                <div>
-                  <input type="email" placeholder="Email Address" className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-sm" />
-                </div>
-                <div>
-                  <textarea placeholder="Project Details" rows={4} className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-sm resize-none"></textarea>
-                </div>
-                <button type="submit" className={`w-full h-12 mt-2 text-base font-bold rounded-xl bg-gradient-to-r ${data.color} text-white shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300`}>
-                  Submit Request
-                </button>
+              <form className="space-y-4" onSubmit={handleQuoteSubmit}>
+                {formSuccess ? (
+                  <div className="flex flex-col items-center justify-center py-4">
+                    <div className="p-4 bg-green-50 border border-green-100 rounded-xl text-green-700 text-center font-medium mb-4 w-full text-sm">
+                      Thanks for reaching out! We will be in touch shortly.
+                    </div>
+                    <button 
+                      type="button" 
+                      onClick={() => {
+                        setFormSuccess(false);
+                        setFormError("");
+                      }}
+                      className={`w-full h-12 mt-2 text-base font-bold rounded-xl bg-gradient-to-r ${data.color} text-white shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 cursor-pointer`}
+                    >
+                      Send Another Request
+                    </button>
+                  </div>
+                ) : (
+                  <>
+                    {formError && (
+                      <div className="p-3 bg-red-50 border border-red-100 text-red-600 rounded-xl font-medium text-sm">
+                        {formError}
+                      </div>
+                    )}
+                    <div>
+                      <input type="text" name="name" required placeholder="Your Name" className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-sm" />
+                    </div>
+                    <div>
+                      <input type="email" name="email" required placeholder="Email Address" className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-sm" />
+                    </div>
+                    <div>
+                      <textarea name="description" required placeholder="Project Details" rows={4} className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-sm resize-none"></textarea>
+                    </div>
+                    <button disabled={isSubmitting} type="submit" className={`w-full h-12 mt-2 text-base font-bold rounded-xl bg-gradient-to-r ${data.color} text-white shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed`}>
+                      {isSubmitting ? "Submitting..." : "Submit Request"}
+                    </button>
+                  </>
+                )}
               </form>
             </div>
           </div>

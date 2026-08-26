@@ -47,9 +47,26 @@ const PROJECTS = [
   }
 ]
 
+import { useState, useEffect } from "react"
 import { PageHeader } from "@/components/layout/PageHeader"
 
 export default function ProjectsPage() {
+  const [displayProjects, setDisplayProjects] = useState(PROJECTS)
+
+  useEffect(() => {
+    const saved = localStorage.getItem("aventiq_admin_projects")
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved)
+        if (parsed && Array.isArray(parsed) && parsed.length > 0) {
+          setDisplayProjects(parsed)
+        }
+      } catch (e) {
+        console.error("Failed to parse projects from local storage")
+      }
+    }
+  }, [])
+
   return (
     <div className="min-h-screen bg-white pb-24">
       <PageHeader 
@@ -75,9 +92,9 @@ export default function ProjectsPage() {
 
       {/* Projects List */}
       <div className="container mx-auto px-4 md:px-8 space-y-32">
-        {PROJECTS.map((project, index) => (
+        {displayProjects.map((project: any, index: number) => (
           <motion.div 
-            key={project.title}
+            key={project.id || project.title}
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
@@ -124,7 +141,7 @@ export default function ProjectsPage() {
               </div>
 
               <div className="flex flex-wrap gap-2">
-                {project.tech.map(t => (
+                {project.tech?.map((t: string) => (
                   <span key={t} className="text-xs md:text-sm px-4 py-2 bg-white border border-slate-200 text-slate-600 rounded-lg font-semibold shadow-sm">
                     {t}
                   </span>

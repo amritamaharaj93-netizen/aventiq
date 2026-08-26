@@ -29,8 +29,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="h-full antialiased scroll-smooth" suppressHydrationWarning>
-      <body className={`${inter.className} min-h-full flex flex-col bg-background text-foreground`} suppressHydrationWarning>
+    <html lang="en" className="h-full antialiased scroll-smooth overflow-x-hidden" suppressHydrationWarning>
+      <body className={`${inter.className} min-h-full flex flex-col bg-background text-foreground overflow-x-hidden`} suppressHydrationWarning>
         <ConditionalHeader />
         <main className="flex-1 w-full pt-0">{children}</main>
         <ConditionalFooter />

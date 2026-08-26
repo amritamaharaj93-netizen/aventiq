@@ -4,13 +4,14 @@ import { useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { motion } from "framer-motion"
-import { Lock, Mail, ArrowRight, Loader2 } from "lucide-react"
+import { Lock, Mail, ArrowRight, Loader2, Eye, EyeOff } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [showPassword, setShowPassword] = useState(false)
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault()
@@ -44,11 +45,11 @@ export default function LoginPage() {
             <div className="flex justify-center mb-8">
               <Link href="/">
                  <Image 
-                    src="/img/aventiq-logo.jpeg" 
+                    src="/img/logo_transparent.png" 
                     alt="Aventiq Logo" 
                     width={240} 
                     height={80} 
-                    className="h-14 w-auto object-contain bg-white px-4 py-2 rounded-2xl shadow-md"
+                    className="h-14 md:h-16 w-auto object-contain drop-shadow-[0_0_15px_rgba(255,255,255,0.7)] drop-shadow-[0_0_5px_rgba(255,255,255,0.9)]"
                     priority
                  />
               </Link>
@@ -87,13 +88,21 @@ export default function LoginPage() {
                     <Lock size={18} />
                   </div>
                   <input 
-                    type="password" 
+                    type={showPassword ? "text" : "password"} 
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
-                    className="w-full h-14 pl-11 pr-4 bg-[#020B1C]/50 border border-white/10 rounded-xl text-white placeholder:text-[#64748B] focus:outline-none focus:ring-2 focus:ring-[#00C6F7] focus:border-transparent transition-all"
+                    className="w-full h-14 pl-11 pr-12 bg-[#020B1C]/50 border border-white/10 rounded-xl text-white placeholder:text-[#64748B] focus:outline-none focus:ring-2 focus:ring-[#00C6F7] focus:border-transparent transition-all"
                     placeholder="••••••••"
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute inset-y-0 right-0 pr-4 flex items-center text-[#64748B] hover:text-[#00C6F7] transition-colors focus:outline-none"
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                  >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
                 </div>
               </div>
 

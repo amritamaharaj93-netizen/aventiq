@@ -108,7 +108,7 @@ export default function ServicesPage() {
       </div>
 
       {/* Services Grid */}
-      <div className="container mx-auto px-4 md:px-8 relative z-10 pb-24">
+      <div className="container mx-auto px-4 md:px-8 relative z-10 pb-16">
         <motion.div 
           variants={containerVariants}
           initial="hidden"
@@ -120,7 +120,7 @@ export default function ServicesPage() {
               key={service.title} 
               variants={itemVariants}
               whileHover={{ y: -8 }}
-              className="group relative bg-white rounded-3xl border border-slate-200 shadow-[0_4px_20px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgb(0,103,217,0.1)] transition-all duration-500 overflow-hidden"
+              className="group relative bg-white rounded-3xl p-8 lg:p-10 border border-slate-200 shadow-[0_4px_20px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgb(0,103,217,0.1)] transition-all duration-500 overflow-hidden"
             >
               {/* Premium Gradient Hover Effect (Behind the content) */}
               <div className="absolute inset-0 bg-gradient-to-br from-[#00C6F7]/5 via-transparent to-[#0067D9]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"></div>
@@ -168,7 +168,7 @@ export default function ServicesPage() {
       </div>
 
       {/* Mini CTA at bottom */}
-      <div className="container mx-auto px-4 mt-32">
+      <div className="container mx-auto px-4 mt-8 md:mt-12">
         <div className="bg-[#031A3D] rounded-3xl p-12 md:p-16 text-center relative overflow-hidden">
           <div className="absolute inset-0 z-0">
              <div className="absolute -top-24 -right-24 w-64 h-64 bg-[#00C6F7] rounded-full mix-blend-screen filter blur-[80px] opacity-20"></div>

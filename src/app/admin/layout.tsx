@@ -7,20 +7,20 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     <div className="min-h-screen bg-[#F4F7FA] flex font-sans">
       {/* Premium Dark Sidebar */}
       <aside className="w-72 bg-[#020B1C] border-r border-[#062B63]/30 hidden md:flex flex-col fixed h-screen top-0 shadow-2xl z-50">
-        <div className="p-8 pb-4 flex items-center justify-center">
+        <div className="px-8 pt-8 pb-4 flex items-center justify-start">
           <Link href="/admin" className="block w-full">
              <Image 
-                src="/img/aventiq-logo.jpeg" 
+                src="/img/logo_transparent.png" 
                 alt="Aventiq Logo" 
                 width={240} 
                 height={80} 
-                className="w-full h-auto object-contain bg-white px-4 py-3 rounded-2xl shadow-lg"
+                className="w-full h-auto object-contain object-left drop-shadow-[0_0_15px_rgba(255,255,255,0.7)] drop-shadow-[0_0_5px_rgba(255,255,255,0.9)]"
                 priority
              />
           </Link>
         </div>
 
-        <div className="px-6 pb-2 text-[11px] uppercase tracking-widest font-semibold text-[#475569]">
+        <div className="px-8 pb-2 text-[11px] uppercase tracking-widest font-semibold text-[#475569]">
           Main Menu
         </div>
 
@@ -29,39 +29,38 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <LayoutDashboard size={18} />
             Dashboard
           </Link>
-          <Link href="/admin/projects" className="flex items-center gap-3 px-4 py-3 text-[#CBD5E1] hover:text-white hover:bg-white/5 rounded-xl font-medium transition-all group">
+          <Link href="/admin/projects" className="flex items-center gap-3 px-4 py-3 text-[#CBD5E1] hover:text-white hover:bg-white/5 rounded-xl font-medium transition-all group border-l-2 border-transparent">
             <FolderKanban size={18} className="text-[#64748B] group-hover:text-[#00C6F7] transition-colors" />
             Projects
           </Link>
-          <Link href="/admin/services" className="flex items-center gap-3 px-4 py-3 text-[#CBD5E1] hover:text-white hover:bg-white/5 rounded-xl font-medium transition-all group">
+          <Link href="/admin/services" className="flex items-center gap-3 px-4 py-3 text-[#CBD5E1] hover:text-white hover:bg-white/5 rounded-xl font-medium transition-all group border-l-2 border-transparent">
             <Briefcase size={18} className="text-[#64748B] group-hover:text-[#00C6F7] transition-colors" />
             Services
           </Link>
-          <Link href="/admin/blog" className="flex items-center gap-3 px-4 py-3 text-[#CBD5E1] hover:text-white hover:bg-white/5 rounded-xl font-medium transition-all group">
+          <Link href="/admin/blog" className="flex items-center gap-3 px-4 py-3 text-[#CBD5E1] hover:text-white hover:bg-white/5 rounded-xl font-medium transition-all group border-l-2 border-transparent">
             <FileText size={18} className="text-[#64748B] group-hover:text-[#00C6F7] transition-colors" />
             Blog
           </Link>
-          <Link href="/admin/leads" className="flex items-center gap-3 px-4 py-3 text-[#CBD5E1] hover:text-white hover:bg-white/5 rounded-xl font-medium transition-all group">
+          <Link href="/admin/leads" className="flex items-center gap-3 px-4 py-3 text-[#CBD5E1] hover:text-white hover:bg-white/5 rounded-xl font-medium transition-all group border-l-2 border-transparent">
             <Mail size={18} className="text-[#64748B] group-hover:text-[#00C6F7] transition-colors" />
             Contact Leads
           </Link>
-          <Link href="/admin/testimonials" className="flex items-center gap-3 px-4 py-3 text-[#CBD5E1] hover:text-white hover:bg-white/5 rounded-xl font-medium transition-all group">
+          <Link href="/admin/testimonials" className="flex items-center gap-3 px-4 py-3 text-[#CBD5E1] hover:text-white hover:bg-white/5 rounded-xl font-medium transition-all group border-l-2 border-transparent">
             <MessageSquare size={18} className="text-[#64748B] group-hover:text-[#00C6F7] transition-colors" />
             Testimonials
           </Link>
-          <Link href="/admin/careers" className="flex items-center gap-3 px-4 py-3 text-[#CBD5E1] hover:text-white hover:bg-white/5 rounded-xl font-medium transition-all group">
+          <Link href="/admin/careers" className="flex items-center gap-3 px-4 py-3 text-[#CBD5E1] hover:text-white hover:bg-white/5 rounded-xl font-medium transition-all group border-l-2 border-transparent">
             <Users size={18} className="text-[#64748B] group-hover:text-[#00C6F7] transition-colors" />
             Careers
           </Link>
         </nav>
 
-        <div className="p-6 mt-auto">
-          
-          <Link href="/admin/settings" className="flex items-center gap-3 px-4 py-2.5 text-[#CBD5E1] hover:text-white hover:bg-white/5 rounded-xl font-medium transition-all mb-1">
+        <div className="px-4 pb-8 pt-4 mt-auto">
+          <Link href="/admin/settings" className="flex items-center gap-3 px-4 py-2.5 text-[#CBD5E1] hover:text-white hover:bg-white/5 rounded-xl font-medium transition-all mb-1 border-l-2 border-transparent">
             <Settings size={18} className="text-[#64748B]" />
             Settings
           </Link>
-          <Link href="/login" className="flex items-center gap-3 px-4 py-2.5 text-[#CBD5E1] hover:text-[#ff4d4f] hover:bg-white/5 rounded-xl font-medium transition-all">
+          <Link href="/login" className="flex items-center gap-3 px-4 py-2.5 text-[#CBD5E1] hover:text-[#ff4d4f] hover:bg-white/5 rounded-xl font-medium transition-all border-l-2 border-transparent">
             <LogOut size={18} className="text-[#64748B]" />
             Exit Dashboard
           </Link>

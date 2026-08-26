@@ -28,7 +28,7 @@ export default function ContactPage() {
   }, [state])
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] pb-24">
+    <div className="min-h-screen bg-[#F8FAFC] pb-8">
       <PageHeader 
         title="Contact Us" 
         breadcrumbs={[{ label: "Contact Us" }]} 
@@ -56,7 +56,7 @@ export default function ContactPage() {
             <div className="space-y-10">
               <div className="group flex flex-col items-start">
                 <h3 className="font-extrabold text-slate-900 text-sm uppercase tracking-wider mb-2">Email Us</h3>
-                <a href="mailto:hello@aventiq.com" className="text-2xl font-bold text-[#0067D9] group-hover:text-[#00C6F7] transition-colors">hello@aventiq.com</a>
+                <a href="mailto:aventiq34@gmail.com" className="text-2xl font-bold text-[#0067D9] group-hover:text-[#00C6F7] transition-colors">aventiq34@gmail.com</a>
               </div>
               <div className="group flex flex-col items-start">
                 <h3 className="font-extrabold text-slate-900 text-sm uppercase tracking-wider mb-2">Call Us</h3>
@@ -64,7 +64,7 @@ export default function ContactPage() {
               </div>
               <div className="flex flex-col items-start">
                 <h3 className="font-extrabold text-slate-900 text-sm uppercase tracking-wider mb-2">Location</h3>
-                <p className="text-xl font-bold text-slate-700">Kokar Ranchi</p>
+                <a href="https://maps.google.com/?q=Kokar+Ranchi" target="_blank" rel="noopener noreferrer" className="text-xl font-bold text-slate-700 hover:text-[#0067D9] transition-colors">Kokar Ranchi</a>
               </div>
             </div>
           </motion.div>
@@ -177,6 +177,32 @@ export default function ContactPage() {
             )}
           </motion.div>
         </div>
+      </div>
+
+      {/* Map Section */}
+      <div className="container mx-auto px-4 max-w-7xl mb-8">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="bg-white p-4 md:p-8 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-200 overflow-hidden"
+        >
+          <div className="flex flex-col items-center mb-8 text-center">
+            <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-4 tracking-tight">Find Us Here</h2>
+            <p className="text-lg text-slate-600 font-medium">Kokar, Ranchi, Jharkhand, India</p>
+          </div>
+          <div className="w-full h-[450px] rounded-xl overflow-hidden border border-slate-100">
+            <iframe 
+              src="https://maps.google.com/maps?q=Kokar%20Ranchi&t=&z=14&ie=UTF8&iwloc=&output=embed" 
+              width="100%" 
+              height="100%" 
+              style={{ border: 0 }} 
+              allowFullScreen 
+              loading="lazy" 
+              referrerPolicy="no-referrer-when-downgrade"
+            ></iframe>
+          </div>
+        </motion.div>
       </div>
     </div>
   )

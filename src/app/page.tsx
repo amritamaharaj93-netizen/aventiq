@@ -12,6 +12,7 @@ import { ArrowRight, Code2, Smartphone, Cloud, Cpu, Database, Blocks, LayoutTemp
 // wrap specific sections in client components. For simplicity and speed of delivering the first pass, 
 // I'll make the page a Client Component to use motion everywhere.
 import { motion, AnimatePresence } from "framer-motion"
+import { submitContactForm } from "@/app/actions/contact"
 
 const SERVICES = [
   { icon: LayoutTemplate, title: "Web Development", desc: "High-performance, accessible, and modern web applications built for scale.", slug: "web-development" },
@@ -72,6 +73,44 @@ export default function Home() {
   const [activeSlide, setActiveSlide] = useState(0)
   const [direction, setDirection] = useState(1)
   const [openFaq, setOpenFaq] = useState<number | null>(0)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [formSuccess, setFormSuccess] = useState(false)
+  const [formError, setFormError] = useState("")
+
+  const handleHomeContact = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setFormError("");
+    setFormSuccess(false);
+    
+    const formData = new FormData(e.currentTarget);
+    const firstName = formData.get("firstName");
+    const lastName = formData.get("lastName");
+    
+    // Zod schema requires these fields to be strings, so we provide defaults if they don't exist in this form
+    formData.set("name", `${firstName} ${lastName}`);
+    formData.set("projectType", "General Inquiry");
+    formData.set("description", formData.get("message") as string);
+    formData.set("company", "");
+    formData.set("phone", "");
+    formData.set("budget", "");
+    formData.set("timeline", "");
+
+    try {
+      const res = await submitContactForm(null, formData);
+      if (res.success) {
+        setFormSuccess(true);
+        e.currentTarget.reset();
+      } else {
+        // Extract the first specific validation error if Zod failed
+        const firstError = res.errors ? (Object.values(res.errors as Record<string, string[]>)[0])?.[0] : null;
+        setFormError(firstError as string || res.message || "Please fill in all required fields correctly.");
+      }
+    } catch(err) {
+      setFormError("Failed to send message. Please try again later.");
+    }
+    setIsSubmitting(false);
+  }
   const testimonials = [
     {
       name: "Rahul Desai",
@@ -113,8 +152,6 @@ export default function Home() {
       <section className="relative overflow-hidden bg-[#030712]">
         {/* Static Base Layer */}
         <div className="absolute inset-0 bg-gradient-to-br from-[#030712] via-[#0C1222] to-[#030712]"></div>
-        <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(circle, #fff 1px, transparent 1px)', backgroundSize: '32px 32px' }}></div>
-        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#0067D9]/40 to-transparent z-20"></div>
 
         {/* FULL SLIDER TRACK */}
         <div className="grid w-full">
@@ -131,78 +168,66 @@ export default function Home() {
               animate="center"
               exit="exit"
               transition={{ type: "spring", stiffness: 300, damping: 35 }}
-              className="col-start-1 row-start-1 w-full pt-[110px] pb-[100px]"
+              className="col-start-1 row-start-1 w-full pt-[80px] pb-[100px]"
             >
               
               {/* Slide-specific Glow Background */}
-              <div className="absolute inset-0 pointer-events-none overflow-hidden">
+              <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
                 <div className="absolute top-[-20%] right-[0%] w-[800px] h-[800px] rounded-full blur-[150px]" style={{ backgroundColor: `${HERO_SLIDES[activeSlide].accent}12` }}></div>
                 <div className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] rounded-full blur-[120px]" style={{ backgroundColor: `${HERO_SLIDES[activeSlide].accent}08` }}></div>
               </div>
 
+              {/* Background Image Layer */}
+              <div 
+                className="absolute inset-0 z-0"
+                style={{
+                  backgroundImage: `url(${HERO_SLIDES[activeSlide].image})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                }}
+              >
+                {/* Dark overlay for readability */}
+                <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px]"></div>
+              </div>
+
               {/* Slide Content */}
-              <div className="container mx-auto px-4 relative z-10">
-                <div className="grid lg:grid-cols-2 gap-16 items-center">
-                  
-                  {/* Left Side: Text Content */}
-                  <div className="text-left">
-                    {/* Pill Badge */}
-                    <div
-                      className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full border text-sm font-medium mb-6"
-                      style={{ backgroundColor: `${HERO_SLIDES[activeSlide].accent}10`, borderColor: `${HERO_SLIDES[activeSlide].accent}25`, color: HERO_SLIDES[activeSlide].accent }}
-                    >
-                      <span className="relative flex h-2 w-2">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75" style={{ backgroundColor: HERO_SLIDES[activeSlide].accent }}></span>
-                        <span className="relative inline-flex rounded-full h-2 w-2" style={{ backgroundColor: HERO_SLIDES[activeSlide].accent }}></span>
-                      </span>
-                      {HERO_SLIDES[activeSlide].badge}
-                    </div>
+              <div className="container mx-auto px-4 relative z-10 flex flex-col items-center text-center justify-center min-h-[60vh] pt-4">
+                {/* Pill Badge */}
+                <div
+                  className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full border text-sm font-medium mb-6 backdrop-blur-sm"
+                  style={{ backgroundColor: `${HERO_SLIDES[activeSlide].accent}20`, borderColor: `${HERO_SLIDES[activeSlide].accent}40`, color: '#fff' }}
+                >
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75" style={{ backgroundColor: HERO_SLIDES[activeSlide].accent }}></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2" style={{ backgroundColor: HERO_SLIDES[activeSlide].accent }}></span>
+                  </span>
+                  {HERO_SLIDES[activeSlide].badge}
+                </div>
 
-                    {/* Headline */}
-                    <h1 className="text-5xl md:text-[5.5rem] font-bold tracking-[-0.03em] mb-8 text-white leading-[1.05]">
-                      {HERO_SLIDES[activeSlide].headline} <br className="hidden md:block" />
-                      <span className="font-serif italic font-normal text-transparent bg-clip-text bg-gradient-to-r" style={{ backgroundImage: `linear-gradient(to right, ${HERO_SLIDES[activeSlide].accent}, ${HERO_SLIDES[activeSlide].accentEnd})` }}>
-                        {HERO_SLIDES[activeSlide].headlineHighlight}
-                      </span>
-                    </h1>
+                {/* Headline */}
+                <h1 className="text-5xl md:text-[5.5rem] font-bold tracking-[-0.03em] mb-8 text-white leading-[1.05] max-w-4xl mx-auto drop-shadow-lg">
+                  {HERO_SLIDES[activeSlide].headline} <br className="hidden md:block" />
+                  <span className="font-serif italic font-normal text-transparent bg-clip-text bg-gradient-to-r" style={{ backgroundImage: `linear-gradient(to right, ${HERO_SLIDES[activeSlide].accent}, ${HERO_SLIDES[activeSlide].accentEnd})` }}>
+                    {HERO_SLIDES[activeSlide].headlineHighlight}
+                  </span>
+                </h1>
 
-                    {/* Description */}
-                    <p className="text-base md:text-lg text-[#94A3B8] mb-10 max-w-md leading-relaxed">
-                      {HERO_SLIDES[activeSlide].description}
-                    </p>
+                {/* Description */}
+                <p className="text-base md:text-xl text-white/90 mb-10 max-w-2xl mx-auto leading-relaxed drop-shadow-md font-medium">
+                  {HERO_SLIDES[activeSlide].description}
+                </p>
 
-                    {/* Buttons */}
-                    <div className="flex flex-col sm:flex-row gap-4">
-                      <Button asChild size="lg" className="rounded-full px-8 h-14 border-0 shadow-[0_0_30px_rgba(255,255,255,0.1)] transition-all font-semibold text-base" style={{ backgroundColor: HERO_SLIDES[activeSlide].accent, color: '#030712' }}>
-                        <Link href="/contact">{HERO_SLIDES[activeSlide].cta}</Link>
-                      </Button>
-                      <Button asChild variant="outline" size="lg" className="rounded-full px-8 h-14 border border-white/10 bg-transparent text-white hover:bg-white/5 hover:border-white/20 font-medium transition-all text-base group">
-                        <Link href="/services">
-                          Explore Services
-                          <svg className="w-4 h-4 ml-2 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" /></svg>
-                        </Link>
-                      </Button>
-                    </div>
-                  </div>
-
-                  {/* Right Side: Content Image */}
-                  <div className="block relative mt-4 lg:mt-0">
-                    <div className="relative">
-                      {/* Glow behind image */}
-                      <div className="absolute -inset-4 rounded-[2.5rem] blur-2xl opacity-30" style={{ backgroundColor: HERO_SLIDES[activeSlide].accent }}></div>
-                      
-                      <div className="relative rounded-[2rem] overflow-hidden border border-white/[0.1] shadow-2xl">
-                        <img 
-                          src={HERO_SLIDES[activeSlide].image} 
-                          alt={HERO_SLIDES[activeSlide].headline}
-                          draggable={false}
-                          className="w-full h-[280px] md:h-[400px] lg:h-[480px] object-cover select-none cursor-pointer"
-                        />
-                        {/* Subtle gradient overlay at bottom */}
-                        <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-gradient-to-t from-[#030712]/60 to-transparent"></div>
-                      </div>
-                    </div>
-                  </div>
+                {/* Buttons */}
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <Button asChild size="lg" className="rounded-full px-8 h-14 border-0 shadow-[0_0_30px_rgba(255,255,255,0.1)] transition-all font-semibold text-base hover:scale-105" style={{ backgroundColor: HERO_SLIDES[activeSlide].accent, color: '#030712' }}>
+                    <Link href="/contact">{HERO_SLIDES[activeSlide].cta}</Link>
+                  </Button>
+                  <Button asChild variant="outline" size="lg" className="rounded-full px-8 h-14 border border-white/30 bg-white/10 backdrop-blur-md text-white hover:bg-white/20 hover:border-white/50 hover:scale-105 font-medium transition-all text-base group shadow-lg">
+                    <Link href="/services">
+                      Explore Services
+                      <svg className="w-4 h-4 ml-2 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" /></svg>
+                    </Link>
+                  </Button>
                 </div>
               </div>
             </motion.div>
@@ -229,7 +254,7 @@ export default function Home() {
       </section>
 
       {/* SERVICES */}
-      <section className="py-[80px] relative bg-[#F0F7FF] overflow-hidden">
+      <section className="py-10 relative bg-[#F0F7FF] overflow-hidden">
         
         {/* Atmospheric Glow Orbs */}
         <div className="absolute top-[-20%] right-[-10%] w-[600px] h-[600px] bg-blue-200/40 rounded-full blur-[120px] pointer-events-none"></div>
@@ -305,11 +330,11 @@ export default function Home() {
       </section>
 
       {/* WHY CHOOSE AVENTIQ */}
-      <section className="py-[80px] bg-[#031A3D] text-white">
+      <section className="py-10 md:py-[80px] bg-[#031A3D] text-white overflow-hidden w-full">
         <div className="container mx-auto px-4 md:px-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {/* Card 1 */}
-            <div className="bg-[#0f1115] p-8 rounded-[1.5rem] border border-white/5 flex flex-col items-center text-center shadow-2xl">
+            <div className="bg-[#0f1115] p-8 rounded-[1.5rem] border border-white/5 flex flex-col items-center text-center shadow-2xl w-full">
               <div className="w-[4.5rem] h-[4.5rem] rounded-[1.25rem] bg-white/5 border border-white/10 flex items-center justify-center mb-6">
                 <Briefcase className="text-[#00C6F7] w-8 h-8" strokeWidth={1.5} />
               </div>
@@ -323,7 +348,7 @@ export default function Home() {
             </div>
 
             {/* Card 2 */}
-            <div className="bg-[#0f1115] p-8 rounded-[1.5rem] border border-white/5 flex flex-col items-center text-center shadow-2xl">
+            <div className="bg-[#0f1115] p-8 rounded-[1.5rem] border border-white/5 flex flex-col items-center text-center shadow-2xl w-full">
               <div className="w-[4.5rem] h-[4.5rem] rounded-[1.25rem] bg-white/5 border border-white/10 flex items-center justify-center mb-6">
                 <Users className="text-[#FF8A00] w-8 h-8" strokeWidth={1.5} />
               </div>
@@ -337,7 +362,7 @@ export default function Home() {
             </div>
 
             {/* Card 3 */}
-            <div className="bg-[#0f1115] p-8 rounded-[1.5rem] border border-white/5 flex flex-col items-center text-center shadow-2xl">
+            <div className="bg-[#0f1115] p-8 rounded-[1.5rem] border border-white/5 flex flex-col items-center text-center shadow-2xl w-full">
               <div className="w-[4.5rem] h-[4.5rem] rounded-[1.25rem] bg-white/5 border border-white/10 flex items-center justify-center mb-6">
                 <Layers className="text-[#00C6F7] w-8 h-8" strokeWidth={1.5} />
               </div>
@@ -351,7 +376,7 @@ export default function Home() {
             </div>
 
             {/* Card 4 */}
-            <div className="bg-[#0f1115] p-8 rounded-[1.5rem] border border-white/5 flex flex-col items-center text-center shadow-2xl">
+            <div className="bg-[#0f1115] p-8 rounded-[1.5rem] border border-white/5 flex flex-col items-center text-center shadow-2xl w-full">
               <div className="w-[4.5rem] h-[4.5rem] rounded-[1.25rem] bg-white/5 border border-white/10 flex items-center justify-center mb-6">
                 <Calendar className="text-[#FF8A00] w-8 h-8" strokeWidth={1.5} />
               </div>
@@ -368,7 +393,7 @@ export default function Home() {
       </section>
 
       {/* TESTIMONIALS */}
-      <section className="py-[80px] bg-[#F8FAFC] border-y border-slate-100 overflow-hidden">
+      <section className="py-10 bg-[#F8FAFC] border-y border-slate-100 overflow-hidden">
         <div className="container mx-auto px-4 md:px-8">
           
           <div className="mb-16 text-center">
@@ -469,7 +494,7 @@ export default function Home() {
         {/* Top gradient line */}
         <div className="h-px bg-gradient-to-r from-transparent via-[#0067D9]/50 to-transparent"></div>
 
-        <div className="py-14 md:py-20 relative z-10">
+        <div className="py-[40px] relative z-10">
           {/* Section Header */}
           <div className="container mx-auto px-4 md:px-8 text-center mb-14">
             <div className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full bg-white/[0.04] border border-white/[0.08] mb-6">
@@ -639,7 +664,7 @@ export default function Home() {
       </section>
 
       {/* TECHNOLOGIES */}
-      <section className="py-[100px] bg-gradient-to-b from-[#020C1B] to-[#0A1E3D] relative overflow-hidden">
+      <section className="py-[40px] bg-gradient-to-b from-[#020C1B] to-[#0A1E3D] relative overflow-hidden">
         {/* Glows */}
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#00C6F7]/5 rounded-full blur-[100px] pointer-events-none"></div>
         <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[#0067D9]/10 rounded-full blur-[100px] pointer-events-none"></div>
@@ -658,6 +683,29 @@ export default function Home() {
 
           <div className="flex flex-wrap justify-center gap-6 md:gap-10">
             {[
+              {
+                name: "HTML",
+                category: "Frontend",
+                color: "#E34F26",
+                svg: (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-14 h-14">
+                    <path d="M3 3h18l-1.5 16L12 22l-7.5-3L3 3z" strokeLinejoin="round" />
+                    <path d="M7.5 7h9l-.5 4.5h-8" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M16 11.5l-.5 4.5-3.5 1.5-3.5-1.5-.2-2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                )
+              },
+              {
+                name: "CSS",
+                category: "Frontend",
+                color: "#1572B6",
+                svg: (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-14 h-14">
+                    <path d="M3 3h18l-1.5 16L12 22l-7.5-3L3 3z" strokeLinejoin="round" />
+                    <path d="M16.5 7H7.5l.5 4.5h8l-.5 4.5-3.5 1.5-3.5-1.5-.2-2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                )
+              },
               {
                 name: "React",
                 category: "Frontend",
@@ -769,7 +817,7 @@ export default function Home() {
       </section>
 
       {/* FAQ */}
-      <section className="py-[100px] bg-[#F4F8FA] relative overflow-hidden">
+      <section className="py-10 bg-[#F4F8FA] relative overflow-hidden">
         <div className="container mx-auto px-4 md:px-8 max-w-5xl">
           <div className="text-center mb-16">
             <div className="inline-flex items-center gap-3 mb-4">
@@ -810,17 +858,17 @@ export default function Home() {
             ].map((faq, i) => (
               <div 
                 key={i} 
-                className={`bg-white rounded-[1.5rem] border ${openFaq === i ? 'border-[#0067D9] shadow-lg shadow-blue-900/5' : 'border-slate-200 shadow-sm'} overflow-hidden transition-all duration-300`}
+                className={`bg-white rounded-2xl border ${openFaq === i ? 'border-[#0067D9] shadow-md shadow-blue-900/5' : 'border-slate-200 shadow-sm'} overflow-hidden transition-all duration-300`}
               >
                 <button 
                   onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                  className="w-full px-8 py-7 flex items-center justify-between text-left focus:outline-none"
+                  className="w-full px-8 py-4 flex items-center justify-between text-left focus:outline-none"
                 >
                   <span className={`font-bold text-xl pr-4 leading-tight ${openFaq === i ? 'text-[#0067D9]' : 'text-[#102A43]'}`}>
                     {faq.q}
                   </span>
-                  <div className={`w-12 h-12 rounded-full flex items-center justify-center shrink-0 transition-colors duration-300 ${openFaq === i ? 'bg-[#0067D9] text-white' : 'bg-[#F0F7FF] text-[#0067D9]'}`}>
-                    <svg className={`w-5 h-5 transition-transform duration-300 ${openFaq === i ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 transition-colors duration-300 ${openFaq === i ? 'bg-[#0067D9] text-white' : 'bg-[#F0F7FF] text-[#0067D9]'}`}>
+                    <svg className={`w-4 h-4 transition-transform duration-300 ${openFaq === i ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
                     </svg>
                   </div>
@@ -833,7 +881,7 @@ export default function Home() {
                       exit={{ height: 0, opacity: 0 }}
                       className="overflow-hidden"
                     >
-                      <div className="px-8 pb-8 pt-4 text-slate-500 text-lg leading-relaxed border-t border-slate-100">
+                      <div className="px-8 pb-5 pt-3 text-slate-500 text-lg leading-relaxed border-t border-slate-100">
                         {faq.a}
                       </div>
                     </motion.div>
@@ -846,7 +894,7 @@ export default function Home() {
       </section>
 
       {/* CONTACT US */}
-      <section className="py-[100px] bg-white relative overflow-hidden">
+      <section className="py-10 bg-white relative overflow-hidden">
         {/* Subtle decorative background elements */}
         <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-gradient-to-bl from-slate-50 to-transparent rounded-full pointer-events-none -translate-y-1/2 translate-x-1/3"></div>
         <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-to-tr from-blue-50/50 to-transparent rounded-full pointer-events-none translate-y-1/3 -translate-x-1/3"></div>
@@ -874,7 +922,7 @@ export default function Home() {
                   </div>
                   <div>
                     <h4 className="text-base font-bold text-[#102A43] mb-0.5">Email Us</h4>
-                    <a href="mailto:hello@aventiq.com" className="text-sm text-[#0067D9] font-medium hover:underline">hello@aventiq.com</a>
+                    <a href="mailto:aventiq34@gmail.com" className="text-sm text-[#0067D9] font-medium hover:underline">aventiq34@gmail.com</a>
                   </div>
                 </div>
                 
@@ -894,7 +942,7 @@ export default function Home() {
                   </div>
                   <div>
                     <h4 className="text-base font-bold text-[#102A43] mb-0.5">Visit Us</h4>
-                    <span className="text-sm text-slate-600 font-medium">Kokar Ranchi</span>
+                    <a href="https://maps.google.com/?q=Kokar+Ranchi" target="_blank" rel="noopener noreferrer" className="text-sm text-[#0067D9] font-medium hover:underline">Kokar Ranchi</a>
                   </div>
                 </div>
               </div>
@@ -908,48 +956,81 @@ export default function Home() {
                 
                 <h3 className="text-2xl font-bold text-[#102A43] mb-8 relative z-10">Send a Message</h3>
                 
-                <form className="space-y-6 relative z-10" onSubmit={(e) => e.preventDefault()}>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <label className="text-sm font-semibold text-slate-600 ml-1">First Name</label>
-                      <input 
-                        type="text" 
-                        placeholder="John" 
-                        className="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#0067D9]/20 focus:border-[#0067D9] transition-all placeholder:text-slate-400"
-                      />
+                <form className="space-y-6 relative z-10" onSubmit={handleHomeContact}>
+                  {formSuccess ? (
+                    <div className="flex flex-col items-center justify-center py-6">
+                      <div className="p-6 bg-green-50 border border-green-100 rounded-2xl text-green-700 text-center font-medium mb-6 w-full">
+                        Thanks for reaching out! We will be in touch shortly.
+                      </div>
+                      <button 
+                        type="button" 
+                        onClick={() => {
+                          setFormSuccess(false);
+                          setFormError("");
+                        }}
+                        className="w-full py-4 rounded-2xl bg-[#102A43] hover:bg-[#0067D9] text-white font-bold text-lg transition-colors flex items-center justify-center shadow-lg shadow-blue-900/20 cursor-pointer"
+                      >
+                        Send Another Message
+                      </button>
                     </div>
-                    <div className="space-y-2">
-                      <label className="text-sm font-semibold text-slate-600 ml-1">Last Name</label>
-                      <input 
-                        type="text" 
-                        placeholder="Doe" 
-                        className="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#0067D9]/20 focus:border-[#0067D9] transition-all placeholder:text-slate-400"
-                      />
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <label className="text-sm font-semibold text-slate-600 ml-1">Email Address</label>
-                    <input 
-                      type="email" 
-                      placeholder="john@company.com" 
-                      className="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#0067D9]/20 focus:border-[#0067D9] transition-all placeholder:text-slate-400"
-                    />
-                  </div>
+                  ) : (
+                    <>
+                      {formError && (
+                        <div className="p-4 bg-red-50 border border-red-100 text-red-600 rounded-xl font-medium text-sm">
+                          {formError}
+                        </div>
+                      )}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                          <label className="text-sm font-semibold text-slate-600 ml-1">First Name</label>
+                          <input 
+                            type="text" 
+                            name="firstName"
+                            required
+                            placeholder="John" 
+                            className="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#0067D9]/20 focus:border-[#0067D9] transition-all placeholder:text-slate-400"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <label className="text-sm font-semibold text-slate-600 ml-1">Last Name</label>
+                          <input 
+                            type="text" 
+                            name="lastName"
+                            required
+                            placeholder="Doe" 
+                            className="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#0067D9]/20 focus:border-[#0067D9] transition-all placeholder:text-slate-400"
+                          />
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <label className="text-sm font-semibold text-slate-600 ml-1">Email Address</label>
+                        <input 
+                          type="email" 
+                          name="email"
+                          required
+                          placeholder="john@company.com" 
+                          className="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#0067D9]/20 focus:border-[#0067D9] transition-all placeholder:text-slate-400"
+                        />
+                      </div>
 
-                  <div className="space-y-2">
-                    <label className="text-sm font-semibold text-slate-600 ml-1">Message</label>
-                    <textarea 
-                      placeholder="Tell us about your project..." 
-                      rows={4}
-                      className="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#0067D9]/20 focus:border-[#0067D9] transition-all placeholder:text-slate-400 resize-none"
-                    ></textarea>
-                  </div>
-                  
-                  <button className="w-full py-4 rounded-2xl bg-[#102A43] hover:bg-[#0067D9] text-white font-bold text-lg transition-colors flex items-center justify-center gap-2 group shadow-lg shadow-blue-900/20 mt-2">
-                    Send Message
-                    <Send className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                  </button>
+                      <div className="space-y-2">
+                        <label className="text-sm font-semibold text-slate-600 ml-1">Message</label>
+                        <textarea 
+                          name="message"
+                          required
+                          placeholder="Tell us about your project..." 
+                          rows={4}
+                          className="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#0067D9]/20 focus:border-[#0067D9] transition-all placeholder:text-slate-400 resize-none"
+                        ></textarea>
+                      </div>
+                      
+                      <button disabled={isSubmitting} type="submit" className="w-full py-4 rounded-2xl bg-[#102A43] hover:bg-[#0067D9] text-white font-bold text-lg transition-colors flex items-center justify-center gap-2 group shadow-lg shadow-blue-900/20 mt-2 disabled:opacity-70">
+                        {isSubmitting ? "Sending..." : "Send Message"}
+                        {!isSubmitting && <Send className="w-5 h-5 group-hover:translate-x-1 transition-transform" />}
+                      </button>
+                    </>
+                  )}
                 </form>
               </div>
             </div>
