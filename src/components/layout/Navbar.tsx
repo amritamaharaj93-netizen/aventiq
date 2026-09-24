@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button"
 import { Menu, X } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 
-const NAV_LINKS = [
+const DEFAULT_NAV_LINKS = [
   { name: "Home", href: "/" },
   { name: "Services", href: "/services" },
   { name: "Projects", href: "/projects" },
@@ -21,6 +21,10 @@ const NAV_LINKS = [
 export function Navbar() {
   const [isScrolled, setIsScrolled] = React.useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false)
+  const [navLinks, setNavLinks] = React.useState(DEFAULT_NAV_LINKS)
+  const [logoUrl, setLogoUrl] = React.useState("/img/logo_transparent.png")
+  const [ctaText, setCtaText] = React.useState("Start a Project")
+  const [ctaLink, setCtaLink] = React.useState("/contact")
   const pathname = usePathname()
 
   React.useEffect(() => {
@@ -29,6 +33,26 @@ export function Navbar() {
     }
     window.addEventListener("scroll", handleScroll)
     return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
+
+  // Load dynamic Home Settings
+  React.useEffect(() => {
+    const saved = localStorage.getItem("aventiq_admin_home")
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved)
+        if (parsed && typeof parsed === "object") {
+          if (Array.isArray(parsed.navLinks) && parsed.navLinks.length > 0) {
+            setNavLinks(parsed.navLinks)
+          }
+          if (parsed.headerLogoUrl) setLogoUrl(parsed.headerLogoUrl)
+          if (parsed.headerCtaText) setCtaText(parsed.headerCtaText)
+          if (parsed.headerCtaLink) setCtaLink(parsed.headerCtaLink)
+        }
+      } catch (e) {
+        console.error("Failed to load header settings")
+      }
+    }
   }, [])
 
   // Close mobile menu on route change
@@ -49,7 +73,7 @@ export function Navbar() {
           <Link href="/" className="flex items-center gap-2 relative z-50">
             <div className="relative flex items-center">
                <Image 
-                  src="/img/logo_transparent.png" 
+                  src={logoUrl} 
                   alt="Aventiq Logo" 
                   width={240} 
                   height={80} 
@@ -66,7 +90,7 @@ export function Navbar() {
         {/* Center: Desktop Navigation */}
         <nav className="hidden md:flex flex-none items-center justify-center">
           <ul className="flex items-center gap-8">
-            {NAV_LINKS.map((link) => {
+            {navLinks.filter((l: any) => l.isActive !== false).map((link: any) => {
               const isActive = pathname === link.href || (pathname.startsWith(link.href) && link.href !== "/")
               return (
                 <li key={link.name}>
@@ -91,7 +115,7 @@ export function Navbar() {
         <div className="flex-1 flex justify-end items-center gap-4">
           <div className="hidden md:block">
             <Button asChild variant="default" className="rounded-full px-6 bg-[#0067D9] hover:bg-[#00C6F7] hover:text-[#020B1C] transition-all">
-              <Link href="/contact">Start a Project</Link>
+              <Link href={ctaLink}>{ctaText}</Link>
             </Button>
           </div>
 
@@ -118,7 +142,7 @@ export function Navbar() {
             className="absolute top-0 left-0 right-0 h-screen bg-white dark:bg-[#020B1C] pt-24 px-4 pb-8 flex flex-col md:hidden border-b border-border shadow-lg"
           >
             <nav className="flex flex-col gap-6 items-center text-center">
-              {NAV_LINKS.map((link) => {
+              {navLinks.filter((l: any) => l.isActive !== false).map((link: any) => {
                 const isActive = pathname === link.href || (pathname.startsWith(link.href) && link.href !== "/")
                 return (
                   <Link

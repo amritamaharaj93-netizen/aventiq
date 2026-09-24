@@ -5,6 +5,7 @@ import Link from "next/link"
 import { useParams, useRouter } from "next/navigation"
 import { ArrowLeft, Save, Loader2, Image as ImageIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { RichTextEditor } from "@/components/ui/rich-text-editor"
 
 export default function EditProjectPage() {
   const params = useParams()
@@ -20,7 +21,9 @@ export default function EditProjectPage() {
   const [projectTech, setProjectTech] = useState("")
 
   // Image Upload State
+  // Image Upload State
   const [imagePreview, setImagePreview] = useState<string | null>(null)
+  const [isUploadingImage, setIsUploadingImage] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   // Fetch from localStorage
@@ -47,16 +50,40 @@ export default function EditProjectPage() {
     }
   }, [params.id])
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
-      const url = URL.createObjectURL(file)
-      setImagePreview(url)
+      setIsUploadingImage(true)
+      
+      const localUrl = URL.createObjectURL(file)
+      setImagePreview(localUrl)
+      
+      try {
+        const formData = new FormData()
+        formData.append('file', file)
+        formData.append('folder', 'aventiq_projects')
+        
+        const { uploadMedia } = await import('@/actions/upload')
+        const response = await uploadMedia(formData)
+        
+        if (response.success && response.result) {
+          setImagePreview(response.result.secure_url)
+        } else {
+          console.error("Upload failed:", response.error)
+          alert("Failed to upload image. " + (response.error || ''))
+        }
+      } catch (error) {
+        console.error("Error uploading:", error)
+        alert("An error occurred during upload.")
+      } finally {
+        setIsUploadingImage(false)
+      }
     }
   }
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault()
+    if (isUploadingImage) return
     setIsLoading(true)
 
     // Save to localStorage
@@ -138,7 +165,7 @@ export default function EditProjectPage() {
               <select 
                 value={projectCategory}
                 onChange={(e) => setProjectCategory(e.target.value)}
-                className="w-full h-12 px-4 rounded-xl border border-slate-200/80 bg-slate-50/50 hover:bg-white hover:border-slate-300 focus:bg-white focus:outline-none focus:ring-4 focus:ring-[#0067D9]/10 focus:border-[#0067D9] transition-all duration-300 text-[15px] font-semibold text-[#020B1C] shadow-[0_2px_10px_rgba(0,0,0,0.02)] appearance-none"
+                className="w-full h-12 px-4 rounded-xl border border-slate-200/80 bg-slate-50/50 hover:bg-white hover:border-slate-300 focus:bg-white focus:outline-none focus:ring-4 focus:ring-[#0067D9]/10 focus:border-[#0067D9] transition-all duration-300 text-[15px] font-semibold text-[#020B1C] shadow-[0_2px_10px_rgba(0,0,0,0.02)]"
               >
                 <option value="SaaS">SaaS</option>
                 <option value="Mobile">Mobile</option>
@@ -154,7 +181,7 @@ export default function EditProjectPage() {
               <select 
                 value={projectStatus}
                 onChange={(e) => setProjectStatus(e.target.value)}
-                className="w-full h-12 px-4 rounded-xl border border-slate-200/80 bg-slate-50/50 hover:bg-white hover:border-slate-300 focus:bg-white focus:outline-none focus:ring-4 focus:ring-[#0067D9]/10 focus:border-[#0067D9] transition-all duration-300 text-[15px] font-semibold text-[#020B1C] shadow-[0_2px_10px_rgba(0,0,0,0.02)] appearance-none"
+                className="w-full h-12 px-4 rounded-xl border border-slate-200/80 bg-slate-50/50 hover:bg-white hover:border-slate-300 focus:bg-white focus:outline-none focus:ring-4 focus:ring-[#0067D9]/10 focus:border-[#0067D9] transition-all duration-300 text-[15px] font-semibold text-[#020B1C] shadow-[0_2px_10px_rgba(0,0,0,0.02)]"
               >
                 <option value="Published">Published</option>
                 <option value="Draft">Draft</option>
@@ -165,8 +192,8 @@ export default function EditProjectPage() {
             <div className="space-y-1">
               <label className="text-[12px] font-bold text-slate-500 uppercase tracking-wider block ml-1">Thumbnail Image</label>
               <div 
-                onClick={() => fileInputRef.current?.click()}
-                className="relative w-full h-12 px-4 rounded-xl border-2 border-dashed border-[#0067D9]/20 bg-[#0067D9]/[0.02] flex items-center justify-start gap-2 text-[#0067D9] font-semibold hover:bg-[#0067D9]/5 hover:border-[#0067D9]/40 cursor-pointer transition-all duration-300 overflow-hidden group shadow-[0_2px_10px_rgba(0,103,217,0.02)]"
+                onClick={() => !isUploadingImage && fileInputRef.current?.click()}
+                className={`relative w-full h-12 px-4 rounded-xl border-2 border-dashed border-[#0067D9]/20 bg-[#0067D9]/[0.02] flex items-center justify-start gap-2 text-[#0067D9] font-semibold hover:bg-[#0067D9]/5 hover:border-[#0067D9]/40 cursor-pointer transition-all duration-300 overflow-hidden group shadow-[0_2px_10px_rgba(0,103,217,0.02)] ${isUploadingImage ? 'opacity-50 pointer-events-none' : ''}`}
               >
                 <input 
                   type="file" 
@@ -174,8 +201,14 @@ export default function EditProjectPage() {
                   onChange={handleImageChange} 
                   accept="image/*" 
                   className="hidden" 
+                  disabled={isUploadingImage}
                 />
-                {imagePreview ? (
+                {isUploadingImage ? (
+                  <div className="flex items-center gap-2">
+                    <Loader2 size={18} className="animate-spin text-[#0067D9]" />
+                    <span className="text-[14px]">Uploading...</span>
+                  </div>
+                ) : imagePreview ? (
                   <div className="flex items-center gap-3 w-full justify-start">
                     <div className="h-8 w-8 rounded-lg overflow-hidden shadow-sm border border-slate-200">
                       <img src={imagePreview} alt="Preview" className="h-full w-full object-cover" />
@@ -221,11 +254,11 @@ export default function EditProjectPage() {
             
             <div className="space-y-1">
               <label className="text-[12px] font-bold text-slate-500 uppercase tracking-wider block ml-1">Project Description</label>
-              <textarea 
-                rows={4}
+              <RichTextEditor 
                 value={projectDescription}
-                onChange={(e) => setProjectDescription(e.target.value)}
-                className="w-full p-4 rounded-xl border border-slate-200/80 bg-slate-50/50 hover:bg-white hover:border-slate-300 focus:bg-white focus:outline-none focus:ring-4 focus:ring-[#0067D9]/10 focus:border-[#0067D9] transition-all duration-300 text-[15px] font-semibold text-[#020B1C] shadow-[0_2px_10px_rgba(0,0,0,0.02)] resize-none leading-relaxed"
+                onChange={(val) => setProjectDescription(val)}
+                placeholder="Comprehensive description of the project..."
+                minHeight="220px"
               />
             </div>
           </div>

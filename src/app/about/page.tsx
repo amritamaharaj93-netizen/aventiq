@@ -1,24 +1,59 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { Target, Eye, Zap, Shield, HeartHandshake, BookOpen } from "lucide-react"
-
 import { PageHeader } from "@/components/layout/PageHeader"
 
-const VALUES = [
-  { icon: Zap, title: "Innovation", desc: "We constantly explore new technologies to deliver cutting-edge solutions." },
-  { icon: Shield, title: "Quality", desc: "We write clean, tested, and maintainable code built to last." },
-  { icon: Eye, title: "Transparency", desc: "Clear communication and honest feedback at every stage of development." },
-  { icon: Target, title: "Ownership", desc: "We treat your product and your success as our own." },
-  { icon: BookOpen, title: "Continuous Learning", desc: "Our engineers stay ahead of the curve in a fast-changing landscape." },
-  { icon: HeartHandshake, title: "Customer Success", desc: "Your ROI and business growth are our ultimate metrics of success." }
-]
+const DEFAULT_ABOUT = {
+  headerTitle: "Technology With a Purpose.",
+  badgeTag: "Who We Are",
+  mainTitle: "Building software that actually works",
+  mainDesc1: "Aventiq is a premier software development agency focused on helping ambitious businesses turn ideas into reliable, scalable, and impactful digital products.",
+  mainDesc2: "With a passion for engineering excellence, we bring together top-tier talent and innovative design thinking. Whether you're a disruptive startup or an established enterprise, we build strategic partnerships to deliver real business value through clean code, transparent communication, and forward-thinking architecture.",
+  missionTitle: "Our Mission",
+  missionDesc: "To empower ambitious businesses by engineering intelligent, scalable technology solutions that solve complex problems and drive sustainable growth.",
+  visionTitle: "Our Vision",
+  visionDesc: "To be the trusted global technology partner for visionary companies, setting the standard for software engineering excellence and digital innovation.",
+  valuesHeading: "Our Core Values",
+  valuesSubheading: "The principles that guide our engineering process and how we interact with our clients.",
+  values: [
+    { title: "Innovation", desc: "We constantly explore new technologies to deliver cutting-edge solutions." },
+    { title: "Quality", desc: "We write clean, tested, and maintainable code built to last." },
+    { title: "Transparency", desc: "Clear communication and honest feedback at every stage of development." },
+    { title: "Ownership", desc: "We treat your product and your success as our own." },
+    { title: "Continuous Learning", desc: "Our engineers stay ahead of the curve in a fast-changing landscape." },
+    { title: "Customer Success", desc: "Your ROI and business growth are our ultimate metrics of success." }
+  ]
+}
+
+const ICON_MAP = [Zap, Shield, Eye, Target, BookOpen, HeartHandshake]
 
 export default function AboutPage() {
+  const [data, setData] = useState(DEFAULT_ABOUT)
+
+  useEffect(() => {
+    const saved = localStorage.getItem("aventiq_admin_about")
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved)
+        if (parsed && typeof parsed === "object") {
+          setData({
+            ...DEFAULT_ABOUT,
+            ...parsed,
+            values: Array.isArray(parsed.values) && parsed.values.length > 0 ? parsed.values : DEFAULT_ABOUT.values
+          })
+        }
+      } catch (e) {
+        console.error("Failed to load about page content")
+      }
+    }
+  }, [])
+
   return (
     <div className="min-h-screen bg-white pb-24">
       <PageHeader 
-        title="Technology With a Purpose." 
+        title={data.headerTitle} 
         breadcrumbs={[{ label: "About Us" }]} 
         bgImage="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2000&auto=format&fit=crop"
       />
@@ -27,17 +62,19 @@ export default function AboutPage() {
       <div className="container mx-auto px-4 md:px-8 mt-12 mb-24 relative">
         <div className="max-w-4xl text-center mx-auto">
           <div className="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-slate-50 border border-slate-200 text-sm font-bold text-[#0067D9] mb-8 tracking-widest uppercase shadow-sm">
-            Who We Are
+            {data.badgeTag}
           </div>
           <h2 className="text-4xl md:text-5xl font-extrabold text-slate-900 mb-8 tracking-tight">
-            Building software that <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#0067D9] to-[#00C6F7]">actually works</span>
+            {data.mainTitle}
           </h2>
-          <p className="text-xl md:text-2xl text-slate-600 leading-relaxed font-medium mb-6">
-            Aventiq is a premier software development agency focused on helping ambitious businesses turn ideas into reliable, scalable, and impactful digital products.
-          </p>
-          <p className="text-lg md:text-xl text-slate-500 leading-relaxed">
-            With a passion for engineering excellence, we bring together top-tier talent and innovative design thinking. Whether you're a disruptive startup or an established enterprise, we build strategic partnerships to deliver real business value through clean code, transparent communication, and forward-thinking architecture.
-          </p>
+          <div 
+            className="text-xl md:text-2xl text-slate-600 leading-relaxed font-medium mb-6 rich-text-content"
+            dangerouslySetInnerHTML={{ __html: data.mainDesc1 }}
+          />
+          <div 
+            className="text-lg md:text-xl text-slate-500 leading-relaxed rich-text-content"
+            dangerouslySetInnerHTML={{ __html: data.mainDesc2 }}
+          />
         </div>
       </div>
 
@@ -60,10 +97,10 @@ export default function AboutPage() {
                 <Target strokeWidth={1.5} size={32} />
               </div>
               
-              <h3 className="text-3xl font-extrabold text-slate-900 mb-6 tracking-tight">Our Mission</h3>
+              <h3 className="text-3xl font-extrabold text-slate-900 mb-6 tracking-tight">{data.missionTitle}</h3>
               
               <p className="text-xl md:text-2xl text-slate-600 leading-relaxed font-light">
-                To empower ambitious businesses by engineering <span className="font-semibold text-slate-900">intelligent, scalable technology solutions</span> that solve complex problems and drive sustainable growth.
+                {data.missionDesc}
               </p>
             </div>
           </motion.div>
@@ -84,10 +121,10 @@ export default function AboutPage() {
                 <Eye strokeWidth={1.5} size={32} />
               </div>
               
-              <h3 className="text-3xl font-extrabold text-white mb-6 tracking-tight">Our Vision</h3>
+              <h3 className="text-3xl font-extrabold text-white mb-6 tracking-tight">{data.visionTitle}</h3>
               
               <p className="text-xl md:text-2xl text-slate-300 leading-relaxed font-light">
-                To be the <span className="font-semibold text-white">trusted global technology partner</span> for visionary companies, setting the standard for software engineering excellence and digital innovation.
+                {data.visionDesc}
               </p>
             </div>
           </motion.div>
@@ -96,33 +133,36 @@ export default function AboutPage() {
       </div>
 
       {/* Values */}
-      <div className="container mx-auto px-4 md:px-8 mt-4 pt-0 pb-24">
+      <div className="container mx-auto px-4 md:px-8 mt-16 pt-0 pb-24">
         <div className="text-center max-w-3xl mx-auto mb-12">
-          <h2 className="text-4xl md:text-5xl font-extrabold text-slate-900 mb-6 tracking-tight">Our Core Values</h2>
+          <h2 className="text-4xl md:text-5xl font-extrabold text-slate-900 mb-6 tracking-tight">{data.valuesHeading}</h2>
           <p className="text-xl text-slate-600 font-medium">
-            The principles that guide our engineering process and how we interact with our clients.
+            {data.valuesSubheading}
           </p>
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {VALUES.map((value, i) => (
-            <motion.div 
-              key={value.title}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-              className="group bg-white p-10 rounded-[2rem] border border-slate-200 shadow-sm hover:shadow-xl hover:shadow-[#0067D9]/5 transition-all duration-500 relative overflow-hidden"
-            >
-              <div className="absolute inset-0 bg-gradient-to-br from-[#00C6F7]/5 to-[#0067D9]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              
-              <div className="relative z-10 w-16 h-16 bg-[#F3F8FF] rounded-2xl flex items-center justify-center text-[#0067D9] mb-8 group-hover:scale-110 group-hover:bg-[#0067D9] group-hover:text-white transition-all duration-500">
-                <value.icon size={28} strokeWidth={2} />
-              </div>
-              <h3 className="relative z-10 text-2xl font-bold text-slate-900 mb-4 group-hover:text-[#0067D9] transition-colors">{value.title}</h3>
-              <p className="relative z-10 text-slate-600 font-medium leading-relaxed">{value.desc}</p>
-            </motion.div>
-          ))}
+          {data.values.map((value, i) => {
+            const IconComp = ICON_MAP[i % ICON_MAP.length]
+            return (
+              <motion.div 
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className="group bg-white p-10 rounded-[2rem] border border-slate-200 shadow-sm hover:shadow-xl hover:shadow-[#0067D9]/5 transition-all duration-500 relative overflow-hidden"
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-[#00C6F7]/5 to-[#0067D9]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                
+                <div className="relative z-10 w-16 h-16 bg-[#F3F8FF] rounded-2xl flex items-center justify-center text-[#0067D9] mb-8 group-hover:scale-110 group-hover:bg-[#0067D9] group-hover:text-white transition-all duration-500">
+                  <IconComp size={28} strokeWidth={2} />
+                </div>
+                <h3 className="relative z-10 text-2xl font-bold text-slate-900 mb-4 group-hover:text-[#0067D9] transition-colors">{value.title}</h3>
+                <p className="relative z-10 text-slate-600 font-medium leading-relaxed">{value.desc}</p>
+              </motion.div>
+            )
+          })}
         </div>
       </div>
     </div>

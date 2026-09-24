@@ -1,10 +1,12 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { motion } from "framer-motion"
-import { ArrowRight, LayoutTemplate, Cloud, Smartphone, Palette, Cpu, Database, Server, Blocks, ShoppingCart, Wrench, Megaphone, Search, Target, MousePointerClick } from "lucide-react"
+import { ArrowRight, LayoutTemplate, Cloud, Smartphone, Palette, Cpu, Server, Megaphone, Search, Target, MousePointerClick, Zap } from "lucide-react"
+import { PageHeader } from "@/components/layout/PageHeader"
 
-const ALL_SERVICES = [
+const DEFAULT_SERVICES = [
   { 
     icon: LayoutTemplate, 
     title: "Web Development", 
@@ -18,6 +20,13 @@ const ALL_SERVICES = [
     desc: "End-to-end multi-tenant software as a service platform engineering. From subscription billing to complex user roles, we build scalable platforms.",
     tags: ["Node.js", "AWS", "PostgreSQL", "Stripe"],
     slug: "saas-development"
+  },
+  { 
+    icon: Smartphone, 
+    title: "Mobile App Development", 
+    desc: "Native and cross-platform mobile apps for iOS and Android built with smooth animations, offline sync, and real-time push notifications.",
+    tags: ["React Native", "Flutter", "Swift", "Kotlin"],
+    slug: "mobile-app-development"
   },
   { 
     icon: Palette, 
@@ -83,9 +92,48 @@ const itemVariants = {
   show: { opacity: 1, y: 0, transition: { duration: 0.5 } }
 }
 
-import { PageHeader } from "@/components/layout/PageHeader"
-
 export default function ServicesPage() {
+  const [servicesList, setServicesList] = useState<any[]>(DEFAULT_SERVICES)
+
+  useEffect(() => {
+    const saved = localStorage.getItem("aventiq_admin_services")
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved)
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          const PRIORITY_SLUGS = ["web-development", "saas-development", "mobile-app-development"]
+          const mapped = parsed.map((item: any) => {
+            const found = DEFAULT_SERVICES.find(d => d.slug === item.slug || d.title.toLowerCase() === item.title.toLowerCase())
+            return {
+              icon: found ? found.icon : Zap,
+              title: item.title,
+              desc: item.desc || item.overview || "High-performance software and digital solutions.",
+              tags: item.tech && item.tech.length > 0 ? item.tech : (found ? found.tags : ["React", "TypeScript", "Node.js"]),
+              slug: item.slug || item.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')
+            }
+          })
+
+          mapped.sort((a: any, b: any) => {
+            const slugA = (a.slug || "").toLowerCase()
+            const slugB = (b.slug || "").toLowerCase()
+
+            const indexA = PRIORITY_SLUGS.indexOf(slugA)
+            const indexB = PRIORITY_SLUGS.indexOf(slugB)
+
+            if (indexA !== -1 && indexB !== -1) return indexA - indexB
+            if (indexA !== -1) return -1
+            if (indexB !== -1) return 1
+            return 0
+          })
+
+          setServicesList(mapped)
+        }
+      } catch (e) {
+        console.error("Failed to load services from local storage")
+      }
+    }
+  }, [])
+
   return (
     <div className="min-h-screen bg-[#F8FAFC] pb-24">
       <PageHeader 
@@ -115,79 +163,57 @@ export default function ServicesPage() {
           animate="show"
           className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
         >
-          {ALL_SERVICES.map((service) => (
-            <motion.div 
-              key={service.title} 
-              variants={itemVariants}
-              whileHover={{ y: -8 }}
-              className="group relative bg-white rounded-3xl p-8 lg:p-10 border border-slate-200 shadow-[0_4px_20px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgb(0,103,217,0.1)] transition-all duration-500 overflow-hidden"
-            >
-              {/* Premium Gradient Hover Effect (Behind the content) */}
-              <div className="absolute inset-0 bg-gradient-to-br from-[#00C6F7]/5 via-transparent to-[#0067D9]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"></div>
-              
-              <Link href={`/services/${service.slug}`} className="relative z-10 block p-8 md:p-10 h-full flex flex-col">
+          {servicesList.map((service) => {
+            const Icon = service.icon || Zap
+            return (
+              <motion.div 
+                key={service.slug || service.title} 
+                variants={itemVariants}
+                whileHover={{ y: -8 }}
+                className="group relative bg-white rounded-3xl p-2 border border-slate-200 shadow-[0_4px_20px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgb(0,103,217,0.1)] transition-all duration-500 overflow-hidden flex flex-col"
+              >
+                {/* Premium Gradient Hover Effect */}
+                <div className="absolute inset-0 bg-gradient-to-br from-[#00C6F7]/5 via-transparent to-[#0067D9]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"></div>
                 
-                {/* Icon Container matching image colors exactly */}
-                <div className="w-16 h-16 rounded-2xl bg-[#F3F8FF] flex items-center justify-center text-[#0067D9] mb-8 group-hover:scale-110 group-hover:bg-white group-hover:shadow-[0_0_25px_rgba(0,198,247,0.25)] transition-all duration-500 relative">
-                   <service.icon size={28} strokeWidth={2} />
-                   <div className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-[#FF8A00] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 shadow-sm border-2 border-white"></div>
-                </div>
+                <Link href={`/services/${service.slug}`} className="relative z-10 p-8 md:p-10 h-full flex flex-col justify-between">
+                  <div>
+                    {/* Icon Container */}
+                    <div className="w-16 h-16 rounded-2xl bg-[#F3F8FF] flex items-center justify-center text-[#0067D9] mb-8 group-hover:scale-110 group-hover:bg-white group-hover:shadow-[0_0_25px_rgba(0,198,247,0.25)] transition-all duration-500 relative">
+                      <Icon size={28} strokeWidth={2} />
+                      <div className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-[#FF8A00] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 shadow-sm border-2 border-white"></div>
+                    </div>
 
-                {/* Content */}
-                <h3 className="text-2xl font-bold text-slate-900 mb-4 tracking-tight group-hover:text-[#0067D9] transition-colors duration-300">
-                  {service.title}
-                </h3>
-                <p className="text-slate-600 mb-8 leading-relaxed font-medium flex-grow text-[17px]">
-                  {service.desc}
-                </p>
+                    {/* Content */}
+                    <h3 className="text-2xl font-bold text-slate-900 mb-4 tracking-tight group-hover:text-[#0067D9] transition-colors duration-300">
+                      {service.title}
+                    </h3>
+                    <p className="text-slate-600 mb-8 leading-relaxed font-medium text-[17px]">
+                      {service.desc}
+                    </p>
+                  </div>
 
-                {/* Tech Tags */}
-                <div className="flex flex-wrap gap-2 mb-12">
-                  {service.tags.map(tag => (
-                    <span 
-                      key={tag} 
-                      className="text-xs font-semibold px-3 py-1.5 rounded-full border border-slate-200 bg-slate-50 text-slate-600 group-hover:border-[#00C6F7]/30 transition-colors"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
+                  <div>
+                    {/* Tech Tags */}
+                    <div className="flex flex-wrap gap-2 mb-8">
+                      {service.tags?.map((tag: string) => (
+                        <span key={tag} className="text-xs px-3.5 py-1.5 bg-slate-50 text-slate-600 rounded-full font-semibold border border-slate-100">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
 
-                {/* Link Arrow */}
-                <div className="flex items-center font-bold mt-auto group/link text-[#0067D9]">
-                  <span className="relative overflow-hidden">
-                    <span className="inline-block transition-transform duration-300 group-hover/link:-translate-y-full">View Details</span>
-                    <span className="absolute top-0 left-0 inline-block transition-transform duration-300 translate-y-full group-hover/link:translate-y-0 text-[#00C6F7]">View Details</span>
-                  </span>
-                  <ArrowRight size={18} className="ml-2 group-hover:translate-x-2 transition-transform duration-300" />
-                </div>
-              </Link>
-            </motion.div>
-          ))}
+                    {/* Action Button Link */}
+                    <div className="inline-flex items-center gap-2 font-bold text-[#0067D9] group-hover:text-[#00C6F7] transition-colors">
+                      View Details <ArrowRight size={18} className="group-hover:translate-x-1.5 transition-transform" />
+                    </div>
+                  </div>
+                </Link>
+              </motion.div>
+            )
+          })}
         </motion.div>
       </div>
 
-      {/* Mini CTA at bottom */}
-      <div className="container mx-auto px-4 mt-8 md:mt-12">
-        <div className="bg-[#031A3D] rounded-3xl p-12 md:p-16 text-center relative overflow-hidden">
-          <div className="absolute inset-0 z-0">
-             <div className="absolute -top-24 -right-24 w-64 h-64 bg-[#00C6F7] rounded-full mix-blend-screen filter blur-[80px] opacity-20"></div>
-             <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-[#0067D9] rounded-full mix-blend-screen filter blur-[80px] opacity-20"></div>
-          </div>
-          <div className="relative z-10">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Need a custom solution?</h2>
-            <p className="text-[#CBD5E1] mb-8 max-w-2xl mx-auto">
-              We specialize in building bespoke software that fits your exact operational needs. Let's discuss your requirements and technical architecture.
-            </p>
-            <Link 
-              href="/contact" 
-              className="inline-flex items-center justify-center bg-[#FF8A00] hover:bg-[#FF9700] text-white px-8 py-4 rounded-full font-semibold transition-colors shadow-lg"
-            >
-              Talk to Our Engineers
-            </Link>
-          </div>
-        </div>
-      </div>
     </div>
   )
 }

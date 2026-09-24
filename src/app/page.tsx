@@ -14,26 +14,219 @@ import { ArrowRight, Code2, Smartphone, Cloud, Cpu, Database, Blocks, LayoutTemp
 import { motion, AnimatePresence } from "framer-motion"
 import { submitContactForm } from "@/app/actions/contact"
 
-const SERVICES = [
-  { icon: LayoutTemplate, title: "Web Development", desc: "High-performance, accessible, and modern web applications built for scale.", slug: "web-development" },
-  { icon: Cloud, title: "SaaS Development", desc: "End-to-end multi-tenant software as a service platform engineering.", slug: "saas-development" },
-  { icon: Palette, title: "UI/UX Design", desc: "Beautiful, intuitive interfaces and user experiences that delight and convert.", slug: "ui-ux-design" },
-  { icon: Cpu, title: "AI Development", desc: "Intelligent automation and integrations powered by modern machine learning.", slug: "ai-development" },
-  { icon: Server, title: "Cloud & DevOps", desc: "Scalable cloud infrastructure, CI/CD pipelines, and reliable deployment workflows.", slug: "cloud-devops" },
-  { icon: Megaphone, title: "Digital Marketing", desc: "Data-driven marketing strategies that amplify your brand and drive growth.", slug: "digital-marketing" },
-  { icon: Search, title: "SEO", desc: "Search engine optimization that boosts visibility and organic traffic.", slug: "seo" },
-  { icon: Target, title: "Meta Ads", desc: "High-ROI Facebook and Instagram ad campaigns that reach your target audience.", slug: "meta-ads" },
-  { icon: MousePointerClick, title: "Google Ads", desc: "Strategic Google Ads management to maximize conversions and minimize ad spend.", slug: "google-ads" },
+const IconMap: Record<string, any> = { ArrowRight, Code2, Smartphone, Cloud, Cpu, Database, Blocks, LayoutTemplate, ShieldCheck, Zap, Palette, Server, Megaphone, Search, Target, MousePointerClick, Hexagon, Triangle, Box, Command, Layers, User, Mail, Phone, MapPin, Send, Briefcase, Users, Award, Calendar }
+
+const DEFAULT_SERVICES = [
+  { id: "1", iconName: "LayoutTemplate", title: "Web Development", desc: "High-performance, accessible, and modern web applications built for scale.", slug: "web-development" },
+  { id: "2", iconName: "Cloud", title: "SaaS Development", desc: "End-to-end multi-tenant software as a service platform engineering.", slug: "saas-development" },
+  { id: "3", iconName: "Palette", title: "UI/UX Design", desc: "Beautiful, intuitive interfaces and user experiences that delight and convert.", slug: "ui-ux-design" },
+  { id: "4", iconName: "Cpu", title: "AI Development", desc: "Intelligent automation and integrations powered by modern machine learning.", slug: "ai-development" },
+  { id: "5", iconName: "Server", title: "Cloud & DevOps", desc: "Scalable cloud infrastructure, CI/CD pipelines, and reliable deployment workflows.", slug: "cloud-devops" },
+  { id: "6", iconName: "Megaphone", title: "Digital Marketing", desc: "Data-driven marketing strategies that amplify your brand and drive growth.", slug: "digital-marketing" },
+  { id: "7", iconName: "Search", title: "SEO", desc: "Search engine optimization that boosts visibility and organic traffic.", slug: "seo" },
+  { id: "8", iconName: "Target", title: "Meta Ads", desc: "High-ROI Facebook and Instagram ad campaigns that reach your target audience.", slug: "meta-ads" },
+  { id: "9", iconName: "MousePointerClick", title: "Google Ads", desc: "Strategic Google Ads management to maximize conversions and minimize ad spend.", slug: "google-ads" },
+]
+
+const DEFAULT_TESTIMONIALS = [
+  {
+    id: "1",
+    name: "Rahul Desai",
+    role: "CTO, TechVanguard India",
+    quote: "Aventiq transformed our legacy system into a modern SaaS platform. Their team delivered ahead of schedule with exceptional code quality. The architecture handles 10x our original traffic across India. Our experience throughout the engagement was incredible. We were guided whenever we had queries and the engineering staff is highly professional.",
+    rating: 5,
+  },
+  {
+    id: "2",
+    name: "Vikram Mehta",
+    role: "Founder, CloudSync Networks",
+    quote: "Working with Aventiq felt like having an in-house engineering team in Bengaluru. Their deep understanding of cloud architecture and DevOps practices helped us reduce infrastructure costs by 40%. Highly recommend them to anyone needing serious backend scaling for the Indian market.",
+    rating: 5,
+  },
+  {
+    id: "3",
+    name: "Priya Sharma",
+    role: "VP of Product, DataFlow Systems",
+    quote: "The mobile application Aventiq built for us has a 4.8-star rating and helped us seamlessly expand into Tier 2 and Tier 3 cities. Their attention to UX details and smooth animations set our product apart from every competitor. An absolute joy to collaborate with from start to finish.",
+    rating: 5,
+  },
+  {
+    id: "4",
+    name: "Anjali Kapoor",
+    role: "Director of Engineering, FinTech Corp",
+    quote: "They didn't just write code; they partnered with us to fundamentally improve our product strategy for the UPI ecosystem. The best technical partners we've ever hired in India. The migration was completely seamless without any downtime.",
+    rating: 5,
+  },
+]
+
+const DEFAULT_PARTNERS = [
+  { id: "1", name: "TechVanguard India" },
+  { id: "2", name: "CloudSync Networks" },
+  { id: "3", name: "DataFlow Systems" },
+  { id: "4", name: "FinTech Corp" },
+  { id: "5", name: "NexGen Solutions" },
+  { id: "6", name: "Innovate Labs" },
+  { id: "7", name: "Acme Corp" },
+  { id: "8", name: "GlobalTech" },
+  { id: "9", name: "FutureSoft" },
+  { id: "10", name: "RapidScale AI" },
+  { id: "11", name: "MetaEdge" },
+  { id: "12", name: "Zenith Digital" },
+  { id: "13", name: "Prism Analytics" }
+]
+
+const DEFAULT_BLOG_POSTS = [
+  {
+    id: "1",
+    tag: "Engineering",
+    tagColor: "#0067D9",
+    title: "Building Scalable SaaS Platforms with Next.js and Edge Computing",
+    excerpt: "Learn how we architect multi-tenant SaaS applications that serve thousands of concurrent users with sub-100ms response times.",
+    date: "Aug 18, 2026",
+    readTime: "8 min read",
+    image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=800"
+  },
+  {
+    id: "2",
+    tag: "AI & ML",
+    tagColor: "#8B5CF6",
+    title: "Integrating AI Agents into Enterprise Workflows: A Practical Guide",
+    excerpt: "A deep dive into how we build intelligent automation pipelines that reduce manual work by up to 60% for our enterprise clients.",
+    date: "Aug 12, 2026",
+    readTime: "12 min read",
+    image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=800"
+  },
+  {
+    id: "3",
+    tag: "Design",
+    tagColor: "#EC4899",
+    title: "The Art of Micro-Interactions: Why Small Details Win Big Users",
+    excerpt: "How subtle animations and thoughtful UI feedback loops can dramatically improve user retention and satisfaction scores.",
+    date: "Aug 5, 2026",
+    readTime: "6 min read",
+    image: "https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&q=80&w=800"
+  },
+]
+
+export interface TechItem {
+  id: string
+  name: string
+  category: string
+  color: string
+  svgString: string
+  imageUrl?: string
+}
+
+const DEFAULT_TECH_STACK: TechItem[] = [
+  {
+    id: "1",
+    name: "HTML",
+    category: "Frontend",
+    color: "#E34F26",
+    svgString: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-14 h-14"><path d="M3 3h18l-1.5 16L12 22l-7.5-3L3 3z" strokeLinejoin="round" /><path d="M7.5 7h9l-.5 4.5h-8" strokeLinecap="round" strokeLinejoin="round" /><path d="M16 11.5l-.5 4.5-3.5 1.5-3.5-1.5-.2-2" strokeLinecap="round" strokeLinejoin="round" /></svg>'
+  },
+  {
+    id: "2",
+    name: "CSS",
+    category: "Frontend",
+    color: "#1572B6",
+    svgString: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-14 h-14"><path d="M3 3h18l-1.5 16L12 22l-7.5-3L3 3z" strokeLinejoin="round" /><path d="M16.5 7H7.5l.5 4.5h8l-.5 4.5-3.5 1.5-3.5-1.5-.2-2" strokeLinecap="round" strokeLinejoin="round" /></svg>'
+  },
+  {
+    id: "3",
+    name: "React",
+    category: "Frontend",
+    color: "#61DAFB",
+    svgString: '<svg viewBox="-11.5 -10.2 23 20.4" fill="none" stroke="currentColor" strokeWidth="1.2" className="w-14 h-14"><ellipse rx="11" ry="4.2"/><ellipse rx="11" ry="4.2" transform="rotate(60)"/><ellipse rx="11" ry="4.2" transform="rotate(120)"/><circle r="2" fill="currentColor" stroke="none"/></svg>'
+  },
+  {
+    id: "4",
+    name: "Next.js",
+    category: "Frontend",
+    color: "#FFFFFF",
+    svgString: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-14 h-14"><circle cx="12" cy="12" r="10"/><path d="M8 8v8l8-8v8"/></svg>'
+  },
+  {
+    id: "5",
+    name: "PHP",
+    category: "Backend",
+    color: "#777BB4",
+    svgString: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-14 h-14"><ellipse cx="12" cy="12" rx="10" ry="6"/><text x="12" y="16" fontSize="10" fontWeight="bold" textAnchor="middle" fill="currentColor" stroke="none">PHP</text></svg>'
+  },
+  {
+    id: "6",
+    name: "WordPress",
+    category: "CMS",
+    color: "#21759B",
+    svgString: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-14 h-14"><circle cx="12" cy="12" r="10"/><path d="M6 10l3 8.5L12 12l3 6.5L18 10" strokeLinejoin="round"/></svg>'
+  },
+  {
+    id: "7",
+    name: "Android",
+    category: "Mobile",
+    color: "#3DDC84",
+    svgString: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-14 h-14"><path d="M5 14v-4a7 7 0 0 1 14 0v4M8 8v-2M16 8v-2"/><rect x="5" y="14" width="14" height="4" rx="1"/></svg>'
+  },
+  {
+    id: "8",
+    name: "AWS",
+    category: "Cloud",
+    color: "#FF9900",
+    svgString: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-14 h-14"><path d="M4 15s4 4 10 2c-3 1-7-1-10-2z" fill="currentColor" stroke="none"/><path d="M14 12c-1.5 2-4.5 3-7 1.5 1-1 3.5-2.5 7-1.5z" fill="currentColor" stroke="none"/><path d="M19 15l-2 1m2-1l-1-2" strokeWidth="2"/><text x="12" y="11" fontSize="8" fontWeight="bold" textAnchor="middle" fill="currentColor" stroke="none">AWS</text></svg>'
+  },
+  {
+    id: "9",
+    name: "GitHub",
+    category: "Version Control",
+    color: "#FFFFFF",
+    svgString: '<svg viewBox="0 0 24 24" fill="currentColor" className="w-14 h-14"><path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.161 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>'
+  },
+  {
+    id: "10",
+    name: "Vercel",
+    category: "Hosting",
+    color: "#FFFFFF",
+    svgString: '<svg viewBox="0 0 24 24" fill="currentColor" className="w-14 h-14"><path d="M12 4L22 20H2L12 4Z"/></svg>'
+  }
+]
+
+const DEFAULT_FAQ = [
+  {
+    id: "1",
+    q: "What is your typical project timeline?",
+    a: "Project timelines vary depending on scope and complexity. A simple MVP might take 4-8 weeks, while enterprise SaaS platforms typically take 3-6 months. We work iteratively, providing deliverables every sprint."
+  },
+  {
+    id: "2",
+    q: "Do you provide post-launch support and maintenance?",
+    a: "Yes, we offer comprehensive post-launch support, maintenance, and SLA-backed retainers to ensure your software remains secure, performant, and up-to-date with the latest technologies."
+  },
+  {
+    id: "3",
+    q: "What is your pricing model?",
+    a: "We offer flexible pricing models including fixed-price for well-defined scopes and time-and-materials for agile projects with evolving requirements. We're transparent about costs and provide detailed estimates."
+  },
+  {
+    id: "4",
+    q: "Will I own the intellectual property (IP)?",
+    a: "Absolutely. Once the project is fully paid for, you receive complete ownership of all source code, designs, and intellectual property."
+  },
+  {
+    id: "5",
+    q: "How do you ensure the quality of your code?",
+    a: "We employ rigorous code reviews, automated testing (unit, integration, and E2E), CI/CD pipelines, and adhere to strict coding standards to deliver robust, bug-free applications."
+  }
 ]
 
 export default function Home() {
-  const HERO_SLIDES = [
+  const DEFAULT_HERO = [
     {
       badge: "Aventiq 2.0 is now live",
       headline: "We build premium tech",
       headlineHighlight: "digital experiences",
       description: "Aventiq is a world-class software development agency specializing in enterprise SaaS platforms, high-performance mobile applications, and intelligent cloud architecture.",
       cta: "Start a Project",
+      ctaLink: "/contact",
       accent: "#0067D9",
       accentEnd: "#00C6F7",
       image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=1200",
@@ -44,31 +237,68 @@ export default function Home() {
       headlineHighlight: "love & engage with",
       description: "We craft pixel-perfect iOS and Android applications with smooth animations, offline-first architecture, and real-time sync that deliver 4.8+ star experiences.",
       cta: "Build Your App",
+      ctaLink: "/contact",
       accent: "#10B981",
       accentEnd: "#34D399",
       image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&q=80&w=1200",
     },
     {
-      badge: "E-Commerce Solutions",
-      headline: "Commerce platforms that",
-      headlineHighlight: "scale & convert",
-      description: "End-to-end e-commerce engineering with headless CMS, real-time inventory, and AI-powered recommendations that drive 3x higher conversion rates.",
-      cta: "Launch Your Store",
-      accent: "#8B5CF6",
-      accentEnd: "#A78BFA",
-      image: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&q=80&w=1200",
+      badge: "Cloud Infrastructure",
+      headline: "Scalable systems built",
+      headlineHighlight: "for future growth",
+      description: "Our cloud-native architectures ensure maximum uptime, rapid scalability, and optimized operational costs for enterprise operations.",
+      cta: "Explore DevOps",
+      ctaLink: "/services",
+      accent: "#F59E0B",
+      accentEnd: "#FCD34D",
+      image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=1200",
     },
     {
-      badge: "AI-Powered Automation",
-      headline: "Intelligent systems that",
-      headlineHighlight: "think & automate",
-      description: "We build custom AI agents, ML pipelines, and intelligent automation workflows that reduce manual work by 60% and unlock new business capabilities.",
-      cta: "Explore AI Solutions",
-      accent: "#F59E0B",
-      accentEnd: "#FBBF24",
-      image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=1200",
-    },
+      badge: "AI Integrations",
+      headline: "Automate intelligently with",
+      headlineHighlight: "machine learning",
+      description: "Leverage generative AI and custom machine learning models to streamline workflows and deliver next-generation insights.",
+      cta: "Learn More",
+      ctaLink: "/services",
+      accent: "#8B5CF6",
+      accentEnd: "#C4B5FD",
+      image: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&q=80&w=1200",
+    }
   ]
+
+  const [heroSlides, setHeroSlides] = useState(DEFAULT_HERO)
+  const [whyChooseUs, setWhyChooseUs] = useState({
+    badge: "Why Choose Aventiq",
+    title: "Engineering Excellence Meets World-Class Design",
+    sub: "We don't just write code — we architect high-converting digital products that scale smoothly with your business goals."
+  })
+  const [ctaBanner, setCtaBanner] = useState({
+    headline: "Ready to Build Something Extraordinary?",
+    subtext: "Schedule a free technical architecture consultation with our senior engineers.",
+    buttonText: "Get Free Consultation",
+    buttonLink: "/contact"
+  })
+  
+  const [whatWeBuild, setWhatWeBuild] = useState({
+    badge: "Our Services",
+    title: "What We Build",
+    sub: "From strategy to deployment, Aventiq delivers technology solutions designed to solve real business problems and create long-term value."
+  })
+
+  const [servicesList, setServicesList] = useState(DEFAULT_SERVICES)
+
+  const [testimonialsMeta, setTestimonialsMeta] = useState({ badge: "Client Reviews", title: "Real Stories of Growth & Success" })
+  const [testimonialsList, setTestimonialsList] = useState(DEFAULT_TESTIMONIALS)
+  const [partnersMeta, setPartnersMeta] = useState({ badge: "Our Trusted Partners", title: "Companies We've Built & Delivered For" })
+  const [partnersList, setPartnersList] = useState(DEFAULT_PARTNERS)
+  const [blogMeta, setBlogMeta] = useState({ badge: "Insights", title: "Latest from Our Blog", sub: "Insights on engineering, design, and technology trends from the Aventiq team." })
+  const [blogPostsList, setBlogPostsList] = useState(DEFAULT_BLOG_POSTS)
+  const [techMeta, setTechMeta] = useState({ badge: "Tech Stack", title: "Technologies We Use" })
+  const [techStackList, setTechStackList] = useState(DEFAULT_TECH_STACK)
+  const [faqMeta, setFaqMeta] = useState({ badge: "FAQ", title: "Frequently Asked Questions", sub: "Got questions? We've got answers. If you don't see your question here, feel free to reach out to our team." })
+  const [faqList, setFaqList] = useState(DEFAULT_FAQ)
+  const [contactMeta, setContactMeta] = useState({ badge: "Contact Us", titleBase: "Let's build something\n", titleHighlight: "extraordinary together.", sub: "Whether you have a fully formed project or just an idea on a napkin, our team is ready to bring your vision to life." })
+  const [finalCtaMeta, setFinalCtaMeta] = useState({ badge: "Let's Collaborate", titleBase: "Have an Idea? ", titleHighlight: "Let's Build It.", sub: "Tell Aventiq what you're building. We'll help turn your vision into a scalable digital product." })
 
   const [activeSlide, setActiveSlide] = useState(0)
   const [direction, setDirection] = useState(1)
@@ -76,6 +306,95 @@ export default function Home() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [formSuccess, setFormSuccess] = useState(false)
   const [formError, setFormError] = useState("")
+
+  useEffect(() => {
+    const saved = localStorage.getItem("aventiq_admin_home")
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved)
+        if (parsed && typeof parsed === "object") {
+          if (Array.isArray(parsed.heroSlides) && parsed.heroSlides.length > 0) {
+            const mappedSlides = parsed.heroSlides.map((s: any) => ({
+              badge: s.badge || "Aventiq Live",
+              headline: s.headline || "We build premium tech",
+              headlineHighlight: s.headlineHighlight || "digital experiences",
+              description: s.description || "",
+              cta: s.ctaText || "Start a Project",
+              ctaLink: s.ctaLink || "/contact",
+              accent: s.accentColor || "#0067D9",
+              accentEnd: s.accentEndColor || "#00C6F7",
+              image: s.imageUrl || "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=1200"
+            }));
+            
+            if (mappedSlides.length < 4) {
+              mappedSlides.push(...DEFAULT_HERO.slice(mappedSlides.length));
+            }
+            
+            setHeroSlides(mappedSlides);
+          }
+
+          if (parsed.whyChooseUsTitle) {
+            setWhyChooseUs({
+              badge: parsed.whyChooseUsBadge || "Why Choose Aventiq",
+              title: parsed.whyChooseUsTitle,
+              sub: parsed.whyChooseUsSub || ""
+            })
+          }
+
+          if (parsed.ctaHeadline) {
+            setCtaBanner({
+              headline: parsed.ctaHeadline,
+              subtext: parsed.ctaSubtext || "",
+              buttonText: parsed.ctaButtonText || "Get Started",
+              buttonLink: parsed.ctaButtonLink || "/contact"
+            })
+          }
+
+          if (parsed.servicesTitle) {
+            setWhatWeBuild({
+              badge: parsed.servicesBadge || "Our Services",
+              title: parsed.servicesTitle,
+              sub: parsed.servicesSub || ""
+            })
+          }
+
+          if (Array.isArray(parsed.servicesList)) {
+            setServicesList(parsed.servicesList)
+          }
+
+          if (Array.isArray(parsed.testimonialsList)) {
+            setTestimonialsList(parsed.testimonialsList)
+          }
+
+          if (Array.isArray(parsed.partnersList)) {
+            setPartnersList(parsed.partnersList)
+          }
+
+          if (Array.isArray(parsed.blogPostsList)) {
+            setBlogPostsList(parsed.blogPostsList)
+          }
+
+          if (Array.isArray(parsed.techStackList)) {
+            setTechStackList(parsed.techStackList)
+          }
+
+          if (Array.isArray(parsed.faqList)) {
+            setFaqList(parsed.faqList)
+          }
+
+          if (parsed.testimonialsTitle) setTestimonialsMeta({ badge: parsed.testimonialsBadge || "Client Reviews", title: parsed.testimonialsTitle });
+          if (parsed.partnersTitle) setPartnersMeta({ badge: parsed.partnersBadge || "Our Trusted Partners", title: parsed.partnersTitle });
+          if (parsed.blogTitle) setBlogMeta({ badge: parsed.blogBadge || "Insights", title: parsed.blogTitle, sub: parsed.blogSub || "" });
+          if (parsed.techTitle) setTechMeta({ badge: parsed.techBadge || "Tech Stack", title: parsed.techTitle });
+          if (parsed.faqTitle) setFaqMeta({ badge: parsed.faqBadge || "FAQ", title: parsed.faqTitle, sub: parsed.faqSub || "" });
+          if (parsed.contactTitleBase || parsed.contactTitleHighlight) setContactMeta({ badge: parsed.contactBadge || "Contact Us", titleBase: parsed.contactTitleBase || "Let's build something\n", titleHighlight: parsed.contactTitleHighlight || "extraordinary together.", sub: parsed.contactSub || "" });
+          if (parsed.finalCtaTitleBase || parsed.finalCtaTitleHighlight) setFinalCtaMeta({ badge: parsed.finalCtaBadge || "Let's Collaborate", titleBase: parsed.finalCtaTitleBase || "Have an Idea? ", titleHighlight: parsed.finalCtaTitleHighlight || "Let's Build It.", sub: parsed.finalCtaSub || "" });
+        }
+      } catch (e) {
+        console.error("Failed to load home page settings")
+      }
+    }
+  }, [])
 
   const handleHomeContact = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -111,41 +430,19 @@ export default function Home() {
     }
     setIsSubmitting(false);
   }
-  const testimonials = [
-    {
-      name: "Rahul Desai",
-      role: "CTO, TechVanguard India",
-      quote: "Aventiq transformed our legacy system into a modern SaaS platform. Their team delivered ahead of schedule with exceptional code quality. The architecture handles 10x our original traffic across India. Our experience throughout the engagement was incredible. We were guided whenever we had queries and the engineering staff is highly professional.",
-      rating: 5,
-    },
-    {
-      name: "Vikram Mehta",
-      role: "Founder, CloudSync Networks",
-      quote: "Working with Aventiq felt like having an in-house engineering team in Bengaluru. Their deep understanding of cloud architecture and DevOps practices helped us reduce infrastructure costs by 40%. Highly recommend them to anyone needing serious backend scaling for the Indian market.",
-      rating: 5,
-    },
-    {
-      name: "Priya Sharma",
-      role: "VP of Product, DataFlow Systems",
-      quote: "The mobile application Aventiq built for us has a 4.8-star rating and helped us seamlessly expand into Tier 2 and Tier 3 cities. Their attention to UX details and smooth animations set our product apart from every competitor. An absolute joy to collaborate with from start to finish.",
-      rating: 5,
-    },
-    {
-      name: "Anjali Kapoor",
-      role: "Director of Engineering, FinTech Corp",
-      quote: "They didn't just write code; they partnered with us to fundamentally improve our product strategy for the UPI ecosystem. The best technical partners we've ever hired in India. The migration was completely seamless without any downtime.",
-      rating: 5,
-    },
-  ]
+  const testimonials = testimonialsList;
 
 
   useEffect(() => {
     const timer = setInterval(() => {
       setDirection(1)
-      setActiveSlide((prev) => (prev + 1) % HERO_SLIDES.length)
+      setActiveSlide((prev) => (prev + 1) % (heroSlides.length || 1))
     }, 4000)
     return () => clearInterval(timer)
-  }, [])
+  }, [heroSlides.length])
+
+  const safeSlide = heroSlides[activeSlide] || heroSlides[0] || DEFAULT_HERO[0]
+
   return (
     <div className="flex flex-col min-h-screen">
       {/* HERO SECTION */}
@@ -173,15 +470,15 @@ export default function Home() {
               
               {/* Slide-specific Glow Background */}
               <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
-                <div className="absolute top-[-20%] right-[0%] w-[800px] h-[800px] rounded-full blur-[150px]" style={{ backgroundColor: `${HERO_SLIDES[activeSlide].accent}12` }}></div>
-                <div className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] rounded-full blur-[120px]" style={{ backgroundColor: `${HERO_SLIDES[activeSlide].accent}08` }}></div>
+                <div className="absolute top-[-20%] right-[0%] w-[800px] h-[800px] rounded-full blur-[150px]" style={{ backgroundColor: `${safeSlide.accent}12` }}></div>
+                <div className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] rounded-full blur-[120px]" style={{ backgroundColor: `${safeSlide.accent}08` }}></div>
               </div>
 
               {/* Background Image Layer */}
               <div 
                 className="absolute inset-0 z-0"
                 style={{
-                  backgroundImage: `url(${HERO_SLIDES[activeSlide].image})`,
+                  backgroundImage: `url(${safeSlide.image})`,
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
                 }}
@@ -195,32 +492,33 @@ export default function Home() {
                 {/* Pill Badge */}
                 <div
                   className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full border text-sm font-medium mb-6 backdrop-blur-sm"
-                  style={{ backgroundColor: `${HERO_SLIDES[activeSlide].accent}20`, borderColor: `${HERO_SLIDES[activeSlide].accent}40`, color: '#fff' }}
+                  style={{ backgroundColor: `${safeSlide.accent}20`, borderColor: `${safeSlide.accent}40`, color: '#fff' }}
                 >
                   <span className="relative flex h-2 w-2">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75" style={{ backgroundColor: HERO_SLIDES[activeSlide].accent }}></span>
-                    <span className="relative inline-flex rounded-full h-2 w-2" style={{ backgroundColor: HERO_SLIDES[activeSlide].accent }}></span>
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-75" style={{ backgroundColor: safeSlide.accent }}></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2" style={{ backgroundColor: safeSlide.accent }}></span>
                   </span>
-                  {HERO_SLIDES[activeSlide].badge}
+                  {safeSlide.badge}
                 </div>
 
                 {/* Headline */}
                 <h1 className="text-5xl md:text-[5.5rem] font-bold tracking-[-0.03em] mb-8 text-white leading-[1.05] max-w-4xl mx-auto drop-shadow-lg">
-                  {HERO_SLIDES[activeSlide].headline} <br className="hidden md:block" />
-                  <span className="font-serif italic font-normal text-transparent bg-clip-text bg-gradient-to-r" style={{ backgroundImage: `linear-gradient(to right, ${HERO_SLIDES[activeSlide].accent}, ${HERO_SLIDES[activeSlide].accentEnd})` }}>
-                    {HERO_SLIDES[activeSlide].headlineHighlight}
+                  {safeSlide.headline} <br className="hidden md:block" />
+                  <span className="font-serif italic font-normal text-transparent bg-clip-text bg-gradient-to-r" style={{ backgroundImage: `linear-gradient(to right, ${safeSlide.accent}, ${safeSlide.accentEnd})` }}>
+                    {safeSlide.headlineHighlight}
                   </span>
                 </h1>
 
                 {/* Description */}
-                <p className="text-base md:text-xl text-white/90 mb-10 max-w-2xl mx-auto leading-relaxed drop-shadow-md font-medium">
-                  {HERO_SLIDES[activeSlide].description}
-                </p>
+                <div 
+                  className="text-base md:text-xl text-white/90 mb-10 max-w-2xl mx-auto leading-relaxed drop-shadow-md font-medium"
+                  dangerouslySetInnerHTML={{ __html: safeSlide.description }}
+                />
 
                 {/* Buttons */}
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Button asChild size="lg" className="rounded-full px-8 h-14 border-0 shadow-[0_0_30px_rgba(255,255,255,0.1)] transition-all font-semibold text-base hover:scale-105" style={{ backgroundColor: HERO_SLIDES[activeSlide].accent, color: '#030712' }}>
-                    <Link href="/contact">{HERO_SLIDES[activeSlide].cta}</Link>
+                  <Button asChild size="lg" className="rounded-full px-8 h-14 border-0 shadow-[0_0_30px_rgba(255,255,255,0.1)] transition-all font-semibold text-base hover:scale-105" style={{ backgroundColor: safeSlide.accent, color: '#030712' }}>
+                    <Link href={safeSlide.ctaLink || "/contact"}>{safeSlide.cta}</Link>
                   </Button>
                   <Button asChild variant="outline" size="lg" className="rounded-full px-8 h-14 border border-white/30 bg-white/10 backdrop-blur-md text-white hover:bg-white/20 hover:border-white/50 hover:scale-105 font-medium transition-all text-base group shadow-lg">
                     <Link href="/services">
@@ -236,7 +534,7 @@ export default function Home() {
 
         {/* Dot Navigation - Floating at bottom */}
         <div className="absolute bottom-10 left-0 right-0 flex items-center justify-center gap-2 z-20">
-          {HERO_SLIDES.map((slide, i) => (
+          {heroSlides.map((slide, i) => (
             <button
               key={i}
               onClick={() => {
@@ -246,7 +544,7 @@ export default function Home() {
               className="relative h-2 rounded-full transition-all duration-500"
               style={{
                 width: i === activeSlide ? '32px' : '8px',
-                backgroundColor: i === activeSlide ? HERO_SLIDES[activeSlide].accent : 'rgba(255,255,255,0.15)',
+                backgroundColor: i === activeSlide ? safeSlide.accent : 'rgba(255,255,255,0.15)',
               }}
             />
           ))}
@@ -264,19 +562,20 @@ export default function Home() {
           <div className="text-center max-w-3xl mx-auto mb-16">
             <div className="inline-flex items-center gap-3 mb-4">
               <div className="w-8 h-[2px] bg-[#0067D9]"></div>
-              <span className="text-[#102A43] font-bold text-sm tracking-[0.15em] uppercase">Our Services</span>
+              <span className="text-[#102A43] font-bold text-sm tracking-[0.15em] uppercase">{whatWeBuild.badge}</span>
               <div className="w-8 h-[2px] bg-[#0067D9]"></div>
             </div>
             <h2 className="text-4xl md:text-5xl font-extrabold text-[#102A43] tracking-tight mb-6">
-              What We Build
+              {whatWeBuild.title}
             </h2>
-            <p className="text-lg text-[#475569]">
-              From strategy to deployment, Aventiq delivers technology solutions designed to solve real business problems and create long-term value.
-            </p>
+            <div 
+              className="text-lg text-[#475569]"
+              dangerouslySetInnerHTML={{ __html: whatWeBuild.sub }}
+            />
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {SERVICES.map((service, i) => {
+            {servicesList.map((service, i) => {
               const CARD_THEMES = [
                 { main: '#10B981', light: '#ECFDF5' }, // Green
                 { main: '#0EA5E9', light: '#F0F9FF' }, // Blue
@@ -286,10 +585,11 @@ export default function Home() {
                 { main: '#6366F1', light: '#EEF2FF' }, // Indigo
               ];
               const theme = CARD_THEMES[i % CARD_THEMES.length];
+              const IconComponent = IconMap[service.iconName] || IconMap.Box;
               
               return (
                 <motion.div 
-                  key={i}
+                  key={service.id || i}
                   whileHover={{ y: -5 }}
                   style={{ borderColor: theme.main }}
                   className="bg-white rounded-3xl border p-8 flex flex-col items-center text-center shadow-[0_4px_20px_rgb(0,0,0,0.03)] hover:shadow-[0_10px_30px_rgb(0,0,0,0.08)] transition-all duration-300"
@@ -302,24 +602,34 @@ export default function Home() {
                       boxShadow: `0 10px 25px -5px ${theme.main}90` 
                     }}
                   >
-                    <service.icon size={28} strokeWidth={2} />
+                    <IconComponent size={28} strokeWidth={2} />
                   </div>
                   
                   {/* Text Content */}
                   <h3 className="text-xl font-bold text-[#102A43] mb-3">{service.title}</h3>
-                  <p className="text-[#64748B] text-sm leading-relaxed mb-8 flex-grow">{service.desc}</p>
+                  <div 
+                    className="text-[#64748B] text-sm leading-relaxed mb-8 flex-grow"
+                    dangerouslySetInnerHTML={{ __html: service.desc }}
+                  />
                   
                   {/* Subtle Horizontal Divider */}
                   <div className="w-full h-px bg-slate-100 mb-6"></div>
                   
                   {/* Bottom Action Bar */}
-                  <div className="w-full flex items-center justify-center mt-auto">
+                  <div className="w-full flex items-center justify-between mt-auto">
                     <Link 
                       href={`/services/${service.slug}`} 
                       className="flex items-center text-sm font-bold group/link"
                       style={{ color: theme.main }}
                     >
                       Explore <ArrowRight size={16} className="ml-1 group-hover/link:translate-x-1 transition-transform" />
+                    </Link>
+                    <Link 
+                      href="/contact"
+                      className="px-4 py-2 rounded-lg text-xs font-bold text-white transition-transform hover:-translate-y-0.5"
+                      style={{ backgroundColor: theme.main, boxShadow: `0 4px 14px -4px ${theme.main}` }}
+                    >
+                      Get a Quote
                     </Link>
                   </div>
                 </motion.div>
@@ -399,11 +709,11 @@ export default function Home() {
           <div className="mb-16 text-center">
              <div className="inline-flex items-center gap-3 mb-4">
                <div className="w-8 h-[2px] bg-[#FFB800]"></div>
-               <span className="text-[#102A43] font-bold text-sm tracking-[0.15em] uppercase">Client Reviews</span>
+               <span className="text-[#102A43] font-bold text-sm tracking-[0.15em] uppercase">{testimonialsMeta.badge}</span>
                <div className="w-8 h-[2px] bg-[#FFB800]"></div>
              </div>
              <h2 className="text-4xl md:text-5xl font-extrabold text-[#102A43] tracking-tight">
-                Real Stories of Growth & Success
+                {testimonialsMeta.title}
              </h2>
           </div>
 
@@ -432,9 +742,10 @@ export default function Home() {
 
                    {/* Quote */}
                    <div className="flex-1">
-                     <p className="text-slate-500 italic text-[14.5px] leading-relaxed">
-                        "{testimonial.quote}"
-                     </p>
+                     <div 
+                       className="text-slate-500 italic text-[14.5px] leading-relaxed"
+                       dangerouslySetInnerHTML={{ __html: testimonial.quote }}
+                     />
                    </div>
 
                    {/* User Info */}
@@ -499,10 +810,10 @@ export default function Home() {
           <div className="container mx-auto px-4 md:px-8 text-center mb-14">
             <div className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full bg-white/[0.04] border border-white/[0.08] mb-6">
               <div className="w-1.5 h-1.5 rounded-full bg-[#00C6F7] animate-pulse"></div>
-              <span className="text-[12px] font-bold text-[#00C6F7] tracking-[0.2em] uppercase">Our Trusted Partners</span>
+              <span className="text-[12px] font-bold text-[#00C6F7] tracking-[0.2em] uppercase">{partnersMeta.badge}</span>
             </div>
             <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight">
-              Companies We've Built <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#0067D9] to-[#00C6F7]">& Delivered For</span>
+              {partnersMeta.title}
             </h2>
           </div>
 
@@ -511,13 +822,13 @@ export default function Home() {
             <div className="marquee-left items-center">
               {[...Array(4)].map((_, i) => (
                 <div key={i} className="flex items-center shrink-0">
-                  {['TechVanguard India', 'CloudSync Networks', 'DataFlow Systems', 'FinTech Corp', 'NexGen Solutions', 'Innovate Labs'].map((company, j) => (
+                  {partnersList.slice(0, Math.ceil(partnersList.length / 2)).map((partner, j) => (
                     <div
                       key={j}
                       className="shrink-0 mx-3 px-10 py-5 rounded-2xl bg-gradient-to-br from-white/[0.07] to-white/[0.02] border border-white/[0.12] backdrop-blur-md shadow-[inset_0_1px_1px_rgba(255,255,255,0.06),0_4px_20px_rgba(0,0,0,0.2)] hover:from-white/[0.12] hover:to-white/[0.05] hover:border-[#00C6F7]/40 hover:shadow-[inset_0_1px_1px_rgba(255,255,255,0.1),0_4px_30px_rgba(0,198,247,0.1)] transition-all duration-500 group cursor-default"
                     >
                       <span className="font-semibold text-[15px] text-white/80 tracking-[0.04em] whitespace-nowrap group-hover:text-white transition-colors duration-500">
-                        {company}
+                        {partner.name}
                       </span>
                     </div>
                   ))}
@@ -531,13 +842,13 @@ export default function Home() {
             <div className="marquee-right items-center">
               {[...Array(4)].map((_, i) => (
                 <div key={i} className="flex items-center shrink-0">
-                  {['Acme Corp', 'GlobalTech', 'FutureSoft', 'RapidScale AI', 'MetaEdge', 'Zenith Digital', 'Prism Analytics'].map((company, j) => (
+                  {partnersList.slice(Math.ceil(partnersList.length / 2)).map((partner, j) => (
                     <div
                       key={j}
                       className="shrink-0 mx-3 px-10 py-5 rounded-2xl bg-gradient-to-br from-white/[0.07] to-white/[0.02] border border-white/[0.12] backdrop-blur-md shadow-[inset_0_1px_1px_rgba(255,255,255,0.06),0_4px_20px_rgba(0,0,0,0.2)] hover:from-white/[0.12] hover:to-white/[0.05] hover:border-[#00C6F7]/40 hover:shadow-[inset_0_1px_1px_rgba(255,255,255,0.1),0_4px_30px_rgba(0,198,247,0.1)] transition-all duration-500 group cursor-default"
                     >
                       <span className="font-semibold text-[15px] text-white/80 tracking-[0.04em] whitespace-nowrap group-hover:text-white transition-colors duration-500">
-                        {company}
+                        {partner.name}
                       </span>
                     </div>
                   ))}
@@ -572,14 +883,15 @@ export default function Home() {
               <div className="absolute -inset-10 bg-white/40 blur-3xl rounded-full z-0 pointer-events-none"></div>
               <div className="relative z-10">
                 <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-[#0067D9]/20 text-sm font-bold text-[#0067D9] mb-6 shadow-sm">
-                  Insights
+                  {blogMeta.badge}
                 </div>
                 <h2 className="text-3xl md:text-5xl font-bold text-[#102A43] mb-4" style={{ textShadow: '0 2px 10px rgba(255,255,255,1)' }}>
-                  Latest from Our Blog
+                  {blogMeta.title}
                 </h2>
-                <p className="text-lg text-[#334155] max-w-lg font-medium" style={{ textShadow: '0 2px 8px rgba(255,255,255,0.9)' }}>
-                  Insights on engineering, design, and technology trends from the Aventiq team.
-                </p>
+                <div 
+                  className="text-lg text-[#334155] max-w-lg font-medium" style={{ textShadow: '0 2px 8px rgba(255,255,255,0.9)' }}
+                  dangerouslySetInnerHTML={{ __html: blogMeta.sub }}
+                />
               </div>
             </div>
             <Button asChild variant="outline" className="relative z-10 rounded-full px-6 border-[#0067D9]/30 text-[#0067D9] hover:bg-[#0067D9] hover:text-white mt-6 md:mt-0 h-12 bg-white shadow-sm font-bold transition-all">
@@ -591,35 +903,7 @@ export default function Home() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                tag: "Engineering",
-                tagColor: "#0067D9",
-                title: "Building Scalable SaaS Platforms with Next.js and Edge Computing",
-                excerpt: "Learn how we architect multi-tenant SaaS applications that serve thousands of concurrent users with sub-100ms response times.",
-                date: "Aug 18, 2026",
-                readTime: "8 min read",
-                image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&q=80&w=800"
-              },
-              {
-                tag: "AI & ML",
-                tagColor: "#8B5CF6",
-                title: "Integrating AI Agents into Enterprise Workflows: A Practical Guide",
-                excerpt: "A deep dive into how we build intelligent automation pipelines that reduce manual work by up to 60% for our enterprise clients.",
-                date: "Aug 12, 2026",
-                readTime: "12 min read",
-                image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=800"
-              },
-              {
-                tag: "Design",
-                tagColor: "#EC4899",
-                title: "The Art of Micro-Interactions: Why Small Details Win Big Users",
-                excerpt: "How subtle animations and thoughtful UI feedback loops can dramatically improve user retention and satisfaction scores.",
-                date: "Aug 5, 2026",
-                readTime: "6 min read",
-                image: "https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&q=80&w=800"
-              },
-            ].map((post, i) => (
+            {blogPostsList.map((post, i) => (
               <motion.div
                 key={i}
                 whileHover={{ y: -5 }}
@@ -649,7 +933,10 @@ export default function Home() {
                   </h3>
 
                   {/* Excerpt */}
-                  <p className="text-sm text-[#64748B] leading-relaxed mb-6">{post.excerpt}</p>
+                  <div 
+                    className="text-sm text-[#64748B] leading-relaxed mb-6"
+                    dangerouslySetInnerHTML={{ __html: post.excerpt }}
+                  />
 
                   {/* Footer */}
                   <div className="flex items-center justify-between pt-4 border-t border-slate-200">
@@ -673,131 +960,17 @@ export default function Home() {
           <div className="text-center max-w-3xl mx-auto mb-16">
             <div className="inline-flex items-center gap-3 mb-4">
               <div className="w-8 h-[2px] bg-[#00C6F7]"></div>
-              <span className="text-[#00C6F7] font-bold text-sm tracking-[0.15em] uppercase">Tech Stack</span>
+              <span className="text-[#00C6F7] font-bold text-sm tracking-[0.15em] uppercase">{techMeta.badge}</span>
               <div className="w-8 h-[2px] bg-[#00C6F7]"></div>
             </div>
             <h2 className="text-4xl md:text-5xl font-extrabold text-white tracking-tight mb-6">
-              Technologies We Use
+              {techMeta.title}
             </h2>
           </div>
 
           <div className="flex flex-wrap justify-center gap-6 md:gap-10">
-            {[
-              {
-                name: "HTML",
-                category: "Frontend",
-                color: "#E34F26",
-                svg: (
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-14 h-14">
-                    <path d="M3 3h18l-1.5 16L12 22l-7.5-3L3 3z" strokeLinejoin="round" />
-                    <path d="M7.5 7h9l-.5 4.5h-8" strokeLinecap="round" strokeLinejoin="round" />
-                    <path d="M16 11.5l-.5 4.5-3.5 1.5-3.5-1.5-.2-2" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                )
-              },
-              {
-                name: "CSS",
-                category: "Frontend",
-                color: "#1572B6",
-                svg: (
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-14 h-14">
-                    <path d="M3 3h18l-1.5 16L12 22l-7.5-3L3 3z" strokeLinejoin="round" />
-                    <path d="M16.5 7H7.5l.5 4.5h8l-.5 4.5-3.5 1.5-3.5-1.5-.2-2" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                )
-              },
-              {
-                name: "React",
-                category: "Frontend",
-                color: "#61DAFB",
-                svg: (
-                  <svg viewBox="-11.5 -10.2 23 20.4" fill="none" stroke="currentColor" strokeWidth="1.2" className="w-14 h-14">
-                    <ellipse rx="11" ry="4.2"/>
-                    <ellipse rx="11" ry="4.2" transform="rotate(60)"/>
-                    <ellipse rx="11" ry="4.2" transform="rotate(120)"/>
-                    <circle r="2" fill="currentColor" stroke="none"/>
-                  </svg>
-                )
-              },
-              {
-                name: "Next.js",
-                category: "Frontend",
-                color: "#FFFFFF",
-                svg: (
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-14 h-14">
-                    <circle cx="12" cy="12" r="10"/>
-                    <path d="M8 8v8l8-8v8"/>
-                  </svg>
-                )
-              },
-              {
-                name: "PHP",
-                category: "Backend",
-                color: "#777BB4",
-                svg: (
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-14 h-14">
-                    <ellipse cx="12" cy="12" rx="10" ry="6"/>
-                    <text x="12" y="16" fontSize="10" fontWeight="bold" textAnchor="middle" fill="currentColor" stroke="none">PHP</text>
-                  </svg>
-                )
-              },
-              {
-                name: "WordPress",
-                category: "CMS",
-                color: "#21759B",
-                svg: (
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-14 h-14">
-                    <circle cx="12" cy="12" r="10"/>
-                    <path d="M6 10l3 8.5L12 12l3 6.5L18 10" strokeLinejoin="round"/>
-                  </svg>
-                )
-              },
-              {
-                name: "Android",
-                category: "Mobile",
-                color: "#3DDC84",
-                svg: (
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-14 h-14">
-                    <path d="M5 14v-4a7 7 0 0 1 14 0v4M8 8v-2M16 8v-2"/>
-                    <rect x="5" y="14" width="14" height="4" rx="1"/>
-                  </svg>
-                )
-              },
-              {
-                name: "AWS",
-                category: "Cloud",
-                color: "#FF9900",
-                svg: (
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-14 h-14">
-                    <path d="M4 15s4 4 10 2c-3 1-7-1-10-2z" fill="currentColor" stroke="none"/>
-                    <path d="M14 12c-1.5 2-4.5 3-7 1.5 1-1 3.5-2.5 7-1.5z" fill="currentColor" stroke="none"/>
-                    <path d="M19 15l-2 1m2-1l-1-2" strokeWidth="2"/>
-                    <text x="12" y="11" fontSize="8" fontWeight="bold" textAnchor="middle" fill="currentColor" stroke="none">AWS</text>
-                  </svg>
-                )
-              },
-              {
-                name: "GitHub",
-                category: "Version Control",
-                color: "#FFFFFF",
-                svg: (
-                  <svg viewBox="0 0 24 24" fill="currentColor" className="w-14 h-14">
-                    <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.161 22 16.418 22 12c0-5.523-4.477-10-10-10z"/>
-                  </svg>
-                )
-              },
-              {
-                name: "Vercel",
-                category: "Hosting",
-                color: "#FFFFFF",
-                svg: (
-                  <svg viewBox="0 0 24 24" fill="currentColor" className="w-14 h-14">
-                    <path d="M12 4L22 20H2L12 4Z"/>
-                  </svg>
-                )
-              }
-            ].map((tech, i) => (
-              <div key={i} className="flex flex-col items-center group">
+            {techStackList.map((tech, i) => (
+              <div key={tech.id} className="flex flex-col items-center group">
                 <div 
                   className="w-[110px] h-[110px] rounded-3xl bg-white/[0.04] border border-white/[0.08] backdrop-blur-md shadow-[inset_0_1px_1px_rgba(255,255,255,0.06),0_4px_20px_rgba(0,0,0,0.2)] flex items-center justify-center mb-5 group-hover:-translate-y-2 group-hover:bg-white/[0.08] transition-all duration-500"
                   style={{ '--hover-border-color': tech.color } as React.CSSProperties}
@@ -805,7 +978,11 @@ export default function Home() {
                   onMouseLeave={(e) => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)')}
                 >
                   <div style={{ color: tech.color }} className="transition-transform duration-500 group-hover:scale-110">
-                    {tech.svg}
+                    {tech.imageUrl ? (
+                      <img src={tech.imageUrl} alt={tech.name} className="w-14 h-14 object-contain" />
+                    ) : (
+                      <div dangerouslySetInnerHTML={{ __html: tech.svgString }} />
+                    )}
                   </div>
                 </div>
                 <h3 className="font-bold text-white text-[16px] mb-1 transition-colors duration-300" style={{ '--hover-text-color': tech.color } as React.CSSProperties} onMouseEnter={(e) => (e.currentTarget.style.color = tech.color)} onMouseLeave={(e) => (e.currentTarget.style.color = '#FFFFFF')}>{tech.name}</h3>
@@ -822,40 +999,20 @@ export default function Home() {
           <div className="text-center mb-16">
             <div className="inline-flex items-center gap-3 mb-4">
               <div className="w-8 h-[2px] bg-[#FFB800]"></div>
-              <span className="text-[#102A43] font-bold text-sm tracking-[0.15em] uppercase">FAQ</span>
+              <span className="text-[#102A43] font-bold text-sm tracking-[0.15em] uppercase">{faqMeta.badge}</span>
               <div className="w-8 h-[2px] bg-[#FFB800]"></div>
             </div>
             <h2 className="text-4xl md:text-5xl font-extrabold text-[#102A43] tracking-tight mb-6">
-              Frequently Asked Questions
+              {faqMeta.title}
             </h2>
-            <p className="text-lg text-slate-500">
-              Got questions? We've got answers. If you don't see your question here, feel free to reach out to our team.
-            </p>
+            <div 
+              className="text-lg text-slate-500"
+              dangerouslySetInnerHTML={{ __html: faqMeta.sub }}
+            />
           </div>
 
           <div className="space-y-6">
-            {[
-              {
-                q: "What is your typical project timeline?",
-                a: "Project timelines vary depending on scope and complexity. A simple MVP might take 4-8 weeks, while enterprise SaaS platforms typically take 3-6 months. We work iteratively, providing deliverables every sprint."
-              },
-              {
-                q: "Do you provide post-launch support and maintenance?",
-                a: "Yes, we offer comprehensive post-launch support, maintenance, and SLA-backed retainers to ensure your software remains secure, performant, and up-to-date with the latest technologies."
-              },
-              {
-                q: "What is your pricing model?",
-                a: "We offer flexible pricing models including fixed-price for well-defined scopes and time-and-materials for agile projects with evolving requirements. We're transparent about costs and provide detailed estimates."
-              },
-              {
-                q: "Will I own the intellectual property (IP)?",
-                a: "Absolutely. Once the project is fully paid for, you receive complete ownership of all source code, designs, and intellectual property."
-              },
-              {
-                q: "How do you ensure the quality of your code?",
-                a: "We employ rigorous code reviews, automated testing (unit, integration, and E2E), CI/CD pipelines, and adhere to strict coding standards to deliver robust, bug-free applications."
-              }
-            ].map((faq, i) => (
+            {faqList.map((faq, i) => (
               <div 
                 key={i} 
                 className={`bg-white rounded-2xl border ${openFaq === i ? 'border-[#0067D9] shadow-md shadow-blue-900/5' : 'border-slate-200 shadow-sm'} overflow-hidden transition-all duration-300`}
@@ -881,9 +1038,10 @@ export default function Home() {
                       exit={{ height: 0, opacity: 0 }}
                       className="overflow-hidden"
                     >
-                      <div className="px-8 pb-5 pt-3 text-slate-500 text-lg leading-relaxed border-t border-slate-100">
-                        {faq.a}
-                      </div>
+                      <div 
+                        className="px-8 pb-5 pt-3 text-slate-500 text-lg leading-relaxed border-t border-slate-100"
+                        dangerouslySetInnerHTML={{ __html: faq.a }}
+                      />
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -905,14 +1063,14 @@ export default function Home() {
             {/* Left Content */}
             <div className="flex-1 w-full">
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-100/80 text-sm font-bold text-slate-600 mb-5 tracking-widest uppercase">
-                Contact Us
+                {contactMeta.badge}
               </div>
-              <h2 className="text-3xl md:text-4xl font-light text-[#102A43] tracking-tight mb-4 leading-snug">
-                Let's build something <br/>
-                <span className="font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#0067D9] to-[#00C6F7]">extraordinary together.</span>
+              <h2 className="text-3xl md:text-4xl font-light text-[#102A43] tracking-tight mb-4 leading-snug whitespace-pre-line">
+                {contactMeta.titleBase}
+                <span className="font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#0067D9] to-[#00C6F7]">{contactMeta.titleHighlight}</span>
               </h2>
               <p className="text-base text-slate-500 mb-8 max-w-md leading-relaxed">
-                Whether you have a fully formed project or just an idea on a napkin, our team is ready to bring your vision to life.
+                {contactMeta.sub}
               </p>
               
               <div className="space-y-5">
@@ -1059,16 +1217,16 @@ export default function Home() {
               <div className="relative z-10">
                 <div className="inline-flex items-center gap-2.5 px-6 py-2.5 rounded-full bg-white/[0.08] border border-white/[0.12] text-sm font-bold text-[#00C6F7] mb-8 uppercase tracking-[0.2em] backdrop-blur-md">
                   <span className="w-2 h-2 rounded-full bg-[#00C6F7] animate-pulse"></span>
-                  Let's Collaborate
+                  {finalCtaMeta.badge}
                 </div>
-                <h2 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-white mb-6 tracking-tight leading-[1.1]">
-                  Have an Idea?{' '}
+                <h2 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-white mb-6 tracking-tight leading-[1.1] whitespace-pre-line">
+                  {finalCtaMeta.titleBase}
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00C6F7] via-[#0067D9] to-[#8B5CF6]">
-                    Let's Build It.
+                    {finalCtaMeta.titleHighlight}
                   </span>
                 </h2>
                 <p className="text-base md:text-xl text-slate-300/80 mb-12 max-w-2xl mx-auto font-medium leading-relaxed">
-                  Tell Aventiq what you're building. We'll help turn your vision into a scalable digital product.
+                  {finalCtaMeta.sub}
                 </p>
                 <div className="flex flex-col sm:flex-row justify-center gap-5">
                   <Button asChild size="lg" className="rounded-full px-10 h-14 text-lg font-bold bg-gradient-to-r from-[#0067D9] to-[#00C6F7] hover:from-[#0052ad] hover:to-[#00b0dc] text-white shadow-[0_0_40px_rgba(0,103,217,0.35)] hover:shadow-[0_0_60px_rgba(0,198,247,0.4)] transition-all duration-300 hover:-translate-y-1 border-0">

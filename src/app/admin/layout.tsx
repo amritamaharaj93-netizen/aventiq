@@ -1,6 +1,6 @@
 import Link from "next/link"
 import Image from "next/image"
-import { LayoutDashboard, FolderKanban, FileText, Briefcase, Mail, Settings, Users, MessageSquare, LogOut, Command } from "lucide-react"
+import { LayoutDashboard, Home as HomeIcon, FolderKanban, FileText, Briefcase, Mail, Settings, Users, Info, LogOut, MapPin } from "lucide-react"
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -29,6 +29,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <LayoutDashboard size={18} />
             Dashboard
           </Link>
+          <Link href="/admin/home" className="flex items-center gap-3 px-4 py-3 text-[#CBD5E1] hover:text-white hover:bg-white/5 rounded-xl font-medium transition-all group border-l-2 border-transparent">
+            <HomeIcon size={18} className="text-[#64748B] group-hover:text-[#00C6F7] transition-colors" />
+            Home Settings
+          </Link>
           <Link href="/admin/projects" className="flex items-center gap-3 px-4 py-3 text-[#CBD5E1] hover:text-white hover:bg-white/5 rounded-xl font-medium transition-all group border-l-2 border-transparent">
             <FolderKanban size={18} className="text-[#64748B] group-hover:text-[#00C6F7] transition-colors" />
             Projects
@@ -36,6 +40,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <Link href="/admin/services" className="flex items-center gap-3 px-4 py-3 text-[#CBD5E1] hover:text-white hover:bg-white/5 rounded-xl font-medium transition-all group border-l-2 border-transparent">
             <Briefcase size={18} className="text-[#64748B] group-hover:text-[#00C6F7] transition-colors" />
             Services
+          </Link>
+          <Link href="/admin/about" className="flex items-center gap-3 px-4 py-3 text-[#CBD5E1] hover:text-white hover:bg-white/5 rounded-xl font-medium transition-all group border-l-2 border-transparent">
+            <Info size={18} className="text-[#64748B] group-hover:text-[#00C6F7] transition-colors" />
+            About
           </Link>
           <Link href="/admin/blog" className="flex items-center gap-3 px-4 py-3 text-[#CBD5E1] hover:text-white hover:bg-white/5 rounded-xl font-medium transition-all group border-l-2 border-transparent">
             <FileText size={18} className="text-[#64748B] group-hover:text-[#00C6F7] transition-colors" />
@@ -45,24 +53,24 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <Mail size={18} className="text-[#64748B] group-hover:text-[#00C6F7] transition-colors" />
             Contact Leads
           </Link>
-          <Link href="/admin/testimonials" className="flex items-center gap-3 px-4 py-3 text-[#CBD5E1] hover:text-white hover:bg-white/5 rounded-xl font-medium transition-all group border-l-2 border-transparent">
-            <MessageSquare size={18} className="text-[#64748B] group-hover:text-[#00C6F7] transition-colors" />
-            Testimonials
+          <Link href="/admin/contact" className="flex items-center gap-3 px-4 py-3 text-[#CBD5E1] hover:text-white hover:bg-white/5 rounded-xl font-medium transition-all group border-l-2 border-transparent">
+            <MapPin size={18} className="text-[#64748B] group-hover:text-[#00C6F7] transition-colors" />
+            Contact Page
           </Link>
           <Link href="/admin/careers" className="flex items-center gap-3 px-4 py-3 text-[#CBD5E1] hover:text-white hover:bg-white/5 rounded-xl font-medium transition-all group border-l-2 border-transparent">
             <Users size={18} className="text-[#64748B] group-hover:text-[#00C6F7] transition-colors" />
             Careers
           </Link>
+          <Link href="/admin/settings" className="flex items-center gap-3 px-4 py-3 text-[#CBD5E1] hover:text-white hover:bg-white/5 rounded-xl font-medium transition-all group border-l-2 border-transparent">
+            <Settings size={18} className="text-[#64748B] group-hover:text-[#00C6F7] transition-colors" />
+            Settings
+          </Link>
         </nav>
 
         <div className="px-4 pb-8 pt-4 mt-auto">
-          <Link href="/admin/settings" className="flex items-center gap-3 px-4 py-2.5 text-[#CBD5E1] hover:text-white hover:bg-white/5 rounded-xl font-medium transition-all mb-1 border-l-2 border-transparent">
-            <Settings size={18} className="text-[#64748B]" />
-            Settings
-          </Link>
           <Link href="/login" className="flex items-center gap-3 px-4 py-2.5 text-[#CBD5E1] hover:text-[#ff4d4f] hover:bg-white/5 rounded-xl font-medium transition-all border-l-2 border-transparent">
             <LogOut size={18} className="text-[#64748B]" />
-            Exit Dashboard
+            Logout
           </Link>
         </div>
       </aside>

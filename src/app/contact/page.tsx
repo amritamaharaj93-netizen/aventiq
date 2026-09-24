@@ -17,9 +17,33 @@ const PROJECT_TYPES = [
   "Other"
 ]
 
+const DEFAULT_CONTACT = {
+  headerTitle: "Contact Us",
+  badgeTag: "Get in touch",
+  mainHeadline: "Let's Build Something Great.",
+  subText: "Have a vision, a product to build, or an existing system that needs scaling? Tell our engineering team about your project.",
+  email: "aventiq34@gmail.com",
+  phone: "8239988743",
+  locationName: "Kokar Ranchi",
+  fullAddress: "Kokar, Ranchi, Jharkhand, India",
+  mapQuery: "Kokar Ranchi",
+  offices: [
+    {
+      id: "1",
+      name: "Main Headquarters",
+      address: "Kokar, Ranchi, Jharkhand, India",
+      phone: "8239988743",
+      email: "aventiq34@gmail.com",
+      mapQuery: "Kokar Ranchi",
+      isPrimary: true
+    }
+  ]
+}
+
 export default function ContactPage() {
   const [state, formAction, isPending] = useActionState(submitContactForm, null as any)
   const [success, setSuccess] = useState(false)
+  const [contactData, setContactData] = useState(DEFAULT_CONTACT)
 
   useEffect(() => {
     if (state?.success) {
@@ -27,10 +51,74 @@ export default function ContactPage() {
     }
   }, [state])
 
+  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const form = e.currentTarget
+    const formData = new FormData(form)
+
+    const name = (formData.get("name") as string) || ""
+    const email = (formData.get("email") as string) || ""
+    const phone = (formData.get("phone") as string) || ""
+    const company = (formData.get("company") as string) || "Individual Client"
+    const projectType = (formData.get("projectType") as string) || "General Inquiry"
+    const budget = (formData.get("budget") as string) || "Not specified"
+    const timeline = (formData.get("timeline") as string) || "Flexible"
+    const description = (formData.get("description") as string) || ""
+
+    if (name && email && description) {
+      const newLead = {
+        id: Date.now().toString(),
+        name,
+        email,
+        phone: phone.replace(/\D/g, "").slice(0, 10),
+        company,
+        subject: `${projectType} - ${description.slice(0, 45)}...`,
+        projectType,
+        budget,
+        timeline,
+        message: description,
+        status: "New",
+        date: new Date().toLocaleDateString("en-US", { month: "short", day: "2-digit", year: "numeric" })
+      }
+
+      try {
+        const existing = localStorage.getItem("aventiq_admin_leads")
+        let leadsList = []
+        if (existing) {
+          const parsed = JSON.parse(existing)
+          if (Array.isArray(parsed)) leadsList = parsed
+        }
+        leadsList.unshift(newLead)
+        localStorage.setItem("aventiq_admin_leads", JSON.stringify(leadsList))
+      } catch (err) {
+        console.error("Failed to store genuine contact lead", err)
+      }
+    }
+  }
+
+  useEffect(() => {
+    const saved = localStorage.getItem("aventiq_admin_contact")
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved)
+        if (parsed && typeof parsed === "object") {
+          setContactData({
+            ...DEFAULT_CONTACT,
+            ...parsed,
+            offices: Array.isArray(parsed.offices) && parsed.offices.length > 0 ? parsed.offices : DEFAULT_CONTACT.offices
+          })
+        }
+      } catch (e) {
+        console.error("Failed to load contact info from local storage")
+      }
+    }
+  }, [])
+
+  const mapEmbedUrl = `https://maps.google.com/maps?q=${encodeURIComponent(contactData.mapQuery || "Kokar Ranchi")}&t=&z=14&ie=UTF8&iwloc=&output=embed`
+
   return (
     <div className="min-h-screen bg-[#F8FAFC] pb-8">
       <PageHeader 
-        title="Contact Us" 
+        title={contactData.headerTitle} 
         breadcrumbs={[{ label: "Contact Us" }]} 
         bgImage="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2000&auto=format&fit=crop"
       />
@@ -44,27 +132,27 @@ export default function ContactPage() {
             className="flex flex-col justify-center"
           >
             <div className="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-slate-50 border border-slate-200 text-sm font-bold text-[#0067D9] mb-8 tracking-widest uppercase shadow-sm w-max">
-              Get in touch
+              {contactData.badgeTag}
             </div>
             <h2 className="text-4xl md:text-5xl font-extrabold text-slate-900 mb-8 tracking-tight">
-              Let's Build Something <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#0067D9] to-[#00C6F7]">Great.</span>
+              {contactData.mainHeadline}
             </h2>
             <p className="text-xl md:text-2xl text-slate-600 mb-16 max-w-lg leading-relaxed font-medium">
-              Have a vision, a product to build, or an existing system that needs scaling? Tell our engineering team about your project.
+              {contactData.subText}
             </p>
             
             <div className="space-y-10">
               <div className="group flex flex-col items-start">
                 <h3 className="font-extrabold text-slate-900 text-sm uppercase tracking-wider mb-2">Email Us</h3>
-                <a href="mailto:aventiq34@gmail.com" className="text-2xl font-bold text-[#0067D9] group-hover:text-[#00C6F7] transition-colors">aventiq34@gmail.com</a>
+                <a href={`mailto:${contactData.email}`} className="text-2xl font-bold text-[#0067D9] group-hover:text-[#00C6F7] transition-colors">{contactData.email}</a>
               </div>
               <div className="group flex flex-col items-start">
                 <h3 className="font-extrabold text-slate-900 text-sm uppercase tracking-wider mb-2">Call Us</h3>
-                <a href="tel:8239988743" className="text-2xl font-bold text-slate-700 group-hover:text-[#0067D9] transition-colors">8239988743</a>
+                <a href={`tel:${contactData.phone.replace(/[^0-9+]/g, '')}`} className="text-2xl font-bold text-slate-700 group-hover:text-[#0067D9] transition-colors">{contactData.phone}</a>
               </div>
               <div className="flex flex-col items-start">
                 <h3 className="font-extrabold text-slate-900 text-sm uppercase tracking-wider mb-2">Location</h3>
-                <a href="https://maps.google.com/?q=Kokar+Ranchi" target="_blank" rel="noopener noreferrer" className="text-xl font-bold text-slate-700 hover:text-[#0067D9] transition-colors">Kokar Ranchi</a>
+                <a href={`https://maps.google.com/?q=${encodeURIComponent(contactData.mapQuery || contactData.locationName)}`} target="_blank" rel="noopener noreferrer" className="text-xl font-bold text-slate-700 hover:text-[#0067D9] transition-colors">{contactData.locationName}</a>
               </div>
             </div>
           </motion.div>
@@ -91,7 +179,7 @@ export default function ContactPage() {
                 <Button className="h-14 px-8 text-lg font-bold rounded-2xl bg-slate-900 text-white hover:scale-105 transition-transform" onClick={() => setSuccess(false)}>Send Another</Button>
               </div>
             ) : (
-              <form action={formAction} className="space-y-6 relative z-10">
+              <form action={formAction} onSubmit={handleFormSubmit} className="space-y-6 relative z-10">
                 {state?.success === false && !state?.errors && (
                   <div className="p-4 bg-red-50 border border-red-100 text-red-600 rounded-xl flex items-start gap-3 font-medium text-sm">
                     <AlertCircle className="shrink-0 mt-0.5" size={20} />
@@ -119,7 +207,15 @@ export default function ContactPage() {
                   </div>
                   <div className="space-y-2.5">
                     <label htmlFor="phone" className="text-xs font-bold text-slate-900 uppercase tracking-wider">Phone Number</label>
-                    <input type="tel" id="phone" name="phone" className="w-full h-14 px-5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#0067D9]/20 focus:border-[#0067D9] transition-all font-medium text-slate-900 placeholder:font-normal placeholder:text-slate-400" placeholder="Optional" />
+                    <input 
+                      type="tel" 
+                      id="phone" 
+                      name="phone" 
+                      maxLength={10} 
+                      onInput={(e) => { e.currentTarget.value = e.currentTarget.value.replace(/\D/g, "").slice(0, 10) }} 
+                      className="w-full h-14 px-5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#0067D9]/20 focus:border-[#0067D9] transition-all font-medium text-slate-900 placeholder:font-normal placeholder:text-slate-400" 
+                      placeholder="10 digit phone number (Optional)" 
+                    />
                   </div>
                 </div>
 
@@ -189,11 +285,11 @@ export default function ContactPage() {
         >
           <div className="flex flex-col items-center mb-8 text-center">
             <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-4 tracking-tight">Find Us Here</h2>
-            <p className="text-lg text-slate-600 font-medium">Kokar, Ranchi, Jharkhand, India</p>
+            <p className="text-lg text-slate-600 font-medium">{contactData.fullAddress}</p>
           </div>
           <div className="w-full h-[450px] rounded-xl overflow-hidden border border-slate-100">
             <iframe 
-              src="https://maps.google.com/maps?q=Kokar%20Ranchi&t=&z=14&ie=UTF8&iwloc=&output=embed" 
+              src={mapEmbedUrl}
               width="100%" 
               height="100%" 
               style={{ border: 0 }} 

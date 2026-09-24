@@ -1,31 +1,14 @@
 "use client"
 
 import { useParams } from "next/navigation"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { submitContactForm } from "@/app/actions/contact"
 import Link from "next/link"
 import { motion } from "framer-motion"
-import { ArrowLeft, CheckCircle2, MonitorSmartphone, PenTool, Sparkles, LayoutTemplate, Palette, Zap } from "lucide-react"
+import { ArrowLeft, CheckCircle2, LayoutTemplate, Palette, Cloud, Cpu, Server, Zap, Megaphone, Search, Target, MousePointerClick } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { notFound } from "next/navigation"
 
-// Mock detailed data for the dynamic routes
-const SERVICE_DETAILS: Record<string, any> = {
-  "ui-ux-design": {
-    title: "UI/UX Design",
-    subtitle: "Crafting digital experiences that captivate users and drive conversions.",
-    description: "In today's digital landscape, a functional application isn't enough. We design intuitive, accessible, and stunning user interfaces that reduce friction and elevate your brand presence. Our design process bridges the gap between complex system logic and seamless human interaction.",
-    icon: Palette,
-    color: "from-[#FF8A00] to-[#FFB52E]",
-    glow: "bg-[#FF8A00]",
-    features: [
-      { title: "User Research & Strategy", desc: "Deep diving into user behavior, market analysis, and journey mapping to ensure the product solves real problems." },
-      { title: "Wireframing & Prototyping", desc: "Rapid low and high-fidelity prototyping to visualize workflows and validate concepts before writing a single line of code." },
-      { title: "Design Systems", desc: "Creating scalable, reusable component libraries that ensure visual consistency across your entire ecosystem." },
-      { title: "Interaction Design", desc: "Implementing micro-interactions and motion design that make software feel alive, responsive, and premium." }
-    ],
-    tech: ["Figma", "Framer", "Adobe Creative Suite", "Principle", "Tailwind CSS"],
-  },
+const DEFAULT_SERVICE_DETAILS: Record<string, any> = {
   "web-development": {
     title: "Web Development",
     subtitle: "High-performance web applications built for enterprise scale.",
@@ -40,35 +23,192 @@ const SERVICE_DETAILS: Record<string, any> = {
       { title: "CMS & Content Platforms", desc: "Dynamic, easy-to-manage content systems powered by headless CMS architecture like Sanity or WordPress." }
     ],
     tech: ["Next.js", "React", "TypeScript", "Tailwind CSS", "Framer Motion"],
+  },
+  "saas-development": {
+    title: "SaaS Development",
+    subtitle: "Scalable multi-tenant cloud platforms designed for rapid growth.",
+    description: "We specialize in building robust Software as a Service (SaaS) products engineered for reliability, security, and effortless scaling. From initial concept to deployment and continuous iteration, we build high-availability platforms that handle high user volumes and automated recurring transactions seamlessly.",
+    icon: Cloud,
+    color: "from-[#0067D9] to-[#00C6F7]",
+    glow: "bg-[#0067D9]",
+    features: [
+      { title: "Multi-Tenant Architecture", desc: "Isolated tenant data structures and shared resources designed for security and massive scaling." },
+      { title: "Subscription & Billing", desc: "Integrated payment gateways, recurring subscriptions, invoice generation, and tier management." },
+      { title: "Role-Based Access Control", desc: "Granular permissions, SSO integration, and enterprise-grade authentication systems." },
+      { title: "API Ecosystem", desc: "Developer-friendly REST and GraphQL APIs for seamless third-party integrations and extensibility." }
+    ],
+    tech: ["Node.js", "AWS", "PostgreSQL", "Stripe", "Docker"],
+  },
+  "ui-ux-design": {
+    title: "UI/UX Design",
+    subtitle: "Crafting digital experiences that captivate users and drive conversions.",
+    description: "In today's digital landscape, a functional application isn't enough. We design intuitive, accessible, and stunning user interfaces that reduce friction and elevate your brand presence. Our design process bridges the gap between complex system logic and seamless human interaction.",
+    icon: Palette,
+    color: "from-[#FF8A00] to-[#FFB52E]",
+    glow: "bg-[#FF8A00]",
+    features: [
+      { title: "User Research & Strategy", desc: "Deep diving into user behavior, market analysis, and journey mapping to ensure the product solves real problems." },
+      { title: "Wireframing & Prototyping", desc: "Rapid low and high-fidelity prototyping to visualize workflows and validate concepts before writing a single line of code." },
+      { title: "Design Systems", desc: "Creating scalable, reusable component libraries that ensure visual consistency across your entire ecosystem." },
+      { title: "Interaction Design", desc: "Implementing micro-interactions and motion design that make software feel alive, responsive, and premium." }
+    ],
+    tech: ["Figma", "Wireframing", "Prototyping", "Design Systems", "Tailwind CSS"],
+  },
+  "ai-development": {
+    title: "AI Development",
+    subtitle: "Cutting-edge artificial intelligence and machine learning solutions.",
+    description: "Empower your business with custom AI solutions, automated workflows, intelligent chatbots, and predictive model integrations designed to turn complex data into actionable business intelligence.",
+    icon: Cpu,
+    color: "from-[#020B1C] to-[#062B63]",
+    glow: "bg-[#00C6F7]",
+    features: [
+      { title: "LLM & GenAI Integration", desc: "Custom fine-tuning and retrieval-augmented generation (RAG) for enterprise knowledge systems." },
+      { title: "Predictive Analytics", desc: "Machine learning models for forecasting sales, inventory optimization, and user behavior analytics." },
+      { title: "Computer Vision", desc: "Automated image and video analysis for quality control, security, and automated tagging." },
+      { title: "Workflow Automation", desc: "AI-driven decision engines and automated document processing for operational efficiency." }
+    ],
+    tech: ["OpenAI", "Python", "PyTorch", "LangChain", "Docker"],
+  },
+  "cloud-devops": {
+    title: "Cloud & DevOps",
+    subtitle: "Automated deployments and cloud infrastructure management for high availability.",
+    description: "Modern digital infrastructure requires automated CI/CD pipelines, container orchestration, and cloud governance. We architect resilient cloud environments on AWS, Azure, and Google Cloud to ensure your applications remain available 24/7 with zero downtime.",
+    icon: Server,
+    color: "from-[#062B63] to-[#0067D9]",
+    glow: "bg-[#0067D9]",
+    features: [
+      { title: "Infrastructure as Code", desc: "Automated server and cluster provisioning using Terraform and CloudFormation." },
+      { title: "CI/CD Pipelines", desc: "Automated build, test, and deployment pipelines for friction-free delivery." },
+      { title: "Container Orchestration", desc: "Production Kubernetes and Docker container management for zero-downtime scaling." },
+      { title: "Monitoring & Alerts", desc: "Real-time telemetry, logging, and automated incident alerting." }
+    ],
+    tech: ["Docker", "Kubernetes", "CI/CD", "Terraform", "AWS"],
+  },
+  "digital-marketing": {
+    title: "Digital Marketing",
+    subtitle: "Comprehensive growth strategies that turn visitors into loyal brand advocates.",
+    description: "Drive sustainable revenue growth with end-to-end digital marketing solutions tailored to modern tech businesses. We combine data analysis, creative messaging, and multi-channel attribution to maximize customer acquisition and brand equity.",
+    icon: Megaphone,
+    color: "from-[#FF8A00] to-[#0067D9]",
+    glow: "bg-[#FF8A00]",
+    features: [
+      { title: "Multi-Channel Strategy", desc: "Unified campaign architectures across search, social, and email marketing." },
+      { title: "Content Marketing", desc: "High-converting blog posts, whitepapers, and landing page content tailored to your audience." },
+      { title: "Funnel Optimization", desc: "Conversion rate optimization (CRO) to maximize lead capture at every step." },
+      { title: "Analytics & Attribution", desc: "Transparent data dashboards tracking ROI, CAC, and LTV." }
+    ],
+    tech: ["Strategy", "Content Marketing", "Google Analytics", "HubSpot", "Growth Hacking"],
+  },
+  "seo": {
+    title: "SEO",
+    subtitle: "Dominate organic search rankings and attract high-intent customer traffic.",
+    description: "Our technical and content-driven SEO strategies help your software products rank at the top of search engine results pages. We optimize site architecture, page performance, and backlink authority to build long-term organic authority.",
+    icon: Search,
+    color: "from-[#0067D9] to-[#00C6F7]",
+    glow: "bg-[#00C6F7]",
+    features: [
+      { title: "Technical SEO Audits", desc: "Deep-dive crawl analysis, fixing indexation issues, and accelerating page load speed." },
+      { title: "On-Page & Keyword Strategy", desc: "Targeting high-intent commercial keywords and optimizing structured data." },
+      { title: "Authority & Link Building", desc: "White-hat outreach and digital PR to earn quality editorial backlinks." },
+      { title: "Core Web Vitals Tuning", desc: "Optimizing LCP, CLS, and FID for maximum Google search preference." }
+    ],
+    tech: ["On-Page SEO", "Technical Audits", "Ahrefs", "Semrush", "Core Web Vitals"],
+  },
+  "meta-ads": {
+    title: "Meta Ads",
+    subtitle: "High-ROI Facebook and Instagram ad campaigns targeted with surgical precision.",
+    description: "Scale customer acquisition with hyper-targeted social ad campaigns on Facebook and Instagram. We craft high-converting ad creative, build lookalike audiences, and continuously test ad copy to generate measurable sales pipeline.",
+    icon: Target,
+    color: "from-[#062B63] to-[#FF8A00]",
+    glow: "bg-[#FF8A00]",
+    features: [
+      { title: "High-Converting Creatives", desc: "Engaging visual ads and copywriting tailored to targeted buyer personas." },
+      { title: "Advanced Audience Targeting", desc: "Leveraging custom audiences, lookalikes, and behavioral retargeting." },
+      { title: "Conversions API Integration", desc: "Server-side tracking setup to ensure 100% accurate conversion data." },
+      { title: "Campaign Scaling & ROAS", desc: "Continuous bid optimization and budget scaling to maximize Return on Ad Spend." }
+    ],
+    tech: ["Facebook Ads", "Instagram Ads", "Meta Pixel", "CAPI", "A/B Testing"],
+  },
+  "google-ads": {
+    title: "Google Ads",
+    subtitle: "Capture high-intent search buyers at the exact moment they search for solutions.",
+    description: "Put your software directly in front of buyers actively searching for your solutions on Google. We structure high-performing PPC search, display, and remarketing campaigns engineered to generate qualified inbound leads.",
+    icon: MousePointerClick,
+    color: "from-[#0067D9] to-[#00C6F7]",
+    glow: "bg-[#00C6F7]",
+    features: [
+      { title: "Intent Search Campaigns", desc: "Bidding on high-converting transactional search keywords with tight match types." },
+      { title: "Negative Keyword Filtering", desc: "Eliminating wasted ad spend by excluding non-converting search queries." },
+      { title: "Quality Score Optimization", desc: "Writing relevant ad copy and dedicated landing pages to lower cost-per-click." },
+      { title: "Conversion Tracking", desc: "Setting up full end-to-end goal tracking in Google Tag Manager and GA4." }
+    ],
+    tech: ["Google Search Ads", "Display Network", "PPC Strategy", "Negative Keywords", "Google Tag Manager"],
   }
 }
 
 export default function ServiceDetail() {
   const params = useParams()
   const slug = params.slug as string
-  
-  // Fallback generic data if not in our specific mock list
-  const data = SERVICE_DETAILS[slug] || {
-    title: slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
-    subtitle: "Premium software engineering and technology solutions.",
-    description: "We deliver sophisticated technology solutions designed to solve complex business problems with elegance and scale. Partner with us to build software that moves your business forward.",
-    icon: Zap,
-    color: "from-[#062B63] to-[#0067D9]",
-    glow: "bg-[#0067D9]",
-    features: [
-      { title: "Strategic Architecture", desc: "Designing scalable systems built to handle future growth and complex requirements." },
-      { title: "Agile Development", desc: "Iterative, transparent delivery cycles that ensure rapid time-to-market." },
-      { title: "Quality Assurance", desc: "Rigorous automated and manual testing pipelines for zero-defect software." },
-      { title: "Ongoing Support", desc: "Dedicated maintenance, monitoring, and feature iteration post-launch." }
-    ],
-    tech: ["Next.js", "Node.js", "PostgreSQL", "AWS", "TypeScript"],
-  }
 
-  const Icon = data.icon
-
+  const [serviceData, setServiceData] = useState<any>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [formSuccess, setFormSuccess] = useState(false)
   const [formError, setFormError] = useState("")
+
+  useEffect(() => {
+    // 1. Check local storage for dynamic backend edits
+    const saved = localStorage.getItem("aventiq_admin_services")
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved)
+        if (Array.isArray(parsed)) {
+          const found = parsed.find((item: any) => item.slug === slug || item.slug === slug?.toLowerCase())
+          if (found) {
+            const defaultMatch = DEFAULT_SERVICE_DETAILS[slug] || {}
+            setServiceData({
+              title: found.title,
+              subtitle: found.subtitle || found.desc || "Premium technology and software engineering solutions.",
+              description: found.overview || found.desc || "We deliver sophisticated technology solutions designed to solve complex business problems.",
+              icon: defaultMatch.icon || Zap,
+              color: defaultMatch.color || "from-[#062B63] to-[#0067D9]",
+              glow: defaultMatch.glow || "bg-[#00C6F7]",
+              features: found.features && found.features.length > 0 ? found.features : (defaultMatch.features || [
+                { title: "Custom Engineering", desc: "Tailored specifically for your business growth." }
+              ]),
+              tech: found.tech && found.tech.length > 0 ? found.tech : (defaultMatch.tech || ["Next.js", "React", "TypeScript", "Node.js"])
+            })
+            return
+          }
+        }
+      } catch (e) {
+        console.error("Failed to parse services from local storage")
+      }
+    }
+
+    // 2. Fallback to default mock data or generic structure
+    const fallback = DEFAULT_SERVICE_DETAILS[slug] || {
+      title: slug?.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') || "Service Detail",
+      subtitle: "Premium software engineering and technology solutions.",
+      description: "We deliver sophisticated technology solutions designed to solve complex business problems with elegance and scale.",
+      icon: Zap,
+      color: "from-[#062B63] to-[#0067D9]",
+      glow: "bg-[#0067D9]",
+      features: [
+        { title: "Strategic Architecture", desc: "Designing scalable systems built to handle future growth and complex requirements." },
+        { title: "Agile Development", desc: "Iterative, transparent delivery cycles that ensure rapid time-to-market." },
+        { title: "Quality Assurance", desc: "Rigorous automated and manual testing pipelines for zero-defect software." },
+        { title: "Ongoing Support", desc: "Dedicated maintenance, monitoring, and feature iteration post-launch." }
+      ],
+      tech: ["Next.js", "Node.js", "PostgreSQL", "AWS", "TypeScript"],
+    }
+    setServiceData(fallback)
+  }, [slug])
+
+  if (!serviceData) {
+    return <div className="min-h-screen bg-white pt-28 text-center text-slate-400">Loading service details...</div>
+  }
+
+  const Icon = serviceData.icon || Zap
 
   const handleQuoteSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -77,8 +217,7 @@ export default function ServiceDetail() {
     setFormSuccess(false);
     
     const formData = new FormData(e.currentTarget);
-    const title = data.title; // we'll capture this from the data object below
-    formData.set("projectType", `${title} Quote Request`);
+    formData.set("projectType", `${serviceData.title} Quote Request`);
     formData.set("company", "");
     formData.set("phone", "");
     formData.set("budget", "");
@@ -101,10 +240,10 @@ export default function ServiceDetail() {
 
   return (
     <div className="min-h-screen bg-white font-sans">
-      {/* PREMIUM HERO */}
+      {/* HERO SECTION */}
       <section className="relative pt-20 pb-12 lg:pt-28 lg:pb-16 overflow-hidden bg-[#020B1C]">
         <div className="absolute inset-0 z-0">
-          <div className={`absolute top-1/4 left-1/4 w-[500px] h-[500px] ${data.glow} rounded-full mix-blend-screen filter blur-[150px] opacity-20 animate-pulse`}></div>
+          <div className={`absolute top-1/4 left-1/4 w-[500px] h-[500px] ${serviceData.glow} rounded-full mix-blend-screen filter blur-[150px] opacity-20 animate-pulse`}></div>
           <div className="absolute bottom-0 right-0 w-full h-1/2 bg-gradient-to-t from-[#020B1C] to-transparent"></div>
         </div>
 
@@ -117,7 +256,7 @@ export default function ServiceDetail() {
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className={`w-20 h-20 rounded-2xl bg-gradient-to-br ${data.color} flex items-center justify-center mb-8 shadow-2xl shadow-[#00C6F7]/20`}
+              className={`w-20 h-20 rounded-2xl bg-gradient-to-br ${serviceData.color} flex items-center justify-center mb-8 shadow-2xl shadow-[#00C6F7]/20`}
             >
               <Icon size={40} className="text-white" />
             </motion.div>
@@ -128,7 +267,7 @@ export default function ServiceDetail() {
               transition={{ delay: 0.1 }}
               className="text-5xl md:text-7xl font-bold text-white tracking-tighter mb-6 leading-[1.1]"
             >
-              {data.title}
+              {serviceData.title}
             </motion.h1>
             
             <motion.p 
@@ -137,7 +276,7 @@ export default function ServiceDetail() {
               transition={{ delay: 0.2 }}
               className="text-xl md:text-3xl text-[#CBD5E1] font-light leading-relaxed max-w-3xl"
             >
-              {data.subtitle}
+              {serviceData.subtitle}
             </motion.p>
           </div>
         </div>
@@ -151,14 +290,14 @@ export default function ServiceDetail() {
           <div className="lg:col-span-8">
             <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-6 tracking-tight">Overview</h2>
             <p className="text-lg md:text-xl text-slate-600 leading-relaxed mb-20 font-medium whitespace-pre-line">
-              {data.description}
+              {serviceData.description}
             </p>
 
             <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-10 tracking-tight">What We Deliver</h2>
             <div className="grid sm:grid-cols-2 gap-6">
-              {data.features.map((feature: any, i: number) => (
+              {serviceData.features.map((feature: any, i: number) => (
                 <div key={i} className="group bg-slate-50 p-8 rounded-3xl border border-slate-100 hover:bg-white hover:shadow-2xl hover:shadow-slate-200/50 transition-all duration-500">
-                  <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${data.color} flex items-center justify-center mb-6 shadow-md text-white group-hover:scale-110 transition-transform duration-500`}>
+                  <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${serviceData.color} flex items-center justify-center mb-6 shadow-md text-white group-hover:scale-110 transition-transform duration-500`}>
                     <CheckCircle2 size={24} />
                   </div>
                   <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-slate-900 group-hover:to-slate-600 transition-colors">{feature.title}</h3>
@@ -172,7 +311,7 @@ export default function ServiceDetail() {
             <div className="bg-white p-8 md:p-10 rounded-[2rem] border border-slate-200 shadow-xl shadow-slate-200/50 sticky top-28">
               <h3 className="text-xl font-extrabold text-slate-900 mb-6 uppercase tracking-wider text-sm">Technologies Used</h3>
               <div className="flex flex-wrap gap-2.5 mb-10">
-                {data.tech.map((tech: string) => (
+                {serviceData.tech.map((tech: string) => (
                   <span key={tech} className="px-4 py-2 bg-slate-50 text-slate-700 font-semibold rounded-xl text-sm border border-slate-200 hover:border-slate-300 transition-colors cursor-default">
                     {tech}
                   </span>
@@ -182,7 +321,7 @@ export default function ServiceDetail() {
               <div className="w-full h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent mb-10"></div>
 
               <h3 className="text-2xl font-bold text-slate-900 mb-2 tracking-tight">Request a Quote</h3>
-              <p className="text-slate-500 mb-6 text-sm">Tell us about your {data.title.toLowerCase()} needs and we'll get back to you within 24 hours.</p>
+              <p className="text-slate-500 mb-6 text-sm">Tell us about your {serviceData.title.toLowerCase()} needs and we'll get back to you within 24 hours.</p>
               
               <form className="space-y-4" onSubmit={handleQuoteSubmit}>
                 {formSuccess ? (
@@ -196,7 +335,7 @@ export default function ServiceDetail() {
                         setFormSuccess(false);
                         setFormError("");
                       }}
-                      className={`w-full h-12 mt-2 text-base font-bold rounded-xl bg-gradient-to-r ${data.color} text-white shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 cursor-pointer`}
+                      className={`w-full h-12 mt-2 text-base font-bold rounded-xl bg-gradient-to-r ${serviceData.color} text-white shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 cursor-pointer`}
                     >
                       Send Another Request
                     </button>
@@ -217,7 +356,7 @@ export default function ServiceDetail() {
                     <div>
                       <textarea name="description" required placeholder="Project Details" rows={4} className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-sm resize-none"></textarea>
                     </div>
-                    <button disabled={isSubmitting} type="submit" className={`w-full h-12 mt-2 text-base font-bold rounded-xl bg-gradient-to-r ${data.color} text-white shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed`}>
+                    <button disabled={isSubmitting} type="submit" className={`w-full h-12 mt-2 text-base font-bold rounded-xl bg-gradient-to-r ${serviceData.color} text-white shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed`}>
                       {isSubmitting ? "Submitting..." : "Submit Request"}
                     </button>
                   </>

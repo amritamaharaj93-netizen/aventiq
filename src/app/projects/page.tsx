@@ -59,7 +59,14 @@ export default function ProjectsPage() {
       try {
         const parsed = JSON.parse(saved)
         if (parsed && Array.isArray(parsed) && parsed.length > 0) {
-          setDisplayProjects(parsed)
+          const INITIAL_IDS = ["1", "2", "3", "4"]
+          const INITIAL_SLUGS = ["nexgen-enterprise", "fintech-mobile", "aura-ai", "luxe-ecommerce"]
+          const isInitial = (p: any) => INITIAL_IDS.includes(String(p.id)) || INITIAL_SLUGS.includes(p.slug)
+
+          const initialProjects = parsed.filter((p: any) => isInitial(p))
+          const customProjects = parsed.filter((p: any) => !isInitial(p))
+          
+          setDisplayProjects([...initialProjects, ...customProjects])
         }
       } catch (e) {
         console.error("Failed to parse projects from local storage")

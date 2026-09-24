@@ -1,19 +1,63 @@
 "use client"
 
-import { useState } from "react"
-import { Plus, Search, Filter, Edit, Trash2, MoreHorizontal, Users } from "lucide-react"
+import { useState, useEffect } from "react"
+import Link from "next/link"
+import { Plus, Search, Filter, Edit, Trash2, Users } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
-// Dummy data for the job postings
 const INITIAL_JOBS = [
-  { id: "1", role: "Senior Full Stack Engineer", department: "Engineering", location: "Remote", applicants: 24, status: "Active", date: "Aug 10, 2026" },
-  { id: "2", role: "Product Designer (UI/UX)", department: "Design", location: "New York, NY", applicants: 45, status: "Active", date: "Aug 05, 2026" },
-  { id: "3", role: "DevOps Specialist", department: "Engineering", location: "Remote", applicants: 8, status: "Draft", date: "Aug 18, 2026" },
-  { id: "4", role: "Marketing Director", department: "Marketing", location: "San Francisco, CA", applicants: 112, status: "Closed", date: "Jul 15, 2026" },
+  { id: "1", role: "Senior Full Stack Engineer", department: "Engineering", location: "Remote", type: "Full-time", applicants: 24, status: "Active", date: "Aug 10, 2026" },
+  { id: "2", role: "Product Designer (UI/UX)", department: "Design", location: "New York, NY", type: "Full-time", applicants: 45, status: "Active", date: "Aug 05, 2026" },
+  { id: "3", role: "DevOps Specialist", department: "Engineering", location: "Remote", type: "Full-time", applicants: 8, status: "Draft", date: "Aug 18, 2026" },
+  { id: "4", role: "Marketing Director", department: "Marketing", location: "San Francisco, CA", type: "Full-time", applicants: 112, status: "Closed", date: "Jul 15, 2026" },
 ]
 
 export default function AdminCareersPage() {
   const [searchQuery, setSearchQuery] = useState("")
+  const [jobs, setJobs] = useState(INITIAL_JOBS)
+  const [isLoaded, setIsLoaded] = useState(false)
+  const [currentPage, setCurrentPage] = useState(1)
+  const ITEMS_PER_PAGE = 5
+
+  // Load from localStorage on mount
+  useEffect(() => {
+    const saved = localStorage.getItem("aventiq_admin_careers")
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved)
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setJobs(parsed)
+        }
+      } catch (e) {
+        console.error("Failed to parse career postings from local storage")
+      }
+    }
+    setIsLoaded(true)
+  }, [])
+
+  // Save to localStorage
+  useEffect(() => {
+    if (isLoaded) {
+      localStorage.setItem("aventiq_admin_careers", JSON.stringify(jobs))
+    }
+  }, [jobs, isLoaded])
+
+  const handleDeleteJob = (id: string) => {
+    setJobs(jobs.filter(j => j.id !== id))
+  }
+
+  const filteredJobs = jobs.filter(job => 
+    job.role.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    job.department.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    job.location.toLowerCase().includes(searchQuery.toLowerCase())
+  )
+
+  // Pagination Math
+  const totalPages = Math.ceil(filteredJobs.length / ITEMS_PER_PAGE) || 1
+  const validCurrentPage = Math.min(Math.max(currentPage, 1), totalPages)
+  const startIndex = (validCurrentPage - 1) * ITEMS_PER_PAGE
+  const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, filteredJobs.length)
+  const paginatedJobs = filteredJobs.slice(startIndex, endIndex)
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
@@ -28,9 +72,11 @@ export default function AdminCareersPage() {
             Manage job postings and review incoming applicants.
           </p>
         </div>
-        <Button className="h-11 bg-gradient-to-r from-[#0067D9] to-[#00C6F7] hover:from-[#00C6F7] hover:to-[#0067D9] text-white font-bold px-6 rounded-xl shadow-[0_0_15px_rgba(0,198,247,0.3)] hover:shadow-[0_0_25px_rgba(0,198,247,0.5)] transition-all flex items-center gap-2">
-          <Plus size={18} strokeWidth={2.5} /> Add Job Posting
-        </Button>
+        <Link href="/admin/careers/create">
+          <Button className="h-11 bg-gradient-to-r from-[#0067D9] to-[#00C6F7] hover:from-[#00C6F7] hover:to-[#0067D9] text-white font-bold px-6 rounded-xl shadow-[0_0_15px_rgba(0,198,247,0.3)] hover:shadow-[0_0_25px_rgba(0,198,247,0.5)] transition-all flex items-center gap-2 cursor-pointer">
+            <Plus size={18} strokeWidth={2.5} /> Add Job Posting
+          </Button>
+        </Link>
       </div>
 
       {/* Main Table Container */}
@@ -45,11 +91,14 @@ export default function AdminCareersPage() {
               placeholder="Search jobs..." 
               className="w-full h-11 pl-11 pr-4 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#00C6F7]/50 focus:border-[#00C6F7] transition-all text-sm text-[#020B1C] placeholder:text-slate-400 font-medium"
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => {
+                setSearchQuery(e.target.value)
+                setCurrentPage(1)
+              }}
             />
           </div>
           <Button variant="outline" className="w-full sm:w-auto h-11 px-5 rounded-xl border-slate-200 text-slate-600 font-semibold hover:bg-slate-50 hover:text-[#020B1C] transition-colors flex items-center gap-2 shadow-sm">
-            <Filter size={18} /> Filter
+            <Filter size={18} /> Filter List
           </Button>
         </div>
 
@@ -67,7 +116,7 @@ export default function AdminCareersPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {INITIAL_JOBS.map((job) => (
+              {paginatedJobs.map((job) => (
                 <tr key={job.id} className="hover:bg-[#F4F7FA]/50 transition-colors group bg-white">
                   <td className="p-5">
                     <div className="font-bold text-[#020B1C] text-sm group-hover:text-[#0067D9] transition-colors">{job.role}</div>
@@ -103,14 +152,19 @@ export default function AdminCareersPage() {
                   </td>
                   <td className="p-5 text-right">
                     <div className="flex items-center justify-end gap-1 opacity-100">
-                      <button className="p-2 text-slate-400 hover:text-[#0067D9] hover:bg-[#0067D9]/10 rounded-lg transition-all" title="Edit">
+                      <Link 
+                        href={`/admin/careers/${job.id}/edit`}
+                        className="p-2 text-slate-400 hover:text-[#0067D9] hover:bg-[#0067D9]/10 rounded-lg transition-all cursor-pointer" 
+                        title="Edit Job Posting"
+                      >
                         <Edit size={16} strokeWidth={2.5} />
-                      </button>
-                      <button className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all" title="Delete">
+                      </Link>
+                      <button 
+                        onClick={() => handleDeleteJob(job.id)}
+                        className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all cursor-pointer" 
+                        title="Delete Job Posting"
+                      >
                         <Trash2 size={16} strokeWidth={2.5} />
-                      </button>
-                      <button className="p-2 text-slate-400 hover:text-[#020B1C] hover:bg-slate-100 rounded-lg transition-all" title="More Options">
-                        <MoreHorizontal size={16} strokeWidth={2.5} />
                       </button>
                     </div>
                   </td>
@@ -120,16 +174,31 @@ export default function AdminCareersPage() {
           </table>
         </div>
         
-        {/* Pagination */}
+        {/* Footer */}
         <div className="p-5 border-t border-slate-100 bg-slate-50/50 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="text-sm font-medium text-slate-500">
-            Showing <span className="font-bold text-[#020B1C]">1</span> to <span className="font-bold text-[#020B1C]">4</span> of <span className="font-bold text-[#020B1C]">4</span> entries
+            Showing <span className="font-bold text-[#020B1C]">{filteredJobs.length > 0 ? startIndex + 1 : 0}</span> to <span className="font-bold text-[#020B1C]">{endIndex}</span> of <span className="font-bold text-[#020B1C]">{filteredJobs.length}</span> entries
           </div>
-          <div className="flex gap-2">
-            <Button variant="outline" size="sm" disabled className="rounded-lg border-slate-200 text-slate-400 font-semibold h-9 px-4">
+          <div className="flex items-center gap-2">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              disabled={validCurrentPage <= 1}
+              onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+              className="rounded-xl border-slate-200 text-slate-600 font-bold h-9 px-4 hover:bg-[#0067D9] hover:text-white hover:border-[#0067D9] hover:shadow-[0_4px_12px_rgba(0,103,217,0.25)] transition-all duration-300 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-slate-400 disabled:hover:border-slate-200 disabled:shadow-none cursor-pointer disabled:cursor-not-allowed"
+            >
               Previous
             </Button>
-            <Button variant="outline" size="sm" disabled className="rounded-lg border-slate-200 text-slate-400 font-semibold h-9 px-4">
+            <span className="text-xs font-bold text-slate-500 px-2">
+              Page {validCurrentPage} of {totalPages}
+            </span>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              disabled={validCurrentPage >= totalPages}
+              onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+              className="rounded-xl border-slate-200 text-slate-600 font-bold h-9 px-4 hover:bg-[#0067D9] hover:text-white hover:border-[#0067D9] hover:shadow-[0_4px_12px_rgba(0,103,217,0.25)] transition-all duration-300 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-slate-400 disabled:hover:border-slate-200 disabled:shadow-none cursor-pointer disabled:cursor-not-allowed"
+            >
               Next
             </Button>
           </div>

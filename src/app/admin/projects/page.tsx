@@ -36,7 +36,17 @@ export default function AdminProjectsPage() {
     const savedProjects = localStorage.getItem("aventiq_admin_projects")
     if (savedProjects) {
       try {
-        setProjects(JSON.parse(savedProjects))
+        const parsed = JSON.parse(savedProjects)
+        if (Array.isArray(parsed)) {
+          const INITIAL_IDS = ["1", "2", "3", "4"]
+          const INITIAL_SLUGS = ["nexgen-enterprise", "fintech-mobile", "aura-ai", "luxe-ecommerce"]
+          const isInitial = (p: any) => INITIAL_IDS.includes(String(p.id)) || INITIAL_SLUGS.includes(p.slug)
+
+          const initialProjects = parsed.filter((p: any) => isInitial(p))
+          const customProjects = parsed.filter((p: any) => !isInitial(p))
+
+          setProjects([...initialProjects, ...customProjects])
+        }
       } catch (e) {
         console.error("Failed to parse projects from local storage")
       }
@@ -76,12 +86,15 @@ export default function AdminProjectsPage() {
       imageColor: "from-[#020B1C] to-[#0067D9]",
       slug: newProjectForm.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')
     }
-    setProjects([newProject, ...projects])
+    setProjects([...projects, newProject])
     setIsAddModalOpen(false)
     setNewProjectForm({ title: "", category: "SaaS", status: "Draft", desc: "", results: "", tech: "" })
     setImagePreview(null)
     setSearchQuery("") // Clear search so the new project is visible immediately
   }
+
+  const [currentPage, setCurrentPage] = useState(1)
+  const ITEMS_PER_PAGE = 5
 
   const handleDeleteProject = (id: string) => {
     setProjects(projects.filter(p => p.id !== id))
@@ -91,6 +104,13 @@ export default function AdminProjectsPage() {
     project.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     project.category.toLowerCase().includes(searchQuery.toLowerCase())
   )
+
+  // Pagination Math
+  const totalPages = Math.ceil(filteredProjects.length / ITEMS_PER_PAGE) || 1
+  const validCurrentPage = Math.min(Math.max(currentPage, 1), totalPages)
+  const startIndex = (validCurrentPage - 1) * ITEMS_PER_PAGE
+  const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, filteredProjects.length)
+  const paginatedProjects = filteredProjects.slice(startIndex, endIndex)
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
@@ -105,9 +125,11 @@ export default function AdminProjectsPage() {
             Create, edit, and manage your portfolio projects.
           </p>
         </div>
-        <Button onClick={() => setIsAddModalOpen(true)} className="h-11 bg-gradient-to-r from-[#0067D9] to-[#00C6F7] hover:from-[#00C6F7] hover:to-[#0067D9] text-white font-bold px-6 rounded-xl shadow-[0_0_15px_rgba(0,198,247,0.3)] hover:shadow-[0_0_25px_rgba(0,198,247,0.5)] transition-all flex items-center gap-2">
-          <Plus size={18} strokeWidth={2.5} /> Add New Project
-        </Button>
+        <Link href="/admin/projects/create">
+          <Button className="h-11 bg-gradient-to-r from-[#0067D9] to-[#00C6F7] hover:from-[#00C6F7] hover:to-[#0067D9] text-white font-bold px-6 rounded-xl shadow-[0_0_15px_rgba(0,198,247,0.3)] hover:shadow-[0_0_25px_rgba(0,198,247,0.5)] transition-all flex items-center gap-2 cursor-pointer">
+            <Plus size={18} strokeWidth={2.5} /> Add New Project
+          </Button>
+        </Link>
       </div>
 
       {/* Main Table Container */}
@@ -122,7 +144,10 @@ export default function AdminProjectsPage() {
               placeholder="Search projects..." 
               className="w-full h-11 pl-11 pr-4 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#00C6F7]/50 focus:border-[#00C6F7] transition-all text-sm text-[#020B1C] placeholder:text-slate-400 font-medium"
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => {
+                setSearchQuery(e.target.value)
+                setCurrentPage(1)
+              }}
             />
           </div>
           <Button variant="outline" className="w-full sm:w-auto h-11 px-5 rounded-xl border-slate-200 text-slate-600 font-semibold hover:bg-slate-50 hover:text-[#020B1C] transition-colors flex items-center gap-2 shadow-sm">
@@ -132,26 +157,43 @@ export default function AdminProjectsPage() {
 
         {/* Data Table */}
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse min-w-[800px]">
+          <table className="w-full text-left border-collapse min-w-[1000px]">
             <thead>
               <tr className="bg-slate-50/80 border-b border-slate-100">
-                <th className="p-5 text-xs font-bold tracking-wider text-slate-500 uppercase">Project Name</th>
+                <th className="p-5 text-xs font-bold tracking-wider text-slate-500 uppercase">Project</th>
                 <th className="p-5 text-xs font-bold tracking-wider text-slate-500 uppercase">Category</th>
+                <th className="p-5 text-xs font-bold tracking-wider text-slate-500 uppercase">Tech Stack</th>
                 <th className="p-5 text-xs font-bold tracking-wider text-slate-500 uppercase">Status</th>
-                <th className="p-5 text-xs font-bold tracking-wider text-slate-500 uppercase hidden md:table-cell">Date Added</th>
                 <th className="p-5 text-xs font-bold tracking-wider text-slate-500 uppercase text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {filteredProjects.map((project) => (
+              {paginatedProjects.map((project) => (
                 <tr key={project.id} className="hover:bg-[#F4F7FA]/50 transition-colors group bg-white">
                   <td className="p-5">
-                    <div className="font-bold text-[#020B1C] text-sm group-hover:text-[#0067D9] transition-colors">{project.title}</div>
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 rounded-xl overflow-hidden shadow-sm border border-slate-200 flex-shrink-0 bg-slate-100">
+                        <img src={project.image} alt={project.title} className="w-full h-full object-cover" />
+                      </div>
+                      <div>
+                        <div className="font-bold text-[#020B1C] text-sm group-hover:text-[#0067D9] transition-colors">{project.title}</div>
+                        <div className="text-xs text-slate-400 font-medium mt-0.5">{project.date}</div>
+                      </div>
+                    </div>
                   </td>
                   <td className="p-5">
                     <span className="inline-flex items-center text-xs font-semibold px-2.5 py-1 bg-slate-100 text-slate-600 rounded-lg border border-slate-200">
                       {project.category}
                     </span>
+                  </td>
+                  <td className="p-5 max-w-[200px]">
+                    <div className="flex flex-wrap gap-1">
+                      {project.tech?.map((t: string, idx: number) => (
+                        <span key={idx} className="text-[10px] font-semibold px-2 py-0.5 bg-slate-100 text-slate-600 rounded-md">
+                          {t}
+                        </span>
+                      ))}
+                    </div>
                   </td>
                   <td className="p-5">
                     <span className={`inline-flex items-center text-[11px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full border ${
@@ -159,24 +201,19 @@ export default function AdminProjectsPage() {
                         ? "bg-emerald-50 text-emerald-700 border-emerald-200/60 shadow-[0_0_10px_rgba(16,185,129,0.1)]" 
                         : "bg-amber-50 text-amber-700 border-amber-200/60 shadow-[0_0_10px_rgba(245,158,11,0.1)]"
                     }`}>
-                      {/* Optional little dot indicator */}
-                      <span className={`w-1.5 h-1.5 rounded-full mr-1.5 ${project.status === "Published" ? "bg-emerald-500" : "bg-amber-500"}`}></span>
+                      <span className={`w-1.5 h-1.5 rounded-full mr-1.5 ${
+                        project.status === "Published" ? "bg-emerald-500 animate-pulse" : "bg-amber-500"
+                      }`}></span>
                       {project.status}
                     </span>
                   </td>
-                  <td className="p-5 text-sm font-medium text-slate-500 hidden md:table-cell">
-                    {project.date}
-                  </td>
                   <td className="p-5 text-right">
-                    <div className="flex items-center justify-end gap-1">
+                    <div className="flex items-center justify-end gap-1 opacity-100">
                       <Link href={`/admin/projects/${project.id}/edit`} className="p-2 text-slate-400 hover:text-[#0067D9] hover:bg-[#0067D9]/10 rounded-lg transition-all" title="Edit">
                         <Edit size={16} strokeWidth={2.5} />
                       </Link>
                       <button onClick={() => handleDeleteProject(project.id)} className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all" title="Delete">
                         <Trash2 size={16} strokeWidth={2.5} />
-                      </button>
-                      <button className="p-2 text-slate-400 hover:text-[#020B1C] hover:bg-slate-100 rounded-lg transition-all" title="More Options">
-                        <MoreHorizontal size={16} strokeWidth={2.5} />
                       </button>
                     </div>
                   </td>
@@ -186,181 +223,37 @@ export default function AdminProjectsPage() {
           </table>
         </div>
         
-        {/* Pagination */}
+        {/* Footer */}
         <div className="p-5 border-t border-slate-100 bg-slate-50/50 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="text-sm font-medium text-slate-500">
-            Showing <span className="font-bold text-[#020B1C]">1</span> to <span className="font-bold text-[#020B1C]">{filteredProjects.length}</span> of <span className="font-bold text-[#020B1C]">{filteredProjects.length}</span> entries
+            Showing <span className="font-bold text-[#020B1C]">{filteredProjects.length > 0 ? startIndex + 1 : 0}</span> to <span className="font-bold text-[#020B1C]">{endIndex}</span> of <span className="font-bold text-[#020B1C]">{filteredProjects.length}</span> entries
           </div>
-          <div className="flex gap-2">
-            <Button variant="outline" size="sm" disabled className="rounded-lg border-slate-200 text-slate-400 font-semibold h-9 px-4">
+          <div className="flex items-center gap-2">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              disabled={validCurrentPage <= 1}
+              onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+              className="rounded-xl border-slate-200 text-slate-600 font-bold h-9 px-4 hover:bg-[#0067D9] hover:text-white hover:border-[#0067D9] hover:shadow-[0_4px_12px_rgba(0,103,217,0.25)] transition-all duration-300 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-slate-400 disabled:hover:border-slate-200 disabled:shadow-none cursor-pointer disabled:cursor-not-allowed"
+            >
               Previous
             </Button>
-            <Button variant="outline" size="sm" disabled className="rounded-lg border-slate-200 text-slate-400 font-semibold h-9 px-4">
+            <span className="text-xs font-bold text-slate-500 px-2">
+              Page {validCurrentPage} of {totalPages}
+            </span>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              disabled={validCurrentPage >= totalPages}
+              onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+              className="rounded-xl border-slate-200 text-slate-600 font-bold h-9 px-4 hover:bg-[#0067D9] hover:text-white hover:border-[#0067D9] hover:shadow-[0_4px_12px_rgba(0,103,217,0.25)] transition-all duration-300 disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-slate-400 disabled:hover:border-slate-200 disabled:shadow-none cursor-pointer disabled:cursor-not-allowed"
+            >
               Next
             </Button>
           </div>
         </div>
 
       </div>
-
-      {/* Add Project Modal */}
-      {isAddModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-white rounded-[24px] shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col relative">
-            <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#0067D9] via-[#00C6F7] to-[#0067D9] opacity-90"></div>
-            
-            <div className="flex items-center justify-between p-6 md:px-8 border-b border-slate-100">
-              <h2 className="text-xl font-bold text-[#020B1C]">Add New Project</h2>
-              <button 
-                onClick={() => setIsAddModalOpen(false)}
-                className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
-              >
-                <X size={20} />
-              </button>
-            </div>
-            
-            <div className="overflow-y-auto p-6 md:p-8 flex-1">
-              <form id="add-project-form" onSubmit={handleAddProject} className="space-y-8">
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-6">
-                  {/* Title */}
-                  <div className="space-y-1">
-                    <label className="text-[12px] font-bold text-slate-500 uppercase tracking-wider block ml-1">Project Title</label>
-                    <input 
-                      type="text" 
-                      required
-                      placeholder="e.g. E-commerce App" 
-                      value={newProjectForm.title}
-                      onChange={(e) => setNewProjectForm({...newProjectForm, title: e.target.value})}
-                      className="w-full h-12 px-4 rounded-xl border border-slate-200/80 bg-slate-50/50 hover:bg-white hover:border-slate-300 focus:bg-white focus:outline-none focus:ring-4 focus:ring-[#0067D9]/10 focus:border-[#0067D9] transition-all duration-300 text-[15px] font-semibold text-[#020B1C] shadow-[0_2px_10px_rgba(0,0,0,0.02)]"
-                    />
-                  </div>
-
-                  {/* Category */}
-                  <div className="space-y-1">
-                    <label className="text-[12px] font-bold text-slate-500 uppercase tracking-wider block ml-1">Category</label>
-                    <select 
-                      value={newProjectForm.category}
-                      onChange={(e) => setNewProjectForm({...newProjectForm, category: e.target.value})}
-                      className="w-full h-12 px-4 rounded-xl border border-slate-200/80 bg-slate-50/50 hover:bg-white hover:border-slate-300 focus:bg-white focus:outline-none focus:ring-4 focus:ring-[#0067D9]/10 focus:border-[#0067D9] transition-all duration-300 text-[15px] font-semibold text-[#020B1C] shadow-[0_2px_10px_rgba(0,0,0,0.02)] appearance-none"
-                    >
-                      <option value="SaaS">SaaS</option>
-                      <option value="Mobile">Mobile</option>
-                      <option value="AI">AI</option>
-                      <option value="E-commerce">E-commerce</option>
-                      <option value="Web">Web</option>
-                    </select>
-                  </div>
-
-                  {/* Status */}
-                  <div className="space-y-1">
-                    <label className="text-[12px] font-bold text-slate-500 uppercase tracking-wider block ml-1">Status</label>
-                    <select 
-                      value={newProjectForm.status}
-                      onChange={(e) => setNewProjectForm({...newProjectForm, status: e.target.value})}
-                      className="w-full h-12 px-4 rounded-xl border border-slate-200/80 bg-slate-50/50 hover:bg-white hover:border-slate-300 focus:bg-white focus:outline-none focus:ring-4 focus:ring-[#0067D9]/10 focus:border-[#0067D9] transition-all duration-300 text-[15px] font-semibold text-[#020B1C] shadow-[0_2px_10px_rgba(0,0,0,0.02)] appearance-none"
-                    >
-                      <option value="Draft">Draft</option>
-                      <option value="Published">Published</option>
-                    </select>
-                  </div>
-                  
-                  {/* Thumbnail Upload */}
-                  <div className="space-y-1">
-                    <label className="text-[12px] font-bold text-slate-500 uppercase tracking-wider block ml-1">Thumbnail Image</label>
-                    <div 
-                      onClick={() => fileInputRef.current?.click()}
-                      className="relative w-full h-12 px-4 rounded-xl border-2 border-dashed border-[#0067D9]/20 bg-[#0067D9]/[0.02] flex items-center justify-start gap-2 text-[#0067D9] font-semibold hover:bg-[#0067D9]/5 hover:border-[#0067D9]/40 cursor-pointer transition-all duration-300 overflow-hidden group shadow-[0_2px_10px_rgba(0,103,217,0.02)]"
-                    >
-                      <input 
-                        type="file" 
-                        ref={fileInputRef} 
-                        onChange={handleImageChange} 
-                        accept="image/*" 
-                        className="hidden" 
-                      />
-                      {imagePreview ? (
-                        <div className="flex items-center gap-3 w-full justify-start">
-                          <div className="h-8 w-8 rounded-lg overflow-hidden shadow-sm border border-slate-200">
-                            <img src={imagePreview} alt="Preview" className="h-full w-full object-cover" />
-                          </div>
-                          <span className="text-[14px] text-[#0067D9] font-bold group-hover:text-[#0052ad] transition-colors">Change Image</span>
-                        </div>
-                      ) : (
-                        <>
-                          <ImageIcon size={18} className="text-[#0067D9]/70 group-hover:text-[#0067D9] transition-colors" /> 
-                          <span className="text-[14px]">Upload Image</span>
-                        </>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                <hr className="border-slate-100" />
-
-                <div className="space-y-6">
-                  {/* Tech Stack */}
-                  <div className="space-y-1">
-                    <label className="text-[12px] font-bold text-slate-500 uppercase tracking-wider block ml-1">Tech Stack</label>
-                    <input 
-                      type="text" 
-                      value={newProjectForm.tech}
-                      onChange={(e) => setNewProjectForm({...newProjectForm, tech: e.target.value})}
-                      placeholder="e.g. Next.js, React, AWS" 
-                      className="w-full h-12 px-4 rounded-xl border border-slate-200/80 bg-slate-50/50 hover:bg-white hover:border-slate-300 focus:bg-white focus:outline-none focus:ring-4 focus:ring-[#0067D9]/10 focus:border-[#0067D9] transition-all duration-300 text-[15px] font-semibold text-[#020B1C] shadow-[0_2px_10px_rgba(0,0,0,0.02)]"
-                    />
-                  </div>
-                  {/* Results */}
-                  <div className="space-y-1">
-                    <label className="text-[12px] font-bold text-slate-500 uppercase tracking-wider block ml-1">The Result / Impact</label>
-                    <input 
-                      type="text" 
-                      value={newProjectForm.results}
-                      onChange={(e) => setNewProjectForm({...newProjectForm, results: e.target.value})}
-                      placeholder="e.g. Reduced operational costs by 40%..." 
-                      className="w-full h-12 px-4 rounded-xl border border-slate-200/80 bg-slate-50/50 hover:bg-white hover:border-slate-300 focus:bg-white focus:outline-none focus:ring-4 focus:ring-[#0067D9]/10 focus:border-[#0067D9] transition-all duration-300 text-[15px] font-semibold text-[#020B1C] shadow-[0_2px_10px_rgba(0,0,0,0.02)]"
-                    />
-                  </div>
-
-                  {/* Description */}
-                  <div className="space-y-1">
-                    <label className="text-[12px] font-bold text-slate-500 uppercase tracking-wider block ml-1">Project Description</label>
-                    <textarea 
-                      rows={3}
-                      required
-                      value={newProjectForm.desc}
-                      onChange={(e) => setNewProjectForm({...newProjectForm, desc: e.target.value})}
-                      placeholder="A comprehensive description..." 
-                      className="w-full p-4 rounded-xl border border-slate-200/80 bg-slate-50/50 hover:bg-white hover:border-slate-300 focus:bg-white focus:outline-none focus:ring-4 focus:ring-[#0067D9]/10 focus:border-[#0067D9] transition-all duration-300 text-[15px] font-semibold text-[#020B1C] shadow-[0_2px_10px_rgba(0,0,0,0.02)] resize-none leading-relaxed"
-                    />
-                  </div>
-                </div>
-              </form>
-            </div>
-
-            <div className="p-6 md:px-8 bg-slate-50 border-t border-slate-100 flex gap-3 justify-end">
-              <Button 
-                type="button" 
-                variant="outline" 
-                onClick={() => {
-                  setIsAddModalOpen(false)
-                  setImagePreview(null)
-                }}
-                className="rounded-xl border-slate-200 h-11 px-6 text-slate-600 font-bold hover:bg-slate-200/50"
-              >
-                Cancel
-              </Button>
-              <Button 
-                type="submit" 
-                form="add-project-form"
-                className="rounded-xl bg-gradient-to-r from-[#0067D9] to-[#00C6F7] hover:from-[#00C6F7] hover:to-[#0067D9] text-white h-11 px-8 font-bold shadow-[0_0_15px_rgba(0,198,247,0.3)] hover:shadow-[0_0_25px_rgba(0,198,247,0.5)] transition-all"
-              >
-                Create Project
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   )
 }
