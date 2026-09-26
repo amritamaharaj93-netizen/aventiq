@@ -75,6 +75,7 @@ export interface SocialLink {
   id: string
   platform: string
   url: string
+  iconUrl?: string
 }
 
 export interface TestimonialItem {
@@ -183,6 +184,13 @@ export interface HomeSettingsContent {
   footerCopyrightText: string
   footerCompanyLinks: NavLink[]
   footerSocialLinks: SocialLink[]
+  
+  seoTitle: string
+  seoDescription: string
+  seoKeywords: string
+  seoCanonical: string
+  seoAuthor: string
+  seoPublisher: string
 }
 
 const DEFAULT_HOME_SETTINGS: HomeSettingsContent = {
@@ -381,70 +389,70 @@ const DEFAULT_HOME_SETTINGS: HomeSettingsContent = {
       name: "HTML",
       category: "Frontend",
       color: "#E34F26",
-      svgString: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-14 h-14"><path d="M3 3h18l-1.5 16L12 22l-7.5-3L3 3z" strokeLinejoin="round" /><path d="M7.5 7h9l-.5 4.5h-8" strokeLinecap="round" strokeLinejoin="round" /><path d="M16 11.5l-.5 4.5-3.5 1.5-3.5-1.5-.2-2" strokeLinecap="round" strokeLinejoin="round" /></svg>'
+      svgString: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-14 h-14"><path d="M3 3h18l-1.5 16L12 22l-7.5-3L3 3z" stroke-linejoin="round" /><path d="M7.5 7h9l-.5 4.5h-8" stroke-linecap="round" stroke-linejoin="round" /><path d="M16 11.5l-.5 4.5-3.5 1.5-3.5-1.5-.2-2" stroke-linecap="round" stroke-linejoin="round" /></svg>'
     },
     {
       id: "2",
       name: "CSS",
       category: "Frontend",
       color: "#1572B6",
-      svgString: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-14 h-14"><path d="M3 3h18l-1.5 16L12 22l-7.5-3L3 3z" strokeLinejoin="round" /><path d="M16.5 7H7.5l.5 4.5h8l-.5 4.5-3.5 1.5-3.5-1.5-.2-2" strokeLinecap="round" strokeLinejoin="round" /></svg>'
+      svgString: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-14 h-14"><path d="M3 3h18l-1.5 16L12 22l-7.5-3L3 3z" stroke-linejoin="round" /><path d="M16.5 7H7.5l.5 4.5h8l-.5 4.5-3.5 1.5-3.5-1.5-.2-2" stroke-linecap="round" stroke-linejoin="round" /></svg>'
     },
     {
       id: "3",
       name: "React",
       category: "Frontend",
       color: "#61DAFB",
-      svgString: '<svg viewBox="-11.5 -10.2 23 20.4" fill="none" stroke="currentColor" strokeWidth="1.2" className="w-14 h-14"><ellipse rx="11" ry="4.2"/><ellipse rx="11" ry="4.2" transform="rotate(60)"/><ellipse rx="11" ry="4.2" transform="rotate(120)"/><circle r="2" fill="currentColor" stroke="none"/></svg>'
+      svgString: '<svg viewBox="-11.5 -10.2 23 20.4" fill="none" stroke="currentColor" stroke-width="1.2" class="w-14 h-14"><ellipse rx="11" ry="4.2"/><ellipse rx="11" ry="4.2" transform="rotate(60)"/><ellipse rx="11" ry="4.2" transform="rotate(120)"/><circle r="2" fill="currentColor" stroke="none"/></svg>'
     },
     {
       id: "4",
       name: "Next.js",
       category: "Frontend",
       color: "#FFFFFF",
-      svgString: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-14 h-14"><circle cx="12" cy="12" r="10"/><path d="M8 8v8l8-8v8"/></svg>'
+      svgString: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-14 h-14"><circle cx="12" cy="12" r="10"/><path d="M8 8v8l8-8v8"/></svg>'
     },
     {
       id: "5",
       name: "PHP",
       category: "Backend",
       color: "#777BB4",
-      svgString: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-14 h-14"><ellipse cx="12" cy="12" rx="10" ry="6"/><text x="12" y="16" fontSize="10" fontWeight="bold" textAnchor="middle" fill="currentColor" stroke="none">PHP</text></svg>'
+      svgString: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-14 h-14"><ellipse cx="12" cy="12" rx="10" ry="6"/><text x="12" y="16" fontSize="10" fontWeight="bold" textAnchor="middle" fill="currentColor" stroke="none">PHP</text></svg>'
     },
     {
       id: "6",
       name: "WordPress",
       category: "CMS",
       color: "#21759B",
-      svgString: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-14 h-14"><circle cx="12" cy="12" r="10"/><path d="M6 10l3 8.5L12 12l3 6.5L18 10" strokeLinejoin="round"/></svg>'
+      svgString: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-14 h-14"><circle cx="12" cy="12" r="10"/><path d="M6 10l3 8.5L12 12l3 6.5L18 10" stroke-linejoin="round"/></svg>'
     },
     {
       id: "7",
       name: "Android",
       category: "Mobile",
       color: "#3DDC84",
-      svgString: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-14 h-14"><path d="M5 14v-4a7 7 0 0 1 14 0v4M8 8v-2M16 8v-2"/><rect x="5" y="14" width="14" height="4" rx="1"/></svg>'
+      svgString: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-14 h-14"><path d="M5 14v-4a7 7 0 0 1 14 0v4M8 8v-2M16 8v-2"/><rect x="5" y="14" width="14" height="4" rx="1"/></svg>'
     },
     {
       id: "8",
       name: "AWS",
       category: "Cloud",
       color: "#FF9900",
-      svgString: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-14 h-14"><path d="M4 15s4 4 10 2c-3 1-7-1-10-2z" fill="currentColor" stroke="none"/><path d="M14 12c-1.5 2-4.5 3-7 1.5 1-1 3.5-2.5 7-1.5z" fill="currentColor" stroke="none"/><path d="M19 15l-2 1m2-1l-1-2" strokeWidth="2"/><text x="12" y="11" fontSize="8" fontWeight="bold" textAnchor="middle" fill="currentColor" stroke="none">AWS</text></svg>'
+      svgString: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-14 h-14"><path d="M4 15s4 4 10 2c-3 1-7-1-10-2z" fill="currentColor" stroke="none"/><path d="M14 12c-1.5 2-4.5 3-7 1.5 1-1 3.5-2.5 7-1.5z" fill="currentColor" stroke="none"/><path d="M19 15l-2 1m2-1l-1-2" stroke-width="2"/><text x="12" y="11" fontSize="8" fontWeight="bold" textAnchor="middle" fill="currentColor" stroke="none">AWS</text></svg>'
     },
     {
       id: "9",
       name: "GitHub",
       category: "Version Control",
       color: "#FFFFFF",
-      svgString: '<svg viewBox="0 0 24 24" fill="currentColor" className="w-14 h-14"><path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.161 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>'
+      svgString: '<svg viewBox="0 0 24 24" fill="currentColor" class="w-14 h-14"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.161 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>'
     },
     {
       id: "10",
       name: "Vercel",
       category: "Hosting",
       color: "#FFFFFF",
-      svgString: '<svg viewBox="0 0 24 24" fill="currentColor" className="w-14 h-14"><path d="M12 4L22 20H2L12 4Z"/></svg>'
+      svgString: '<svg viewBox="0 0 24 24" fill="currentColor" class="w-14 h-14"><path d="M12 4L22 20H2L12 4Z"/></svg>'
     }
   ],
   
@@ -505,9 +513,16 @@ const DEFAULT_HOME_SETTINGS: HomeSettingsContent = {
   footerSocialLinks: [
     { id: "1", platform: "LinkedIn", url: "https://linkedin.com" },
     { id: "2", platform: "GitHub", url: "https://github.com" },
-    { id: "3", platform: "Twitter", url: "https://twitter.com" },
-    { id: "4", platform: "Instagram", url: "https://instagram.com" }
-  ]
+    { id: "3", platform: "Facebook", url: "https://facebook.com" },
+    { id: "4", platform: "Instagram", url: "https://instagram.com" },
+    { id: "5", platform: "YouTube", url: "https://youtube.com" }
+  ],
+  seoTitle: "",
+  seoDescription: "",
+  seoKeywords: "",
+  seoCanonical: "",
+  seoAuthor: "",
+  seoPublisher: ""
 }
 
 export default function AdminHomeSettingsPage() {
@@ -541,7 +556,10 @@ export default function AdminHomeSettingsPage() {
             testimonialsList: Array.isArray(parsed.testimonialsList) ? parsed.testimonialsList : DEFAULT_HOME_SETTINGS.testimonialsList,
             partnersList: Array.isArray(parsed.partnersList) ? parsed.partnersList : DEFAULT_HOME_SETTINGS.partnersList,
             blogPostsList: Array.isArray(parsed.blogPostsList) ? parsed.blogPostsList : DEFAULT_HOME_SETTINGS.blogPostsList,
-            techStackList: Array.isArray(parsed.techStackList) ? parsed.techStackList : DEFAULT_HOME_SETTINGS.techStackList,
+            techStackList: Array.isArray(parsed.techStackList) ? parsed.techStackList.map((t: any) => ({
+              ...t,
+              svgString: t.svgString ? t.svgString.replace(/className=/g, 'class=').replace(/strokeWidth=/g, 'stroke-width=').replace(/strokeLinecap=/g, 'stroke-linecap=').replace(/strokeLinejoin=/g, 'stroke-linejoin=').replace(/fillRule=/g, 'fill-rule=').replace(/clipRule=/g, 'clip-rule=') : t.svgString
+            })) : DEFAULT_HOME_SETTINGS.techStackList,
             faqList: Array.isArray(parsed.faqList) ? parsed.faqList : DEFAULT_HOME_SETTINGS.faqList,
             footerCompanyLinks: Array.isArray(parsed.footerCompanyLinks) ? parsed.footerCompanyLinks : DEFAULT_HOME_SETTINGS.footerCompanyLinks,
             footerSocialLinks: Array.isArray(parsed.footerSocialLinks) ? parsed.footerSocialLinks : DEFAULT_HOME_SETTINGS.footerSocialLinks,
@@ -838,7 +856,7 @@ export default function AdminHomeSettingsPage() {
         name: "New Tech",
         category: "Frontend",
         color: "#FFFFFF",
-        svgString: '<svg viewBox="0 0 24 24" fill="currentColor" className="w-14 h-14"><circle cx="12" cy="12" r="10"/></svg>'
+        svgString: '<svg viewBox="0 0 24 24" fill="currentColor" class="w-14 h-14"><circle cx="12" cy="12" r="10"/></svg>'
       }]
     }))
   }
@@ -872,6 +890,30 @@ export default function AdminHomeSettingsPage() {
       alert("An error occurred during upload.")
     } finally {
       setIsUploadingTech(null)
+    }
+  }
+
+
+  const [isUploadingSocial, setIsUploadingSocial] = useState<string | null>(null)
+  const handleSocialImageUpload = async (id: string, file: File) => {
+    setIsUploadingSocial(id)
+    try {
+      const formDataPayload = new FormData()
+      formDataPayload.append('file', file)
+      formDataPayload.append('folder', 'aventiq_assets')
+      
+      const { uploadMedia } = await import('@/actions/upload')
+      const response = await uploadMedia(formDataPayload)
+      
+      if (response.success && response.result) {
+        updateSocialLink(id, "iconUrl", response.result.secure_url)
+      } else {
+        alert("Failed to upload social icon. " + (response.error || ''))
+      }
+    } catch (error) {
+      alert("An error occurred during upload.")
+    } finally {
+      setIsUploadingSocial(null)
     }
   }
 
@@ -1668,7 +1710,7 @@ export default function AdminHomeSettingsPage() {
                         ) : tech.imageUrl ? (
                           <img src={tech.imageUrl} alt="Tech" className="w-full h-full object-contain p-1" />
                         ) : (
-                          <div dangerouslySetInnerHTML={{ __html: tech.svgString }} className="w-6 h-6" />
+                          <div dangerouslySetInnerHTML={{ __html: tech.svgString ? tech.svgString.replace(/class="[^"]*"/, `class="w-full h-full"`) : `` }} className="w-6 h-6 flex items-center justify-center text-slate-800" />
                         )}
                       </div>
                       <div className="flex-1 relative">
@@ -1761,6 +1803,45 @@ export default function AdminHomeSettingsPage() {
               <div className="space-y-1"><label className="text-xs font-bold text-slate-500 uppercase">Title Highlight</label><input type="text" value={formData.finalCtaTitleHighlight} onChange={(e) => setFormData({...formData, finalCtaTitleHighlight: e.target.value})} className="w-full h-10 px-3 rounded-xl border border-slate-200 bg-slate-50 text-xs font-semibold" /></div>
             </div>
             <div className="space-y-1"><label className="text-xs font-bold text-slate-500 uppercase">Description</label><textarea rows={2} value={formData.finalCtaSub} onChange={(e) => setFormData({...formData, finalCtaSub: e.target.value})} className="w-full p-3 rounded-xl border border-slate-200 bg-slate-50 text-xs font-medium" /></div>
+          </div>
+
+        {/* SECTION 13: SEO SETTINGS */}
+          <div className="bg-white border border-slate-100 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-8 md:p-10 relative overflow-hidden space-y-6 animate-in fade-in">
+            <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#0067D9] to-[#00C6F7]"></div>
+            
+            <h2 className="text-lg font-bold text-[#020B1C] flex items-center gap-2 pb-2 border-b border-slate-100">
+              <Globe className="text-[#0067D9]" size={20} /> Page SEO Settings (Home)
+            </h2>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-slate-600 uppercase tracking-wider block">SEO Title</label>
+                <input 
+                  type="text" 
+                  value={formData.seoTitle || ""}
+                  onChange={(e) => setFormData({...formData, seoTitle: e.target.value})}
+                  className="w-full h-11 px-4 rounded-xl border border-slate-200 bg-slate-50/50 text-sm font-semibold text-[#020B1C] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#00C6F7]/50 focus:border-[#00C6F7]"
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-slate-600 uppercase tracking-wider block">SEO Keywords</label>
+                <input 
+                  type="text" 
+                  value={formData.seoKeywords || ""}
+                  onChange={(e) => setFormData({...formData, seoKeywords: e.target.value})}
+                  className="w-full h-11 px-4 rounded-xl border border-slate-200 bg-slate-50/50 text-sm font-semibold text-[#020B1C] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#00C6F7]/50 focus:border-[#00C6F7]"
+                />
+              </div>
+              <div className="space-y-2 md:col-span-2">
+                <label className="text-xs font-bold text-slate-600 uppercase tracking-wider block">SEO Description</label>
+                <textarea 
+                  rows={3}
+                  value={formData.seoDescription || ""}
+                  onChange={(e) => setFormData({...formData, seoDescription: e.target.value})}
+                  className="w-full p-3.5 rounded-xl border border-slate-200 bg-slate-50/50 text-sm font-semibold text-[#020B1C] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#00C6F7]/50 focus:border-[#00C6F7]"
+                />
+              </div>
+            </div>
           </div>
 
         {/* SECTION 6: FOOTER SETTINGS */}
@@ -1863,24 +1944,55 @@ export default function AdminHomeSettingsPage() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {formData.footerSocialLinks.map((social) => (
-                  <div key={social.id} className="flex items-center gap-2 p-3 bg-slate-50 rounded-xl border border-slate-200">
-                    <input 
-                      type="text"
-                      placeholder="Platform Name"
-                      value={social.platform}
-                      onChange={(e) => updateSocialLink(social.id, "platform", e.target.value)}
-                      className="w-28 h-9 px-3 rounded-lg border border-slate-200 bg-white text-xs font-bold"
-                    />
-                    <input 
-                      type="text"
-                      placeholder="URL"
-                      value={social.url}
-                      onChange={(e) => updateSocialLink(social.id, "url", e.target.value)}
-                      className="flex-1 h-9 px-3 rounded-lg border border-slate-200 bg-white text-xs font-medium"
-                    />
-                    <button type="button" onClick={() => removeSocialLink(social.id)} className="p-1.5 text-slate-400 hover:text-red-500">
-                      <Trash2 size={16} />
-                    </button>
+                  <div key={social.id} className="flex flex-col gap-2 p-3 bg-slate-50 rounded-xl border border-slate-200">
+                    <div className="flex items-center gap-2">
+                      <input 
+                        type="text"
+                        placeholder="Platform Name"
+                        value={social.platform}
+                        onChange={(e) => updateSocialLink(social.id, "platform", e.target.value)}
+                        className="w-28 h-9 px-3 rounded-lg border border-slate-200 bg-white text-xs font-bold"
+                      />
+                      <input 
+                        type="text"
+                        placeholder="URL"
+                        value={social.url}
+                        onChange={(e) => updateSocialLink(social.id, "url", e.target.value)}
+                        className="flex-1 h-9 px-3 rounded-lg border border-slate-200 bg-white text-xs font-medium"
+                      />
+                      <button type="button" onClick={() => removeSocialLink(social.id)} className="p-1.5 text-slate-400 hover:text-red-500">
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-lg bg-white border border-slate-200 flex items-center justify-center overflow-hidden shrink-0 shadow-sm relative">
+                        {isUploadingSocial === social.id ? (
+                          <Loader2 className="w-4 h-4 text-[#0067D9] animate-spin" />
+                        ) : social.iconUrl ? (
+                          <img src={social.iconUrl} alt="Icon" className="w-full h-full object-contain p-1" />
+                        ) : (
+                          <ImageIcon size={14} className="text-slate-300" />
+                        )}
+                      </div>
+                      <div className="flex-1 relative">
+                        <input 
+                          type="file" 
+                          id={`social-upload-${social.id}`}
+                          className="hidden" 
+                          accept="image/*"
+                          onChange={(e) => {
+                            if (e.target.files?.[0]) handleSocialImageUpload(social.id, e.target.files[0])
+                          }}
+                        />
+                        <label 
+                          htmlFor={`social-upload-${social.id}`}
+                          className="w-full flex items-center justify-center gap-2 h-9 px-3 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 cursor-pointer text-xs font-bold text-slate-700 transition-colors"
+                        >
+                          <ImageIcon size={14} /> 
+                          {isUploadingSocial === social.id ? 'Uploading...' : 'Upload Custom Icon'}
+                        </label>
+                      </div>
+                    </div>
                   </div>
                 ))}
               </div>

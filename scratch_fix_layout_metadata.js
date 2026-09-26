@@ -1,11 +1,7 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
-import { ConditionalHeader, ConditionalFooter } from "@/components/layout/ConditionalLayout";
+const fs = require('fs');
+let content = fs.readFileSync('src/app/layout.tsx', 'utf8');
 
-const inter = Inter({ subsets: ["latin"] });
-
-export const metadata: Metadata = {
+const newMetadata = `export const metadata: Metadata = {
   metadataBase: new URL('https://aventiq.com'),
   title: "Aventiq Web Solutions | Web Development & Digital Marketing",
   description: "Aventiq Web Solutions is a premium IT company providing cutting-edge website development, digital marketing, SaaS engineering, and UI/UX design services to help businesses grow.",
@@ -31,20 +27,8 @@ export const metadata: Metadata = {
     description: "Aventiq Web Solutions is a premium IT company providing cutting-edge website development and digital marketing.",
     siteName: "Aventiq Web Solutions",
   },
-};
+};`;
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return (
-    <html lang="en" className="h-full antialiased scroll-smooth overflow-x-hidden" suppressHydrationWarning>
-      <body className={`${inter.className} min-h-full flex flex-col bg-background text-foreground overflow-x-hidden`} suppressHydrationWarning>
-        <ConditionalHeader />
-        <main className="flex-1 w-full pt-0">{children}</main>
-        <ConditionalFooter />
-      </body>
-    </html>
-  );
-}
+content = content.replace(/export const metadata: Metadata = \{[\s\S]*?\};/, newMetadata);
+
+fs.writeFileSync('src/app/layout.tsx', content);

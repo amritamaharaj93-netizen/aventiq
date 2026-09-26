@@ -170,6 +170,15 @@ export default function AdminBlogPage() {
   const [currentPage, setCurrentPage] = useState(1)
   const ITEMS_PER_PAGE = 5
 
+  const [formData, setFormData] = useState({
+    seoTitle: "",
+    seoDescription: "",
+    seoKeywords: "",
+    seoCanonical: "",
+    seoAuthor: "",
+    seoPublisher: "",
+  })
+
   // Load from localStorage on mount, merging defaults
   useEffect(() => {
     const saved = localStorage.getItem("aventiq_admin_blog")
@@ -194,6 +203,14 @@ export default function AdminBlogPage() {
     }
 
     setPosts(currentList)
+    
+    const savedSeo = localStorage.getItem("aventiq_admin_blog_seo")
+    if (savedSeo) {
+      try {
+        setFormData(JSON.parse(savedSeo))
+      } catch (e) {}
+    }
+    
     setIsLoaded(true)
   }, [])
 
@@ -201,8 +218,9 @@ export default function AdminBlogPage() {
   useEffect(() => {
     if (isLoaded) {
       localStorage.setItem("aventiq_admin_blog", JSON.stringify(posts))
+      localStorage.setItem("aventiq_admin_blog_seo", JSON.stringify(formData))
     }
-  }, [posts, isLoaded])
+  }, [posts, formData, isLoaded])
 
   const handleDeletePost = (id: string) => {
     setPosts(posts.filter(p => p.id !== id))
@@ -362,6 +380,47 @@ export default function AdminBlogPage() {
         </div>
 
       </div>
+
+      {/* SEO Settings Section */}
+      <div className="bg-white border border-slate-100 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-8 md:p-10 relative overflow-hidden space-y-6">
+        <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#0067D9] via-[#00C6F7] to-[#0067D9]"></div>
+        
+        <h2 className="text-lg font-bold text-[#020B1C] flex items-center gap-2 pb-2 border-b border-slate-100">
+          <Search className="text-[#0067D9]" size={20} /> Page SEO Settings
+        </h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <label className="text-xs font-bold text-slate-600 uppercase tracking-wider block">SEO Title</label>
+            <input 
+              type="text" 
+              value={formData.seoTitle}
+              onChange={(e) => setFormData({...formData, seoTitle: e.target.value})}
+              className="w-full h-11 px-4 rounded-xl border border-slate-200 bg-slate-50/50 text-sm font-semibold text-[#020B1C] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#00C6F7]/50 focus:border-[#00C6F7]"
+            />
+          </div>
+          <div className="space-y-2">
+            <label className="text-xs font-bold text-slate-600 uppercase tracking-wider block">SEO Keywords</label>
+            <input 
+              type="text" 
+              value={formData.seoKeywords}
+              onChange={(e) => setFormData({...formData, seoKeywords: e.target.value})}
+              className="w-full h-11 px-4 rounded-xl border border-slate-200 bg-slate-50/50 text-sm font-semibold text-[#020B1C] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#00C6F7]/50 focus:border-[#00C6F7]"
+            />
+          </div>
+          <div className="space-y-2 md:col-span-2">
+            <label className="text-xs font-bold text-slate-600 uppercase tracking-wider block">SEO Description</label>
+            <textarea 
+              rows={3}
+              value={formData.seoDescription}
+              onChange={(e) => setFormData({...formData, seoDescription: e.target.value})}
+              className="w-full p-3.5 rounded-xl border border-slate-200 bg-slate-50/50 text-sm font-semibold text-[#020B1C] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#00C6F7]/50 focus:border-[#00C6F7]"
+            />
+          </div>
+
+        </div>
+      </div>
+
     </div>
   )
 }

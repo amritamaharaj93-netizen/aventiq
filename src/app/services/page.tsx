@@ -1,5 +1,7 @@
 "use client"
 
+import { ClientSEO } from "@/components/ClientSEO";
+
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { motion } from "framer-motion"
@@ -136,6 +138,7 @@ export default function ServicesPage() {
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] pb-24">
+      <ClientSEO storageKey="aventiq_admin_services_seo" />
       <PageHeader 
         title="What We Build" 
         breadcrumbs={[{ label: "Services" }]} 
@@ -187,9 +190,7 @@ export default function ServicesPage() {
                     <h3 className="text-2xl font-bold text-slate-900 mb-4 tracking-tight group-hover:text-[#0067D9] transition-colors duration-300">
                       {service.title}
                     </h3>
-                    <p className="text-slate-600 mb-8 leading-relaxed font-medium text-[17px]">
-                      {service.desc}
-                    </p>
+                    <div className="text-slate-600 mb-8 leading-relaxed font-medium text-[17px]" dangerouslySetInnerHTML={{ __html: service.desc }} />
                   </div>
 
                   <div>

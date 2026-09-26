@@ -1,5 +1,7 @@
 "use client"
 
+import { ClientSEO } from "@/components/ClientSEO";
+
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { ArrowRight, ExternalLink } from "lucide-react"
@@ -76,6 +78,7 @@ export default function ProjectsPage() {
 
   return (
     <div className="min-h-screen bg-white pb-24">
+      <ClientSEO storageKey="aventiq_admin_projects_seo" />
       <PageHeader 
         title="Featured Work" 
         breadcrumbs={[{ label: "Projects" }]} 
@@ -137,9 +140,7 @@ export default function ProjectsPage() {
                 {project.title}
               </h2>
               
-              <p className="text-lg md:text-xl text-slate-500 mb-8 leading-relaxed font-light">
-                {project.desc}
-              </p>
+              <div className="text-lg md:text-xl text-slate-500 mb-8 leading-relaxed font-light" dangerouslySetInnerHTML={{ __html: project.desc }} />
 
               <div className="bg-slate-50 p-6 md:p-8 rounded-[1.5rem] border border-slate-100 shadow-sm mb-10 relative overflow-hidden transition-all duration-300 hover:shadow-md hover:bg-white">
                 <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-gradient-to-b from-[#0067D9] to-[#00C6F7]"></div>

@@ -1,5 +1,7 @@
 "use client"
 
+import { ClientSEO } from "@/components/ClientSEO";
+
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { motion } from "framer-motion"
@@ -114,6 +116,7 @@ export default function BlogPage() {
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] pb-24">
+      <ClientSEO storageKey="aventiq_admin_blog_seo" />
       <PageHeader 
         title="Insights & Ideas" 
         breadcrumbs={[{ label: "Blog" }]} 

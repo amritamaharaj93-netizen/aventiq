@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Save, Loader2, Info, Target, Eye, Shield, Zap, BookOpen, HeartHandshake, Plus, Trash2 } from "lucide-react"
+import { Save, Loader2, Info, Target, Eye, Shield, Zap, BookOpen, HeartHandshake, Plus, Trash2, Search } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { RichTextEditor } from "@/components/ui/rich-text-editor"
 
@@ -23,6 +23,12 @@ export interface AboutContent {
   valuesHeading: string
   valuesSubheading: string
   values: ValueItem[]
+  seoTitle?: string
+  seoDescription?: string
+  seoKeywords?: string
+  seoCanonical?: string
+  seoAuthor?: string
+  seoPublisher?: string
 }
 
 const DEFAULT_ABOUT: AboutContent = {
@@ -44,7 +50,13 @@ const DEFAULT_ABOUT: AboutContent = {
     { title: "Ownership", desc: "We treat your product and your success as our own." },
     { title: "Continuous Learning", desc: "Our engineers stay ahead of the curve in a fast-changing landscape." },
     { title: "Customer Success", desc: "Your ROI and business growth are our ultimate metrics of success." }
-  ]
+  ],
+  seoTitle: "",
+  seoDescription: "",
+  seoKeywords: "",
+  seoCanonical: "",
+  seoAuthor: "",
+  seoPublisher: "",
 }
 
 export default function AdminAboutPage() {
@@ -340,6 +352,46 @@ export default function AdminAboutPage() {
             ))}
           </div>
 
+        </div>
+
+        {/* Section 4: SEO Settings */}
+        <div className="bg-white border border-slate-100 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-8 md:p-10 relative overflow-hidden space-y-6">
+          <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#0067D9] via-[#00C6F7] to-[#0067D9]"></div>
+          
+          <h2 className="text-lg font-bold text-[#020B1C] flex items-center gap-2 pb-2 border-b border-slate-100">
+            <Search className="text-[#0067D9]" size={20} /> Section 4: Page SEO Settings
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <label className="text-xs font-bold text-slate-600 uppercase tracking-wider block">SEO Title</label>
+              <input 
+                type="text" 
+                value={formData.seoTitle || ""}
+                onChange={(e) => setFormData({...formData, seoTitle: e.target.value})}
+                className="w-full h-11 px-4 rounded-xl border border-slate-200 bg-slate-50/50 text-sm font-semibold text-[#020B1C] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#00C6F7]/50 focus:border-[#00C6F7]"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-xs font-bold text-slate-600 uppercase tracking-wider block">SEO Keywords</label>
+              <input 
+                type="text" 
+                value={formData.seoKeywords || ""}
+                onChange={(e) => setFormData({...formData, seoKeywords: e.target.value})}
+                className="w-full h-11 px-4 rounded-xl border border-slate-200 bg-slate-50/50 text-sm font-semibold text-[#020B1C] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#00C6F7]/50 focus:border-[#00C6F7]"
+              />
+            </div>
+            <div className="space-y-2 md:col-span-2">
+              <label className="text-xs font-bold text-slate-600 uppercase tracking-wider block">SEO Description</label>
+              <textarea 
+                rows={3}
+                value={formData.seoDescription || ""}
+                onChange={(e) => setFormData({...formData, seoDescription: e.target.value})}
+                className="w-full p-3.5 rounded-xl border border-slate-200 bg-slate-50/50 text-sm font-semibold text-[#020B1C] focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#00C6F7]/50 focus:border-[#00C6F7]"
+              />
+            </div>
+
+          </div>
         </div>
 
         {/* Floating Submit Action Bar */}

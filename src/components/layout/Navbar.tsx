@@ -74,7 +74,7 @@ export function Navbar() {
             <div className="relative flex items-center">
                <Image 
                   src={logoUrl} 
-                  alt="Aventiq Logo" 
+                  alt="Apex Logo" 
                   width={240} 
                   height={80} 
                   className={cn(

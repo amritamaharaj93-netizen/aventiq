@@ -1,5 +1,7 @@
 "use client"
 
+import { ClientSEO } from "@/components/ClientSEO";
+
 import { useState, useEffect } from "react"
 
 import Link from "next/link"
@@ -123,70 +125,70 @@ const DEFAULT_TECH_STACK: TechItem[] = [
     name: "HTML",
     category: "Frontend",
     color: "#E34F26",
-    svgString: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-14 h-14"><path d="M3 3h18l-1.5 16L12 22l-7.5-3L3 3z" strokeLinejoin="round" /><path d="M7.5 7h9l-.5 4.5h-8" strokeLinecap="round" strokeLinejoin="round" /><path d="M16 11.5l-.5 4.5-3.5 1.5-3.5-1.5-.2-2" strokeLinecap="round" strokeLinejoin="round" /></svg>'
+    svgString: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-14 h-14"><path d="M3 3h18l-1.5 16L12 22l-7.5-3L3 3z" stroke-linejoin="round" /><path d="M7.5 7h9l-.5 4.5h-8" stroke-linecap="round" stroke-linejoin="round" /><path d="M16 11.5l-.5 4.5-3.5 1.5-3.5-1.5-.2-2" stroke-linecap="round" stroke-linejoin="round" /></svg>'
   },
   {
     id: "2",
     name: "CSS",
     category: "Frontend",
     color: "#1572B6",
-    svgString: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-14 h-14"><path d="M3 3h18l-1.5 16L12 22l-7.5-3L3 3z" strokeLinejoin="round" /><path d="M16.5 7H7.5l.5 4.5h8l-.5 4.5-3.5 1.5-3.5-1.5-.2-2" strokeLinecap="round" strokeLinejoin="round" /></svg>'
+    svgString: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-14 h-14"><path d="M3 3h18l-1.5 16L12 22l-7.5-3L3 3z" stroke-linejoin="round" /><path d="M16.5 7H7.5l.5 4.5h8l-.5 4.5-3.5 1.5-3.5-1.5-.2-2" stroke-linecap="round" stroke-linejoin="round" /></svg>'
   },
   {
     id: "3",
     name: "React",
     category: "Frontend",
     color: "#61DAFB",
-    svgString: '<svg viewBox="-11.5 -10.2 23 20.4" fill="none" stroke="currentColor" strokeWidth="1.2" className="w-14 h-14"><ellipse rx="11" ry="4.2"/><ellipse rx="11" ry="4.2" transform="rotate(60)"/><ellipse rx="11" ry="4.2" transform="rotate(120)"/><circle r="2" fill="currentColor" stroke="none"/></svg>'
+    svgString: '<svg viewBox="-11.5 -10.2 23 20.4" fill="none" stroke="currentColor" stroke-width="1.2" class="w-14 h-14"><ellipse rx="11" ry="4.2"/><ellipse rx="11" ry="4.2" transform="rotate(60)"/><ellipse rx="11" ry="4.2" transform="rotate(120)"/><circle r="2" fill="currentColor" stroke="none"/></svg>'
   },
   {
     id: "4",
     name: "Next.js",
     category: "Frontend",
     color: "#FFFFFF",
-    svgString: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-14 h-14"><circle cx="12" cy="12" r="10"/><path d="M8 8v8l8-8v8"/></svg>'
+    svgString: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-14 h-14"><circle cx="12" cy="12" r="10"/><path d="M8 8v8l8-8v8"/></svg>'
   },
   {
     id: "5",
     name: "PHP",
     category: "Backend",
     color: "#777BB4",
-    svgString: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-14 h-14"><ellipse cx="12" cy="12" rx="10" ry="6"/><text x="12" y="16" fontSize="10" fontWeight="bold" textAnchor="middle" fill="currentColor" stroke="none">PHP</text></svg>'
+    svgString: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-14 h-14"><ellipse cx="12" cy="12" rx="10" ry="6"/><text x="12" y="16" fontSize="10" fontWeight="bold" textAnchor="middle" fill="currentColor" stroke="none">PHP</text></svg>'
   },
   {
     id: "6",
     name: "WordPress",
     category: "CMS",
     color: "#21759B",
-    svgString: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-14 h-14"><circle cx="12" cy="12" r="10"/><path d="M6 10l3 8.5L12 12l3 6.5L18 10" strokeLinejoin="round"/></svg>'
+    svgString: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-14 h-14"><circle cx="12" cy="12" r="10"/><path d="M6 10l3 8.5L12 12l3 6.5L18 10" stroke-linejoin="round"/></svg>'
   },
   {
     id: "7",
     name: "Android",
     category: "Mobile",
     color: "#3DDC84",
-    svgString: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-14 h-14"><path d="M5 14v-4a7 7 0 0 1 14 0v4M8 8v-2M16 8v-2"/><rect x="5" y="14" width="14" height="4" rx="1"/></svg>'
+    svgString: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-14 h-14"><path d="M5 14v-4a7 7 0 0 1 14 0v4M8 8v-2M16 8v-2"/><rect x="5" y="14" width="14" height="4" rx="1"/></svg>'
   },
   {
     id: "8",
     name: "AWS",
     category: "Cloud",
     color: "#FF9900",
-    svgString: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-14 h-14"><path d="M4 15s4 4 10 2c-3 1-7-1-10-2z" fill="currentColor" stroke="none"/><path d="M14 12c-1.5 2-4.5 3-7 1.5 1-1 3.5-2.5 7-1.5z" fill="currentColor" stroke="none"/><path d="M19 15l-2 1m2-1l-1-2" strokeWidth="2"/><text x="12" y="11" fontSize="8" fontWeight="bold" textAnchor="middle" fill="currentColor" stroke="none">AWS</text></svg>'
+    svgString: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-14 h-14"><path d="M4 15s4 4 10 2c-3 1-7-1-10-2z" fill="currentColor" stroke="none"/><path d="M14 12c-1.5 2-4.5 3-7 1.5 1-1 3.5-2.5 7-1.5z" fill="currentColor" stroke="none"/><path d="M19 15l-2 1m2-1l-1-2" stroke-width="2"/><text x="12" y="11" fontSize="8" fontWeight="bold" textAnchor="middle" fill="currentColor" stroke="none">AWS</text></svg>'
   },
   {
     id: "9",
     name: "GitHub",
     category: "Version Control",
     color: "#FFFFFF",
-    svgString: '<svg viewBox="0 0 24 24" fill="currentColor" className="w-14 h-14"><path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.161 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>'
+    svgString: '<svg viewBox="0 0 24 24" fill="currentColor" class="w-14 h-14"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.161 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>'
   },
   {
     id: "10",
     name: "Vercel",
     category: "Hosting",
     color: "#FFFFFF",
-    svgString: '<svg viewBox="0 0 24 24" fill="currentColor" className="w-14 h-14"><path d="M12 4L22 20H2L12 4Z"/></svg>'
+    svgString: '<svg viewBox="0 0 24 24" fill="currentColor" class="w-14 h-14"><path d="M12 4L22 20H2L12 4Z"/></svg>'
   }
 ]
 
@@ -221,10 +223,10 @@ const DEFAULT_FAQ = [
 export default function Home() {
   const DEFAULT_HERO = [
     {
-      badge: "Aventiq 2.0 is now live",
-      headline: "We build premium tech",
-      headlineHighlight: "digital experiences",
-      description: "Aventiq is a world-class software development agency specializing in enterprise SaaS platforms, high-performance mobile applications, and intelligent cloud architecture.",
+      badge: "Innovative Packaging Solutions",
+      headline: "We manufacture premium",
+      headlineHighlight: "packaging solutions",
+      description: "Apex Packaging Solutions is a world-class manufacturer specializing in sustainable corrugated boxes, flexible packaging, and custom rigid containers for global brands.",
       cta: "Start a Project",
       ctaLink: "/contact",
       accent: "#0067D9",
@@ -232,10 +234,10 @@ export default function Home() {
       image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=1200",
     },
     {
-      badge: "Mobile Excellence",
-      headline: "Native apps that users",
-      headlineHighlight: "love & engage with",
-      description: "We craft pixel-perfect iOS and Android applications with smooth animations, offline-first architecture, and real-time sync that deliver 4.8+ star experiences.",
+      badge: "Sustainable Materials",
+      headline: "Eco-friendly packaging that",
+      headlineHighlight: "protects our planet",
+      description: "We craft 100% recyclable and biodegradable packaging solutions that reduce carbon footprint while ensuring maximum product protection and shelf appeal.",
       cta: "Build Your App",
       ctaLink: "/contact",
       accent: "#10B981",
@@ -243,10 +245,10 @@ export default function Home() {
       image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&q=80&w=1200",
     },
     {
-      badge: "Cloud Infrastructure",
-      headline: "Scalable systems built",
-      headlineHighlight: "for future growth",
-      description: "Our cloud-native architectures ensure maximum uptime, rapid scalability, and optimized operational costs for enterprise operations.",
+      badge: "Industrial Strength",
+      headline: "Heavy-duty packaging built",
+      headlineHighlight: "for safe transit",
+      description: "Our industrial packaging solutions ensure maximum protection, stackability, and compliance with international shipping standards.",
       cta: "Explore DevOps",
       ctaLink: "/services",
       accent: "#F59E0B",
@@ -268,9 +270,9 @@ export default function Home() {
 
   const [heroSlides, setHeroSlides] = useState(DEFAULT_HERO)
   const [whyChooseUs, setWhyChooseUs] = useState({
-    badge: "Why Choose Aventiq",
-    title: "Engineering Excellence Meets World-Class Design",
-    sub: "We don't just write code — we architect high-converting digital products that scale smoothly with your business goals."
+    badge: "Why Choose Apex Packaging",
+    title: "Manufacturing Excellence Meets Sustainable Design",
+    sub: "We don't just make boxes — we engineer sustainable packaging solutions that protect your products and elevate your brand."
   })
   const [ctaBanner, setCtaBanner] = useState({
     headline: "Ready to Build Something Extraordinary?",
@@ -316,8 +318,8 @@ export default function Home() {
           if (Array.isArray(parsed.heroSlides) && parsed.heroSlides.length > 0) {
             const mappedSlides = parsed.heroSlides.map((s: any) => ({
               badge: s.badge || "Aventiq Live",
-              headline: s.headline || "We build premium tech",
-              headlineHighlight: s.headlineHighlight || "digital experiences",
+              headline: s.headline || "We manufacture premium",
+              headlineHighlight: s.headlineHighlight || "packaging solutions",
               description: s.description || "",
               cta: s.ctaText || "Start a Project",
               ctaLink: s.ctaLink || "/contact",
@@ -335,7 +337,7 @@ export default function Home() {
 
           if (parsed.whyChooseUsTitle) {
             setWhyChooseUs({
-              badge: parsed.whyChooseUsBadge || "Why Choose Aventiq",
+              badge: parsed.whyChooseUsBadge || "Why Choose Apex Packaging",
               title: parsed.whyChooseUsTitle,
               sub: parsed.whyChooseUsSub || ""
             })
@@ -375,7 +377,11 @@ export default function Home() {
           }
 
           if (Array.isArray(parsed.techStackList)) {
-            setTechStackList(parsed.techStackList)
+            const sanitizedList = parsed.techStackList.map((t: any) => ({
+              ...t,
+              svgString: t.svgString ? t.svgString.replace(/className=/g, 'class=').replace(/strokeWidth=/g, 'stroke-width=').replace(/strokeLinecap=/g, 'stroke-linecap=').replace(/strokeLinejoin=/g, 'stroke-linejoin=').replace(/fillRule=/g, 'fill-rule=').replace(/clipRule=/g, 'clip-rule=') : t.svgString
+            }));
+            setTechStackList(sanitizedList);
           }
 
           if (Array.isArray(parsed.faqList)) {
@@ -445,6 +451,7 @@ export default function Home() {
 
   return (
     <div className="flex flex-col min-h-screen">
+      <ClientSEO storageKey="aventiq_admin_home" />
       {/* HERO SECTION */}
       <section className="relative overflow-hidden bg-[#030712]">
         {/* Static Base Layer */}

@@ -1,5 +1,7 @@
 "use client"
 
+import { ClientSEO } from "@/components/ClientSEO";
+
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { Target, Eye, Zap, Shield, HeartHandshake, BookOpen } from "lucide-react"
@@ -52,6 +54,7 @@ export default function AboutPage() {
 
   return (
     <div className="min-h-screen bg-white pb-24">
+      <ClientSEO storageKey="aventiq_admin_about" />
       <PageHeader 
         title={data.headerTitle} 
         breadcrumbs={[{ label: "About Us" }]} 
